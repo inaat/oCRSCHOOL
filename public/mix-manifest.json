@@ -1,0 +1,9 @@
+{
+    "/js/init.js": "/js/init.js",
+    "/js/vendor.js": "/js/vendor.js",
+    "/css/vendor.css": "/css/vendor.css",
+    "/fonts/glyphicons-halflings-regular.woff2": "/fonts/glyphicons-halflings-regular.woff2",
+    "/fonts/glyphicons-halflings-regular.woff": "/fonts/glyphicons-halflings-regular.woff",
+    "/fonts/glyphicons-halflings-regular.ttf": "/fonts/glyphicons-halflings-regular.ttf",
+    "/fonts/ionicons.ttf": "/fonts/ionicons.ttf"
+}
