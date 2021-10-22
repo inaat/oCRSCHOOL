@@ -4,19 +4,19 @@
         <div class="page-content">
             <!--breadcrumb-->
             <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                <div class="breadcrumb-title pe-3">Components</div>
+                <div class="breadcrumb-title pe-3">@lang('designation.all_your_designations')</div>
                 <div class="ps-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 p-0">
                             <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Modals</li>
+                            <li class="breadcrumb-item active" aria-current="page">@lang('designation.designations')</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="ms-auto">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-primary">Settings</button>
+                        <button type="button" class="btn btn-primary">@lang('designation.settings')</button>
                         <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
                             data-bs-toggle="dropdown"> <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
@@ -34,10 +34,8 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-primary">designation
-                        <small class="text-info font-13">(An academic designation is the time period during which a
-                            school perform academic activities. You may register designations here. Later campus admin
-                            can use designation to manage academic activities.)</small>
+                    <h5 class="card-title text-primary">@lang('designation.designation_list')
+                        <small class="text-info font-13"></small>
                     </h5>
 
 

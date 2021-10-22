@@ -446,7 +446,13 @@ return [
    'send_sms_only' => 'Send SMS Only',
    'send_both_email_n_sms' => 'Send Both Email & SMS',
    'to' => 'To',
-   'mobile_number' => 'Mobile Number',
+
+   ///
+   'mobile' => 'Mobile Number',
+   'phone' => 'Phone Number',
+   'address' => 'Address',
+
+   ///
    'send' => 'Send',
    'notification_sent_successfully' => 'Notification sent successfully',
    'payment_received_notification' => 'Send Payment Received Notification',

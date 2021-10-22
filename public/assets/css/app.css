@@ -79,7 +79,48 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-
+/*accordion*/
+.cursor-pointer, .accordion-panel .accordion__header {
+	cursor: pointer;
+  }
+  
+  .accordion-panel .accordion__header {
+	/* background: #1665D8; */
+	/* color: #fff; */
+	/* padding: 8px 15px; */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+  }
+  .accordion-panel .accordion__header:hover {
+	 color: #fff;
+	 background: #145ac1; 
+  }
+  .accordion-panel .accordion__header h3 {
+	margin: 0;
+  }
+  .accordion-panel .accordion__header .accordion__button {
+	width: 30px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* border: 1px solid #3680eb; */
+	/* -webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px; */
+  }
+  
+  .accordion-panel .accordion__body {
+	/* border-top: 1px solid #b8babe; */
+	/* padding: 20px; */
+	display: none;
+  }
+  .accordion-panel .accordion__body p:last-child {
+	margin: 0;
+  }
+  /*accordion*/
 .wrapper {
 
 
@@ -632,7 +673,7 @@ input[type=number] {
 
 .sidebar-wrapper .metismenu a:active,
 
-
+.sidebar-wrapper .metismenu .active>a ,
 .sidebar-wrapper .metismenu .mm-active>a {
 
 

@@ -168,6 +168,8 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Nwidart\Menus\MenusServiceProvider::class,
+
 
 
 
@@ -238,6 +240,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,   
         'Carbon' => 'Carbon\Carbon',
         'Datatables' => Yajra\DataTables\Facades\DataTables::class,
+        'Menu' => Nwidart\Menus\Facades\Menu::class,
+
 
     ],
 

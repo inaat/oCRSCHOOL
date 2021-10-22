@@ -19,6 +19,21 @@ $(document).ready(function () {
         allowClear: Boolean($(this).data('allow-clear')),
     });
 
+    $('.view_modal').on('show.bs.modal', function() {
+        $('.view_modal')
+            .find('.select2')
+            .each(function() {
+                var $p = $(this).parent();
+                $(this).select2({
+                    theme: 'bootstrap4'
+                    , width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style'
+                    , placeholder: $(this).data('placeholder')
+                    , allowClear: Boolean($(this).data('allow-clear'))
+                    , dropdownParent: $p
+                });
+            });
+    })
+
     // popover
     $("body").on("mouseover", '[data-toggle="popover"]', function () {
         if ($(this).hasClass("popover-default")) {
@@ -41,6 +56,7 @@ $(document).ready(function () {
         autoclose: true,
         endDate: "today",
     });
+ 
     $(document).on("click", ".btn-modal", function (e) {
         e.preventDefault();
         var container = $(this).data("container");

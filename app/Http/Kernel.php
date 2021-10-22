@@ -65,6 +65,10 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'SetSessionData' => \App\Http\Middleware\SetSessionData::class,
         'superadmin' => \App\Http\Middleware\Superadmin::class,
+        'timezone' => \App\Http\Middleware\Timezone::class,
+        'AdminSidebarMenu' => \App\Http\Middleware\AdminSidebarMenu::class,
+
+
 
 
     ];

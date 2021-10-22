@@ -19,9 +19,9 @@ class SessionController extends Controller
     public $STATUS_PASSED='PASSED';                 //if PASSED IN PAST
     public function index()
     {
-        // if (!auth()->user()->can('session.view') && !auth()->user()->can('session.create')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('session.view') && !auth()->user()->can('session.create')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         if (request()->ajax()) {
 
@@ -42,7 +42,6 @@ class SessionController extends Controller
                 ->editColumn(
                     'status',
                     function ($row) {
-                        // return (string) view('sell.partials.payment_status', ['payment_status' => $payment_status, 'id' => $row->id]);
                         return (string) view('admin\global_configuration\session.session_status',['status'=>$row->status,'id' => $row->id]);
                     }
                 )
@@ -61,9 +60,9 @@ class SessionController extends Controller
      */
     public function create()
     {
-        // if (!auth()->user()->can('session.create')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('session.create')) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('admin\global_configuration\session.create');
     }
 
@@ -75,9 +74,9 @@ class SessionController extends Controller
      */
     public function store(Request $request)
     {
-        // if (!auth()->user()->can('session.create')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('session.create')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         try {
             $input = $request->only(['title']);
@@ -111,9 +110,9 @@ class SessionController extends Controller
     }
     public function activateSession($id)
     {
-               // if (!auth()->user()->can('session.update')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+               if (!auth()->user()->can('session.update')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         if (request()->ajax()) {
             try {
@@ -154,9 +153,9 @@ class SessionController extends Controller
      */
     public function edit($id)
     {
-        // if (!auth()->user()->can('session.update')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('session.update')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         if (request()->ajax()) {
 
@@ -175,9 +174,9 @@ class SessionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // if (!auth()->user()->can('session.update')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('session.update')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         if (request()->ajax()) {
             try {
@@ -211,9 +210,9 @@ class SessionController extends Controller
     public function destroy($id)
     {
 
-        // if (!auth()->user()->can('session.delete')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('session.delete')) {
+            abort(403, 'Unauthorized action.');
+        }
 
         if (request()->ajax()) {
             try {

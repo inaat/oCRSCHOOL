@@ -17,15 +17,25 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        // $data = [
-        //     ['name' => 'session.view'],
-        //     ['name' => 'session.create'],
-        //     ['name' => 'session.update'],
-        //     ['name' => 'session.delete'],
+        $data = [
+            ['name' => 'session.view'],
+            ['name' => 'session.create'],
+            ['name' => 'session.update'],
+            ['name' => 'session.delete'],
+
+            ['name' => 'campus.view'],
+            ['name' => 'campus.create'],
+            ['name' => 'campus.update'],
+            ['name' => 'campus.delete'],
+
+            ['name' => 'discount.view'],
+            ['name' => 'discount.create'],
+            ['name' => 'discount.update'],
+            ['name' => 'discount.delete'],
          
             
 
-        // ];
+        ];
 
         // $insert_data = [];
         // $time_stamp = \Carbon::now()->toDateTimeString();

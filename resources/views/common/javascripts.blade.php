@@ -15,29 +15,31 @@
 @else
     <script src="{{ asset('js/lang/en.js?v=' . $asset_v) }}"></script>
 @endif
+    {{-- <script src="https://getdatepicker.com/5-4/theme/js/tempusdominus-bootstrap-4.js"></script> --}}
+
 @php
-    $business_date_format = session('business.date_format', config('constants.default_date_format'));
-    $datepicker_date_format = str_replace('d', 'dd', $business_date_format);
+    $system_details_date_format = session('system_details.date_format', config('constants.default_date_format'));
+    $datepicker_date_format = str_replace('d', 'dd', $system_details_date_format);
     $datepicker_date_format = str_replace('m', 'mm', $datepicker_date_format);
     $datepicker_date_format = str_replace('Y', 'yyyy', $datepicker_date_format);
 
-    $moment_date_format = str_replace('d', 'DD', $business_date_format);
+    $moment_date_format = str_replace('d', 'DD', $system_details_date_format);
     $moment_date_format = str_replace('m', 'MM', $moment_date_format);
     $moment_date_format = str_replace('Y', 'YYYY', $moment_date_format);
 
-    $business_time_format = session('business.time_format');
+    $system_details_time_format = session('system_details.time_format');
     $moment_time_format = 'HH:mm';
-    if($business_time_format == 12){
+    if($system_details_time_format == 12){
         $moment_time_format = 'hh:mm A';
     }
 
-    $common_settings = !empty(session('business.common_settings')) ? session('business.common_settings') : [];
+    $common_settings = !empty(session('system_details.common_settings')) ? session('system_details.common_settings') : [];
 
     $default_datatable_page_entries = !empty($common_settings['default_datatable_page_entries']) ? $common_settings['default_datatable_page_entries'] : 25;
 @endphp
 
 <script>
-    moment.tz.setDefault('{{ Session::get("business.time_zone") }}');
+    moment.tz.setDefault('{{ Session::get("system_details.time_zone") }}');
     $(document).ready(function(){
         $.ajaxSetup({
             headers: {

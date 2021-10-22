@@ -5,14 +5,14 @@
     {!! Form::open(['url' => action('\App\Http\Controllers\DesignationController@update', [$designation->id]), 'method' => 'PUT', 'id' => 'designation_edit_form' ]) !!}
 
         <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">Update Designation(Sping)</h5>
+            <h5 class="modal-title" id="exampleModalLabel">@lang('designation.update_designation')</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
         <p class="text-muted">Update designation here. Please provide required information to proceed next...</p>
             <div class="form-group">
-        {!! Form::label('designation', __( 'designation.designation_title' ) . ':*') !!}
+        {!! Form::label('designation', __( 'designation.designation_title' ) . ':') !!}
           {!! Form::text('title', $designation->title, ['class' => 'form-control', 'required', 'placeholder' => __( 'designation.designation_title' ) ]); !!}
             </div>
             

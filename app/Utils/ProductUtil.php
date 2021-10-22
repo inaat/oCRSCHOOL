@@ -5,7 +5,7 @@ namespace App\Utils;
 use App\Business;
 use App\BusinessLocation;
 use App\Discount;
-use App\Media;
+use App\Models\Media;
 use App\Product;
 use App\ProductRack;
 use App\ProductVariation;

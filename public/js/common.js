@@ -22,7 +22,19 @@
       })
   })();
 
-
+  $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+    format: moment_date_format + ' ' + moment_time_format,
+     icons: {
+         time: 'fa fa-clock',
+         date: 'fa fa-calendar',
+         up: 'fa fa-arrow-up',
+         down: 'fa fa-arrow-down',
+         previous: 'fa fa-chevron-left',
+         next: 'fa fa-chevron-right',
+         today: 'fa fa-calendar-check-o',
+         clear: 'fa fa-trash',
+         close: 'fa fa-times'
+     } });
 
 //This file contains all common functionality for the application
 $(document).on('submit', 'form', function(e) {

@@ -4,7 +4,7 @@
         {!! Form::open(['url' => action('\App\Http\Controllers\DesignationController@store'), 'method' => 'post', 'id' =>'designation_add_form' ]) !!}
 
         <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">@lang('designation.register_new_designation')</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 

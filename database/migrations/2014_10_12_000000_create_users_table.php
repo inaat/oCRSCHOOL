@@ -14,13 +14,35 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->increments('id');
+            $table->string('surname');
+            $table->string('first_name');
+            $table->string('last_name')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+
+
+
+
+            // $table->increments('id');
+            // $table->string('surname');
+            // $table->string('first_name');
+            // $table->string('last_name')->nullable();
+            // $table->string('email')->nullable();
+            // $table->string('password');
+            // $table->char('language', 7)->default('en');
+            // $table->timestamp('email_verified_at')->nullable();            
+            // $table->rememberToken();
+            // $table->timestamps();
+            // $table->integer('business_id')->unsigned()->nullable()->after('remember_token');
+            // $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
+            // $table->enum('status', ['active', 'inactive', 'terminated'])->default('active')->after('business_id');
+            // $table->boolean('allow_login')->default(1)->after('business_id');
+            // $table->string('user_type')->default('user')->index()->after('id');
         });
     }
 

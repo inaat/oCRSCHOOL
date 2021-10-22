@@ -46,7 +46,7 @@ $(function () {
 			return false;
 		});
 	});
-	// === sidebar menu activation js
+	///=== sidebar menu activation js
 	$(function () {
 		for (var i = window.location, o = $(".metismenu li a").filter(function () {
 			return this.href == i;

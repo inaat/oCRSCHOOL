@@ -4,14 +4,14 @@
         {!! Form::open(['url' => action('\App\Http\Controllers\SessionController@store'), 'method' => 'post', 'id' =>'session_add_form' ]) !!}
 
         <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">@lang('session.register_new_session')</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
-        <p class="text-muted">Register as many sessions as you need. Please provide required information to proceed next...</p>
+        <p class="text-muted">@lang('session.register_as_many_sessions_as_you_need._please_provide_required_information_to_proceed_next...')</p>
             <div class="form-group">
-                {!! Form::label('session', __( 'session.session_title' ) . ':*') !!}
+                {!! Form::label('session', __( 'session.session_information' ) . ':') !!}
                 {!! Form::text('title', null, ['class' => 'form-control', 'required', 'placeholder' => __( 'session.session_title' ) ]); !!}
             </div>
             
