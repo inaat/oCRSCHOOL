@@ -7,7 +7,7 @@ return [
     "session_list" => 'Session List',
     "session_name" => 'Session Name',
     'manage_your_sessions' => 'Manage your sessions',
-    'all_your_sessions' => 'All your sessions',
+    'all_your_sessions' => 'All Your Sessions',
     'added_success' => 'session added successfully',
     'updated_success' => 'session updated successfully',
     'deleted_success' => 'session deleted successfully',
