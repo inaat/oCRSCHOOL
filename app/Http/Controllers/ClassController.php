@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\ClassLevel;
 use App\Models\Classes;
 use App\Models\Campus;
+use App\Models\ClassSection;
+
 use Yajra\DataTables\Facades\DataTables;
 use App\Utils\Util;
 use DB;
@@ -53,9 +55,9 @@ class ClassController extends Controller
                            ->addColumn(
                                'action',
                                '<div class="dropdown">
-                               <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("messages.actions")</button>
+                               <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("lang.actions")</button>
                                <ul class="dropdown-menu">
-                                   <li><a class="dropdown-item edit_class_button" data-href="{{action(\'ClassController@edit\',[$id])}}" data-container=".discounts_model"><i class="bx bxs-edit f-16 mr-15 "></i> @lang("messages.edit")</a>
+                                   <li><a class="dropdown-item edit_class_button" data-href="{{action(\'ClassController@edit\',[$id])}}" data-container=".discounts_model"><i class="bx bxs-edit f-16 mr-15 "></i> @lang("lang.edit")</a>
                                    </li>
                                </ul>
                            </div>'
@@ -113,7 +115,7 @@ class ClassController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
             $output = ['success' => false,
-                            'msg' => __("global_lang.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
         }
 
@@ -172,7 +174,7 @@ class ClassController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
     
             $output = ['success' => false,
-            'msg' => __("messages.something_went_wrong")
+            'msg' => __("lang.something_went_wrong")
             ];
         }
     
@@ -190,4 +192,77 @@ class ClassController extends Controller
     {
         //
     }
+      /**
+     * Gets the Classes for the given unit.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $unit_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCampusClass(Request $request)
+    {
+        
+        if (!empty($request->input('campus_id'))) {
+            $campus_id = $request->input('campus_id');
+            
+            $system_settings_id = session()->get('user.system_settings_id');
+            $classes = Classes::forDropdown($system_settings_id,false,$campus_id);
+            $html = '<option value="">' . __('lang.please_select') . '</option>';
+            //$html = '';
+            if (!empty($classes)) {
+                foreach ($classes as $id => $title) {
+                    $html .= '<option value="' . $id .'">' . $title. '</option>';
+                }
+            }
+
+            return $html;
+        }
+    }
+      
+      /**
+     * Gets the Classes for the given unit.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $unit_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getClassFee(Request $request)
+    {
+        
+        if (!empty($request->input('class_id'))) {
+            $class_id = $request->input('class_id');
+            
+            $system_settings_id = session()->get('user.system_settings_id');
+            $classes = Classes::where('system_settings_id', $system_settings_id)->find($class_id);
+            return json_encode($classes );
+        }
+    }
+      /**
+     * Gets the Classes for the given unit.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $unit_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getClassSection(Request $request)
+    {
+        
+        if (!empty($request->input('class_id'))) {
+            $class_id = $request->input('class_id');
+            
+            $system_settings_id = session()->get('user.system_settings_id');
+            $sections=ClassSection::forDropdown($system_settings_id,false,$class_id);
+            $html = '<option value="">' . __('lang.please_select') . '</option>';
+            //$html = '';
+            if (!empty($sections)) {
+                foreach ($sections as $id => $section_name) {
+                    $html .= '<option value="' . $id .'">' . $section_name. '</option>';
+                }
+            }
+
+            return $html;
+        }
+    }
+
+
 }

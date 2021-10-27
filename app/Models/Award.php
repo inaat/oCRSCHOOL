@@ -40,7 +40,7 @@ class award extends Model
                     ->pluck('title', 'description');
 
         if ($show_none) {
-            $award->prepend(__('global_lang.none'), '');
+            $award->prepend(__('lang.none'), '');
         }
 
         return $award;

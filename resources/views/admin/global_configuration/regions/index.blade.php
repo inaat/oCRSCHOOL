@@ -19,14 +19,14 @@
 
         <div class="card">
             <div class="card-body">
-                            <h5 class="card-title text-primary">@lang('region.region_list')</h5>
+                            <h5 class="card-title text-primary">@lang('lang.region_list')</h5>
 
                <div class="d-lg-flex align-items-center mb-4 gap-3">
                     <div class="ms-auto"><button type="button"
                                 class="btn btn-primary radius-30 mt-2 mt-lg-0 btn-modal"
                                 data-href="{{ action('RegionController@create') }}"
                                 data-container=".regions_modal">
-                                <i class="bx bxs-plus-square"></i>@lang('region.add_new_region')</button></div>
+                                <i class="bx bxs-plus-square"></i>@lang('lang.add_new_region')</button></div>
                 </div>
 
 
@@ -37,9 +37,12 @@
                     <table class="table mb-0" width="100%" id="regions_table">
                         <thead class="table-light" width="100%">
                             <tr>
-                                <th>@lang('global_lang.action')</th>
-                                <th>@lang('region.city')</th>
-                                <th>@lang('region.village')</th>
+                             <th>@lang('lang.country_name')</th>
+                                <th>@lang('lang.province_name')</th>
+                                <th>@lang('lang.district_name')</th>
+                                <th>@lang('lang.city_name')</th>
+                                <th>@lang('lang.region_name')</th>
+                                <th>@lang('lang.action')</th>
                             </tr>
                         </thead>
 
@@ -50,7 +53,7 @@
         <!--end row-->
     </div>
 </div>
- <div class="modal fade regions_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+ <div class="modal fade regions_modal contains_select2" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
   </div>
 @endsection
 @section('javascript')
@@ -63,18 +66,37 @@
             , serverSide: true
             , ajax: "/regions"
             , columns: [{
+                    data: "country_name"
+                    , name: "country_name"
+                }
+                ,
+                {
+                    data: "province_name"
+                    , name: "province_name"
+                }
+                ,
+                {
+                    data: "district_name"
+                    , name: "district_name"
+                }
+                ,
+                {
+                    data: "city_name"
+                    , name: "city_name"
+                }
+
+                , {
+                    data: "name"
+                    , name: "name"
+                }
+            , 
+            {
                     data: "action"
                     , name: "action"
                 }
-                , {
-                    data: "city"
-                    , name: "city"
-                }
-                , {
-                    data: "village"
-                    , name: "village"
-                }
-            , ]
+                , 
+            
+            ]
         , });
 
    $(document).on("submit", "form#region_add_form", function (e) {
@@ -101,11 +123,11 @@
             },
         });
     });
- $(document).on("click", ".edit_class_button", function () {
+ $(document).on("click", ".edit_region_button", function () {
         $("div.regions_modal").load($(this).data("href"), function () {
             $(this).modal("show");
 
-            $("form#class_edit_form").submit(function (e) {
+            $("form#region_edit_form").submit(function (e) {
                 e.preventDefault();
                 var form = $(this);
                 var data = form.serialize();
@@ -133,6 +155,36 @@
             });
         });
     });
+    
+       $(document).on("click", "button.delete_region_button", function() {
+                swal({
+                    title: LANG.sure,
+                    text: LANG.confirm_delete_region,
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        var href = $(this).data("href");
+                        var data = $(this).serialize();
+
+                        $.ajax({
+                            method: "DELETE",
+                            url: href,
+                            dataType: "json",
+                            data: data,
+                            success: function(result) {
+                                if (result.success == true) {
+                                    toastr.success(result.msg);
+                                    regions_table.ajax.reload();
+                                } else {
+                                    toastr.error(result.msg);
+                                }
+                            },
+                        });
+                    }
+                });
+            });
     });
 
 </script>

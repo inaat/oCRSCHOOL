@@ -10,7 +10,8 @@ return [
 'last_name'=>'Last Name',
 'gender'=>'Gender',
 'date_of_birth'=>'Date of Birth',
-'category'=>'Category',
+'student_categories'=> 'Student Categories',
+
 'religion' =>'Religion',
 'caste'=>'Caste',
 'email'=>'Email',
@@ -42,7 +43,14 @@ return [
 'guardian_address'=>'Guardian Address',
 'guardian_image'=>'guardian Image',
 'add_more_detail'=>'Add More Detail',
+'parent_detail'=>'Parent Detail',
 'student_address_details'=>'Student Address Details',
+'current_address'=>'Current Address',
+'permanent_address'=>'Permanent Address',
+'academics_details_&_documents'=>'Academics Details & Documents',
+'miscellaneous_details'=>'Miscellaneous Details',
+'student_tuition_fee' =>'Student Tuition Fee',
+'student_discounts' =>'Student Discounts',
 
 
 
@@ -52,7 +60,6 @@ return [
 'student'=> 'Student',
 'student_admission'=> 'Student Admission',
 'student_attendance'=> 'Student Attendance',
-'student_categories'=> 'Student Categories',
 'student_detail'=> 'Student Detail',
 'student_details'=> 'Student Details',
 'student_fees'=> 'Student Fees',

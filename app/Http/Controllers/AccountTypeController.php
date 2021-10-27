@@ -62,7 +62,7 @@ class AccountTypeController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
         }
 
@@ -141,7 +141,7 @@ class AccountTypeController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
             $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
         }
 

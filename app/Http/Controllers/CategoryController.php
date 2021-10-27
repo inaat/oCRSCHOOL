@@ -17,11 +17,11 @@ class CategoryController extends Controller
                     'action',
                     '<div class="d-flex order-actions">
 
-                    <button data-href="{{action(\'CategoryController@edit\', [$id])}}" class="btn btn-sm btn-primary edit_category_button"><i class="bx bxs-edit f-16 mr-15 text-white"></i> @lang("global_lang.edit")</button>
+                    <button data-href="{{action(\'CategoryController@edit\', [$id])}}" class="btn btn-sm btn-primary edit_category_button"><i class="bx bxs-edit f-16 mr-15 text-white"></i> @lang("lang.edit")</button>
                         &nbsp;
 
 
-                        <button data-href="{{action(\'CategoryController@destroy\', [$id])}}" class="btn btn-sm btn-danger delete_category_button"><i class="bx bxs-trash f-16 text-white"></i> @lang("global_lang.delete")</button>
+                        <button data-href="{{action(\'CategoryController@destroy\', [$id])}}" class="btn btn-sm btn-danger delete_category_button"><i class="bx bxs-trash f-16 text-white"></i> @lang("lang.delete")</button>
 
                     </div>'
                 )
@@ -52,7 +52,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
-            $input = $request->only(['title','description']);
+            $input = $request->only(['cat_name','description']);
             $system_settings_id = $request->session()->get('user.system_settings_id');
             $user_id = $request->session()->get('user.id');
             $input['system_settings_id'] = $system_settings_id;
@@ -66,7 +66,7 @@ class CategoryController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
             $output = ['success' => false,
-                            'msg' => __("global_lang.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
         }
 
@@ -124,7 +124,7 @@ class CategoryController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
                 $output = ['success' => false,
-                            'msg' => __("global_lang.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
             }
 
@@ -152,7 +152,7 @@ class CategoryController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
                 $output = ['success' => false,
-                            'msg' => __("global_lang.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
             }
 

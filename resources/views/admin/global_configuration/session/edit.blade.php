@@ -11,9 +11,19 @@
 
         <div class="modal-body">
         <p class="text-muted">@lang('session.update_sessions_here._please_provide_required_information_to_proceed_next.')</p>
-            <div class="form-group">
-        {!! Form::label('session', __( 'session.session_information' ) . ':*') !!}
-          {!! Form::text('title', $session->title, ['class' => 'form-control', 'required', 'placeholder' => __( 'session.session_title' ) ]); !!}
+             <div class="row">
+                <div class="col-md-6 p-3">
+                    {!! Form::label('session', __( 'session.session_information' ) . ':') !!}
+                    {!! Form::text('title',$session->title, ['class' => 'form-control title mask', 'required','min'=>8,'placeholder' => __( 'session.session_title' ) ]); !!}
+
+                </div>
+
+                <div class="col-md-6 p-3">
+                    {!! Form::label('prefix', __('session.prefix') . ':*') !!}
+                    {!! Form::text('prefix', $session->prefix, ['class' => 'form-control', 'required', 'placeholder' => __('session.prefix')]) !!}
+                </div>
+
+
             </div>
             
         </div>

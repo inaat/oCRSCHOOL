@@ -22,7 +22,7 @@ class Campus extends Model
                         ->pluck('campus_name', 'id');
     
             if ($show_none) {
-                $campuses->prepend(__('global_lang.none'), '');
+                $campuses->prepend(__('lang.none'), '');
             }
     
             return $campuses;

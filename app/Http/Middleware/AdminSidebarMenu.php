@@ -69,6 +69,31 @@ class AdminSidebarMenu
                             __('class_level.class_level'),
                             ['icon' => 'bx bx-menu ', 'active' => request()->segment(1) == 'class_levels']
                         );
+                        $sub->url(
+                            action('CategoryController@index'),
+                            __('lang.student_category'),
+                            ['icon' => 'bx bx-cabinet ', 'active' => request()->segment(1) == 'categories']
+                        );
+                        $sub->url(
+                            action('ProvinceController@index'),
+                            __('lang.provinces'),
+                            ['icon' => 'bx bx-cabinet ', 'active' => request()->segment(1) == 'provinces']
+                        );
+                        $sub->url(
+                            action('DistrictController@index'),
+                            __('lang.districts'),
+                            ['icon' => 'bx bx-cabinet ', 'active' => request()->segment(1) == 'districts']
+                        );
+                        $sub->url(
+                            action('CityController@index'),
+                            __('lang.cities'),
+                            ['icon' => 'bx bx-cabinet ', 'active' => request()->segment(1) == 'cities']
+                        );
+                        $sub->url(
+                            action('RegionController@index'),
+                            __('lang.regions'),
+                            ['icon' => 'bx bx-cabinet ', 'active' => request()->segment(1) == 'regions']
+                        );
                      
                     },
                     ['icon' => 'bx bx-globe']

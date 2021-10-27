@@ -73,9 +73,9 @@ class AccountController extends Controller
                             ->addColumn(
                                 'action',
                                 '<div class="dropdown">
-                                <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("messages.actions")</button>
+                                <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("lang.actions")</button>
                                 <ul class="dropdown-menu" style="">
-                                    <li><a class="dropdown-item  btn-modal" data-href="{{action(\'AccountController@edit\',[$id])}}" data-container=".account_model"><i class="bx bxs-edit f-16 mr-15 "></i> @lang("messages.edit")</a>
+                                    <li><a class="dropdown-item  btn-modal" data-href="{{action(\'AccountController@edit\',[$id])}}" data-container=".account_model"><i class="bx bxs-edit f-16 mr-15 "></i> @lang("lang.edit")</a>
                                     </li>
                                     @if($is_closed == 0)
                                     <li><a href="{{action(\'AccountController@show\',[$id])}}" class="dropdown-item"><i class="bx bx-book"></i> @lang("account.account_book")</a>
@@ -86,10 +86,10 @@ class AccountController extends Controller
                                     </li>
                                     <li><a class="dropdown-item  btn-modal" data-href="{{action(\'AccountController@getDebit\',[$id])}}" data-container=".view_modal"><i class="bx bx-money f-16 mr-15 "></i> @lang("account.debit")</a>
                                     </li>
-                                    <li> <button data-url="{{action(\'AccountController@close\',[$id])}}" class="dropdown-item  btn btn-sm btn-danger close_account"><i class="fa fa-power-off"></i> @lang("messages.close")</button>
+                                    <li> <button data-url="{{action(\'AccountController@close\',[$id])}}" class="dropdown-item  btn btn-sm btn-danger close_account"><i class="fa fa-power-off"></i> @lang("lang.close")</button>
                                     </li>
                                     @elseif($is_closed == 1)
-                                          <li>  <button data-url="{{action(\'AccountController@activate\',[$id])}}" class=" dropdown-item btn btn-sm btn-success activate_account"><i class="fa fa-power-off"></i> @lang("messages.activate")</button>
+                                          <li>  <button data-url="{{action(\'AccountController@activate\',[$id])}}" class=" dropdown-item btn btn-sm btn-success activate_account"><i class="fa fa-power-off"></i> @lang("lang.activate")</button>
                                      </li>
                                           @endif
                                 </ul>
@@ -202,7 +202,7 @@ class AccountController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
                     
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                             ];
             }
 
@@ -286,7 +286,7 @@ class AccountController extends Controller
                             ->editColumn('action', function ($row) {
                                 $action = '';
                                 if ($row->sub_type == 'fund_transfer' || $row->sub_type == 'deposit' || $row->sub_type == 'debit') {
-                                    $action = '<button type="button" class="btn btn-danger btn-sm delete_account_transaction" data-href="' . action('AccountController@destroyAccountTransaction', [$row->id]) . '"><i class="fadeIn animated bx bx-trash"></i>' . __('messages.delete') . '</button>';
+                                    $action = '<button type="button" class="btn btn-danger btn-sm delete_account_transaction" data-href="' . action('AccountController@destroyAccountTransaction', [$row->id]) . '"><i class="fadeIn animated bx bx-trash"></i>' . __('lang.delete') . '</button>';
                                 }
 
                                 if (!empty($row->media->first()) || (!empty($row->transfer_transaction && !empty($row->transfer_transaction->media->first()) ))) {
@@ -367,7 +367,7 @@ class AccountController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
             }
             
@@ -407,7 +407,7 @@ class AccountController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
             }
 
@@ -441,7 +441,7 @@ class AccountController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
             }
             
@@ -539,7 +539,7 @@ class AccountController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
         
             $output = ['success' => false,
-                        'msg' => __("messages.something_went_wrong")
+                        'msg' => __("lang.something_went_wrong")
                     ];
         }
 
@@ -631,7 +631,7 @@ class AccountController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
         
             $output = ['success' => false,
-                        'msg' => __("messages.something_went_wrong")
+                        'msg' => __("lang.something_went_wrong")
                     ];
         }
 
@@ -824,7 +824,7 @@ class AccountController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
                 $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
             }
             
@@ -922,7 +922,7 @@ class AccountController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
         
             $output = ['success' => false,
-                        'msg' => __("messages.something_went_wrong")
+                        'msg' => __("lang.something_went_wrong")
                     ];
         }
 

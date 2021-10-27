@@ -136,7 +136,7 @@ class SystemSettingController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
      
             $output = ['success' => 0,
-                     'msg' => __('messages.something_went_wrong')
+                     'msg' => __('lang.something_went_wrong')
                  ];
         }
         return redirect('setting')->with('status', $output);

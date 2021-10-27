@@ -1,40 +1,34 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-        {!! Form::open(['url' => action('\App\Http\Controllers\ClassController@update',[$classes->id]), 'method' => 'PUT', 'id' =>'class_edit_form' ]) !!}
+        {!! Form::open(['url' => action('\App\Http\Controllers\RegionController@update',[$region->id]), 'method' => 'PUT', 'id' =>'region_edit_form' ]) !!}
 
         <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">@lang('class.edit_class')</h5>
+            <h5 class="modal-title" id="exampleModalLabel">@lang('lang.edit_region')</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
             <div class="row">
-                <div class="col-md-6 p-3">
-                    {!! Form::label('title', __('class.title') . ':*', ['classs' => 'form-lable']) !!}
-                    {!! Form::text('title', $classes->title, ['class' => 'form-control', 'required', 'placeholder' => __('class.title')]) !!}
-
+             <div class="col-md-6 p-3">
+                    {!! Form::label('country_id', __('lang.country_name') . ':*') !!}
+                    {!! Form::select('country_id',$countries,$region->country_id, ['class' => 'form-select  select2 ','required','id'=>'country_id', 'style' => 'width:100%', 'required', 'placeholder' => __('lang.please_select')]) !!}
                 </div>
                 <div class="col-md-6 p-3">
-                    {!! Form::label('campus.campuses', __('campus.campuses') . ':*') !!}
-                    {!! Form::select('campus_id',$campuses,$classes->campus_id, ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]) !!}
+                    {!! Form::label('province_id', __('lang.provinces') . ':*') !!}
+                    {!! Form::select('province_id',$provinces,$region->province_id, ['class' => 'form-select  select2 ','required', 'style' => 'width:100%', 'required','id' => 'provinces_ids','placeholder' => __('lang.please_select')]) !!}
                 </div>
-                <div class="clearfix"></div>
-
-                <div class="col-md-6 p-3">
-                    {!! Form::label('class_level.class_level', __('class_level.class_levels') . ':*') !!}
-                    {!! Form::select('class_level_id',$classLevel,$classes->class_level_id, ['class' => 'form-select select2 ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]) !!}
+                 <div class="col-md-6 p-3">
+                    {!! Form::label('district_id', __('lang.district_name') . ':*') !!}
+                    {!! Form::select('district_id',$districts,$region->district_id, ['class' => 'form-select  select2 ','required', 'style' => 'width:100%', 'required','id' => 'district_ids','placeholder' => __('lang.district_name')]) !!}
+                </div>
+                 <div class="col-md-6 p-3">
+                    {!! Form::label('city_id', __('lang.city_name') . ':*') !!}
+                    {!! Form::select('city_id',$cities,$region->city_id, ['class' => 'form-select  select2 ','required', 'style' => 'width:100%', 'required','id' => 'city_ids','placeholder' => __('lang.city_name')]) !!}
                 </div>
                 <div class="col-md-6 p-3">
-                    {!! Form::label('tuition_fee', __( 'class.tuition_fee' ) . ':*') !!}
-                    {!! Form::text('tuition_fee',@num_format($classes->tuition_fee), ['class' => 'form-control input_number', 'required', 'placeholder' => __( 'class.tuition_fee' ) ]); !!}
-
-                </div>
-                <div class="clearfix"></div>
-
-                <div class="col-md-6 p-3">
-                    {!! Form::label('admission_fee', __( 'class.admission_fee' ) . ':*') !!}
-                    {!! Form::text('admission_fee',@num_format($classes->admission_fee), ['class' => 'form-control input_number', 'required', 'placeholder' => __( 'class.admission_fee' ) ]); !!}
+                    {!! Form::label('name', __('lang.city_name') . ':*', ['classs' => 'form-lable']) !!}
+                    {!! Form::text('name',$region->name, ['class' => 'form-control', 'required', 'placeholder' => __('lang.city_name')]) !!}
 
                 </div>
 
@@ -48,8 +42,8 @@
 
 
 
-                <button type="submit" class="btn btn-primary">@lang( 'global_lang.update' )</button>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">@lang( 'global_lang.close' )</button>
+                <button type="submit" class="btn btn-primary">@lang( 'lang.update' )</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">@lang( 'lang.close' )</button>
             </div>
         </div>
 

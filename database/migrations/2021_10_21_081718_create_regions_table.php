@@ -13,7 +13,7 @@ class CreateRegionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('districts', function (Blueprint $table) {
+        Schema::create('provinces', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->integer('country_id')->unsigned();
@@ -25,9 +25,28 @@ class CreateRegionsTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+        Schema::create('districts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->integer('country_id')->unsigned();
+            $table->foreign('country_id')->references('id')->on('currencies');
+            $table->integer('province_id')->unsigned();
+            $table->foreign('province_id')->references('id')->on('provinces');
+            $table->integer('system_settings_id')->unsigned();
+            $table->foreign('system_settings_id')->references('id')->on('system_settings')->onDelete('cascade');
+            $table->integer('created_by')->unsigned();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    
         Schema::create('cities', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('country_id')->unsigned();
+            $table->foreign('country_id')->references('id')->on('currencies');
+            $table->integer('province_id')->unsigned();
+            $table->foreign('province_id')->references('id')->on('provinces');
             $table->integer('district_id')->unsigned();
             $table->foreign('district_id')->references('id')->on('districts');
             $table->integer('system_settings_id')->unsigned();
@@ -37,9 +56,15 @@ class CreateRegionsTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
-        Schema::create('region', function (Blueprint $table) {
+        Schema::create('regions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('country_id')->unsigned();
+            $table->foreign('country_id')->references('id')->on('currencies');
+            $table->integer('province_id')->unsigned();
+            $table->foreign('province_id')->references('id')->on('provinces');
+            $table->integer('district_id')->unsigned();
+            $table->foreign('district_id')->references('id')->on('districts');
             $table->integer('city_id')->unsigned();
             $table->foreign('city_id')->references('id')->on('cities');
             $table->integer('system_settings_id')->unsigned();

@@ -31,23 +31,20 @@ class ClassSection extends Model
      *
      * @return array
      */
-    public static function forDropdown($system_settings_id,$show_none = false ,$check_permission = false)
+    public static function forDropdown($system_settings_id,$show_none = false ,$class_id=null)
     {
         $query=ClassSection::where('system_settings_id', $system_settings_id);
-
-        if ($check_permission) {
-            $permitted_locations = auth()->user()->permitted_locations();
-            if ($permitted_locations != 'all') {
-                $query->whereIn('id', $permitted_locations);
-            }
+        
+        if($class_id){
+            $query->where('class_id',$class_id);
         }
+        $sections=$query->pluck('section_name', 'id');
+
         if ($show_none) {
-            $query->prepend(__('global_lang.none'), '');
+            $sections->prepend(__('lang.none'), '');
         }
        
-        $result = $query->get();
-
-        $classes = $result->pluck('title', 'id');
-        return $classes;
+      
+        return $sections;
     }
 }

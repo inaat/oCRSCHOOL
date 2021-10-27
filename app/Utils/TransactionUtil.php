@@ -2746,7 +2746,7 @@ class TransactionUtil extends Util
                     
                     if ($mapping_type == 'purchase') {
                         $mismatch_error = trans(
-                            "messages.purchase_sell_mismatch_exception",
+                            "lang.purchase_sell_mismatch_exception",
                             ['product' => $mismatch_name]
                         );
 
@@ -2755,7 +2755,7 @@ class TransactionUtil extends Util
                         }
                     } elseif ($mapping_type == 'stock_adjustment') {
                         $mismatch_error = trans(
-                            "messages.purchase_stock_adjustment_mismatch_exception",
+                            "lang.purchase_stock_adjustment_mismatch_exception",
                             ['product' => $mismatch_name]
                         );
                     } else {

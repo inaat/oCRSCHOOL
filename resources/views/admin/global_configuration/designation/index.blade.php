@@ -70,6 +70,7 @@
         </div>
     </div>
     <div class="modal fade designations_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"></div>
+  @endsection
 
 
 @section('javascript')

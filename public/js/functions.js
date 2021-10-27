@@ -528,3 +528,58 @@ function __disable_submit_button(element) {
         element.attr('disable', true);
     }
 }
+
+//Add dropdown for Provinces 
+function __get_provinces() {
+    var country_id = $('#country_id').val();
+    $.ajax({
+        method: 'GET'
+        , url: '/get_provinces'
+        , dataType: 'html'
+        , data: {
+            country_id: country_id
+        }
+        , success: function(result) {
+            if (result) {
+                $('#provinces_ids').html(result);
+
+            }
+        }
+    , });
+}
+//Add dropdown for Districts
+function __get_districts() {
+    var province_id = $('#provinces_ids').val();
+    $.ajax({
+        method: 'GET'
+        , url: '/get_districts'
+        , dataType: 'html'
+        , data: {
+            province_id: province_id
+        }
+        , success: function(result) {
+            if (result) {
+                $('#district_ids').html(result);
+
+            }
+        }
+    , });
+}
+//Add dropdown for Cities
+function __get_cities() {
+    var district_id = $('#district_ids').val();
+    $.ajax({
+        method: 'GET'
+        , url: '/get_cities'
+        , dataType: 'html'
+        , data: {
+            district_id: district_id
+        }
+        , success: function(result) {
+            if (result) {
+                $('#city_ids').html(result);
+
+            }
+        }
+    , });
+}

@@ -39,7 +39,7 @@ class Category extends Model
                     ->pluck('cat_name', 'id');
 
         if ($show_none) {
-            $categories->prepend(__('global_lang.none'), '');
+            $categories->prepend(__('lang.none'), '');
         }
 
         return $categories;

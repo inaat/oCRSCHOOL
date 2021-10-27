@@ -53,9 +53,9 @@ class DiscountController extends Controller
                            ->addColumn(
                                'action',
                                '<div class="dropdown">
-                               <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("messages.actions")</button>
+                               <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("lang.actions")</button>
                                <ul class="dropdown-menu">
-                                   <li><a class="dropdown-item edit_discount_button" data-href="{{action(\'DiscountController@edit\',[$id])}}" data-container=".discounts_model"><i class="bx bxs-edit f-16 mr-15 "></i> @lang("messages.edit")</a>
+                                   <li><a class="dropdown-item edit_discount_button" data-href="{{action(\'DiscountController@edit\',[$id])}}" data-container=".discounts_model"><i class="bx bxs-edit f-16 mr-15 "></i> @lang("lang.edit")</a>
                                    </li>
                                </ul>
                            </div>'
@@ -114,7 +114,7 @@ class DiscountController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
             $output = ['success' => false,
-                            'msg' => __("global_lang.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
         }
 
@@ -173,7 +173,7 @@ class DiscountController extends Controller
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
     
                 $output = ['success' => false,
-            'msg' => __("messages.something_went_wrong")
+            'msg' => __("lang.something_went_wrong")
             ];
             }
     

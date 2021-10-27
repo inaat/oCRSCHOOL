@@ -42,9 +42,9 @@ class CampusController extends Controller
                             ->addColumn(
                                 'action',
                                 '<div class="dropdown">
-                                <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("messages.actions")</button>
+                                <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("lang.actions")</button>
                                 <ul class="dropdown-menu" style="">
-                                    <li><a class="dropdown-item "href="{{action(\'CampusController@edit\',[$id])}}" ><i class="bx bxs-edit f-16 mr-15 "></i> @lang("messages.edit")</a>
+                                    <li><a class="dropdown-item "href="{{action(\'CampusController@edit\',[$id])}}" ><i class="bx bxs-edit f-16 mr-15 "></i> @lang("lang.edit")</a>
                                     </li>
                                 </ul>
                             </div>')
@@ -113,7 +113,7 @@ class CampusController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
             $output = ['success' => false,
-        'msg' => __("messages.something_went_wrong")
+        'msg' => __("lang.something_went_wrong")
         ];
         }
 
@@ -178,7 +178,7 @@ class CampusController extends Controller
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
             $output = ['success' => false,
-        'msg' => __("messages.something_went_wrong")
+        'msg' => __("lang.something_went_wrong")
         ];
         }
 
@@ -195,4 +195,7 @@ class CampusController extends Controller
     {
         //
     }
+
+
+  
 }

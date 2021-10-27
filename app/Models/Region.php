@@ -38,7 +38,7 @@ class Region extends Model
                     ->pluck('village', 'id');
 
         if ($show_none) {
-            $Regions->prepend(__('global_lang.none'), '');
+            $Regions->prepend(__('lang.none'), '');
         }
 
         return $Regions;

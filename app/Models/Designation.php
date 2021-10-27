@@ -40,7 +40,7 @@ class Designation extends Model
                     ->pluck('title', 'id');
 
         if ($show_none) {
-            $session->prepend(__('global_lang.none'), '');
+            $session->prepend(__('lang.none'), '');
         }
 
         return $session;

@@ -491,7 +491,16 @@ $(document).on('click', '#accordion .box-header', function(e) {
 $(document).on('shown.bs.modal', '.contains_select2', function(){
     $(this).find('.select2').each( function(){
         var $p = $(this).parent();
-        $(this).select2({ dropdownParent: $p });
+        $(this).select2(
+            {
+                dropdownParent: $p,
+                theme: 'bootstrap4',
+                width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+                placeholder: $(this).data('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear')),
+            }
+        );
+
     });
 })
 
@@ -584,3 +593,13 @@ $(document).on('keyup', '.cash_denomination', function(){
     $('input#amount').val(total);
     
 })
+/// Counties Provinces Districts Cities
+$(document).on('change', '#country_id', function() {
+    __get_provinces();
+}); 
+$(document).on('change', '#provinces_ids', function() {
+    __get_districts();
+}); 
+$(document).on('change', '#district_ids', function() {
+    __get_cities();
+}); 

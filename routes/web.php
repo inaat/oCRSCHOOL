@@ -13,8 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebarMenu'])->group(function () {
+
+ 
     Route::resource('session', 'SessionController');
     Route::put('session/activate-session/{id}', 'SessionController@activateSession');
+    Route::get('/sessions/get_roll_no', 'SessionController@getRollNo');
+    Route::get('/classes/get_campus_classes', 'ClassController@getCampusClass');
+    Route::get('/classes/get_class_fee', 'ClassController@getClassFee');
+    Route::get('/classes/get_class_section', 'ClassController@getClassSection');
+    Route::get('/get_provinces', 'ProvinceController@getProvinces');
+    Route::get('/get_districts', 'DistrictController@getDistricts');
+    Route::get('/get_cities', 'CityController@getCities');
+
+
 
     Route::resource('setting', 'SystemSettingController');
     Route::resource('designation', 'DesignationController');
@@ -25,6 +36,10 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     Route::resource('classes', 'ClassController');
     Route::resource('sections', 'ClassSectionController');
     Route::resource('categories', 'CategoryController');
+    Route::resource('provinces', 'ProvinceController');
+    Route::resource('districts', 'DistrictController');
+    Route::resource('cities', 'CityController');
+
     Route::resource('regions', 'RegionController');
     Route::resource('students', 'StudentController');
 

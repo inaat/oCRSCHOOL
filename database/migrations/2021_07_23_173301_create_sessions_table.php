@@ -16,7 +16,8 @@ class CreateSessionsTable extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title', 60)->nullable();
+            $table->string('title', 60);
+            $table->string('prefix', 60)->nullable();
             $table->string('status')->nullable()->default('UPCOMING');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

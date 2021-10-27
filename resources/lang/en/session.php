@@ -28,4 +28,7 @@ return [
     'register_as_many_sessions_as_you_need._please_provide_required_information_to_proceed_next...'=>'Register as many sessions as you need. Please provide required information to proceed next.',
     'session_information'=>'Session Information',
     'session_title'=>'Session Title',
+    'prefix'=>'Prefix',
+    'start_date'=>'Start Date',
+    'end_date'=>'End Date',
 ];

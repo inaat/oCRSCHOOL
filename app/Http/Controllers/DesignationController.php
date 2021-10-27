@@ -27,9 +27,9 @@ class DesignationController extends Controller
                   'action',
                   '
                   <div class="d-flex order-actions">
-                  <button data-href="{{action(\'DesignationController@edit\', [$id])}}" class="btn btn-sm btn-primary edit_designation_button"><i class="bx bxs-edit f-16 mr-15 text-white"></i> @lang("global_lang.edit")</button>
+                  <button data-href="{{action(\'DesignationController@edit\', [$id])}}" class="btn btn-sm btn-primary edit_designation_button"><i class="bx bxs-edit f-16 mr-15 text-white"></i> @lang("lang.edit")</button>
                       &nbsp;
-                      <button data-href="{{action(\'DesignationController@destroy\', [$id])}}" class="btn btn-sm btn-danger delete_designation_button"><i class="bx bxs-trash f-16 text-white"></i> @lang("global_lang.delete")</button>
+                      <button data-href="{{action(\'DesignationController@destroy\', [$id])}}" class="btn btn-sm btn-danger delete_designation_button"><i class="bx bxs-trash f-16 text-white"></i> @lang("lang.delete")</button>
                   </div>
                   '
 
@@ -84,7 +84,7 @@ class DesignationController extends Controller
           \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
           $output = ['success' => false,
-                          'msg' => __("global_lang.something_went_wrong")
+                          'msg' => __("lang.something_went_wrong")
                       ];
       }
 
@@ -150,7 +150,7 @@ class DesignationController extends Controller
               \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
               $output = ['success' => false,
-                          'msg' => __("global_lang.something_went_wrong")
+                          'msg' => __("lang.something_went_wrong")
                       ];
           }
 
@@ -185,7 +185,7 @@ class DesignationController extends Controller
               \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
               $output = ['success' => false,
-                          'msg' => __("global_lang.something_went_wrong")
+                          'msg' => __("lang.something_went_wrong")
                       ];
           }
 

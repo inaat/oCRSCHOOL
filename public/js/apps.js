@@ -11,14 +11,13 @@ $(document).ready(function () {
     });
 
     __select2($(".select2"));
-
+    $('.date-picker').datepicker();
     $('.select2').select2({
         theme: 'bootstrap4',
         width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
         placeholder: $(this).data('placeholder'),
         allowClear: Boolean($(this).data('allow-clear')),
     });
-
     $('.view_modal').on('show.bs.modal', function() {
         $('.view_modal')
             .find('.select2')
@@ -70,133 +69,10 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on("submit", "form#session_add_form", function (e) {
-        e.preventDefault();
-        var form = $(this);
-        var data = form.serialize();
+  
 
-        $.ajax({
-            method: "POST",
-            url: $(this).attr("action"),
-            dataType: "json",
-            data: data,
-            beforeSend: function (xhr) {
-                __disable_submit_button(form.find('button[type="submit"]'));
-            },
-            success: function (result) {
-                if (result.success == true) {
-                    $("div.sessions_modal").modal("hide");
-                    toastr.success(result.msg);
-                    sessions_table.ajax.reload();
-                } else {
-                    toastr.error(result.msg);
-                }
-            },
-        });
-    });
+ 
 
-    //sessions table
-    var sessions_table = $("#sessions_table").DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "/session",
-        columns: [
-            { data: "title", name: "title" },
-            { data: "status", name: "status" },
-            { data: "action", name: "action" },
-        ],
-    });
-    $(document).on('click', 'a.session_activate', function () {
-        swal({
-            title: LANG.sure,
-            text: LANG.confirm_session_activate,
-            icon: 'warning',
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                var href = $(this).data('href');
-                var data = $(this).serialize();
-
-                $.ajax({
-                    method: 'PUT',
-                    url: href,
-                    dataType: 'json',
-                    data: data,
-                    success: function (result) {
-                        if (result.success == true) {
-                            toastr.success(result.msg);
-                            sessions_table.ajax.reload();
-                        } else {
-                            toastr.error(result.msg);
-                        }
-                    },
-                });
-            }
-        });
-    });
-    $(document).on("click", "button.edit_session_button", function () {
-        $("div.sessions_modal").load($(this).data("href"), function () {
-            $(this).modal("show");
-
-            $("form#session_edit_form").submit(function (e) {
-                e.preventDefault();
-                var form = $(this);
-                var data = form.serialize();
-
-                $.ajax({
-                    method: "POST",
-                    url: $(this).attr("action"),
-                    dataType: "json",
-                    data: data,
-                    beforeSend: function (xhr) {
-                        __disable_submit_button(
-                            form.find('button[type="submit"]')
-                        );
-                    },
-                    success: function (result) {
-                        if (result.success == true) {
-                            $("div.sessions_modal").modal("hide");
-                            toastr.success(result.msg);
-                            sessions_table.ajax.reload();
-                        } else {
-                            toastr.error(result.msg);
-                        }
-                    },
-                });
-            });
-        });
-    });
-
-    $(document).on("click", "button.delete_session_button", function () {
-        swal({
-            title: LANG.sure,
-            text: LANG.confirm_delete_session,
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                var href = $(this).data("href");
-                var data = $(this).serialize();
-
-                $.ajax({
-                    method: "DELETE",
-                    url: href,
-                    dataType: "json",
-                    data: data,
-                    success: function (result) {
-                        if (result.success == true) {
-                            toastr.success(result.msg);
-                            sessions_table.ajax.reload();
-                        } else {
-                            toastr.error(result.msg);
-                        }
-                    },
-                });
-            }
-        });
-    });
 
     var active = false;
     $(document).on("mousedown", ".drag-select", function (ev) {

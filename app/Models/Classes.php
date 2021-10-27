@@ -32,23 +32,21 @@ class Classes extends Model
      *
      * @return array
      */
-    public static function forDropdown($system_settings_id,$show_none = false ,$check_permission = false)
+    public static function forDropdown($system_settings_id,$show_none = false ,$campus_id=null)
     {
         $query=Classes::where('system_settings_id', $system_settings_id);
 
-        if ($check_permission) {
-            $permitted_locations = auth()->user()->permitted_locations();
-            if ($permitted_locations != 'all') {
-                $query->whereIn('id', $permitted_locations);
-            }
+        if($campus_id){
+            $query->where('campus_id',$campus_id);
         }
-        if ($show_none) {
-            $query->prepend(__('global_lang.none'), '');
-        }
-       
+
         $result = $query->get();
 
         $classes = $result->pluck('title', 'id');
+        if ($show_none) {
+            $classes->prepend(__('lang.none'), '');
+        }
+       
         return $classes;
     }
 }

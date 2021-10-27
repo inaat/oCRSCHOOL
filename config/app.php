@@ -169,6 +169,15 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Nwidart\Menus\MenusServiceProvider::class,
+        // niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+        // Barryvdh\Snappy\ServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
+
+
+
+      
+
+
 
 
 
@@ -241,6 +250,17 @@ return [
         'Carbon' => 'Carbon\Carbon',
         'Datatables' => Yajra\DataTables\Facades\DataTables::class,
         'Menu' => Nwidart\Menus\Facades\Menu::class,
+        // 'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
+        // 'PDFS' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        // 'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+
+        'WPDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+
+        
+
+
+
 
 
     ],

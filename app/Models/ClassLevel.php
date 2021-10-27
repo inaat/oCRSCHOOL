@@ -39,7 +39,7 @@ class ClassLevel extends Model
                     ->pluck('title', 'id');
 
         if ($show_none) {
-            $classLevel->prepend(__('global_lang.none'), '');
+            $classLevel->prepend(__('lang.none'), '');
         }
 
         return $classLevel;

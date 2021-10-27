@@ -4,30 +4,55 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Region;
+use App\Models\City;
+use App\Models\District;
+use App\Models\Province;
 use Yajra\DataTables\Facades\DataTables;
+use App\Utils\Util;
+use DB;
 class RegionController extends Controller
 {
+    protected $commonUtil;
+
+    /**
+     * Constructor
+     *
+     * @param Util $commonUtil
+     * @return void
+     */
+    public function __construct(Util $commonUtil)
+    {
+        $this->commonUtil = $commonUtil;
+    }
     
     public function index()
     {
         if (request()->ajax()) {
-            $regions = Region::select(['city', 'village', 'id']);
+            $system_settings_id = session()->get('user.system_settings_id');
+
+            $regions = Region::where('regions.system_settings_id', $system_settings_id)
+            ->leftjoin('districts as d', 'regions.district_id', '=', 'd.id')
+            ->leftjoin('currencies as c', 'regions.country_id', '=', 'c.id')
+            ->leftjoin('provinces as p', 'regions.province_id', '=', 'p.id')
+            ->leftjoin('cities as ct', 'regions.city_id', '=', 'ct.id')
+            ->select(['regions.id', 'regions.name','d.name as district_name','c.country as country_name','p.name as province_name','ct.name as city_name']);
+
             return Datatables::of($regions)
                 ->addColumn(
                     'action',
                     '<div class="d-flex order-actions">
 
-                    <button data-href="{{action(\'RegionController@edit\', [$id])}}" class="btn btn-sm btn-primary edit_region_button"><i class="bx bxs-edit f-16 mr-15 text-white"></i> @lang("global_lang.edit")</button>
+                    <button data-href="{{action(\'RegionController@edit\', [$id])}}" class="btn btn-sm btn-primary edit_region_button"><i class="bx bxs-edit f-16 mr-15 text-white"></i> @lang("lang.edit")</button>
                         &nbsp;
 
 
-                        <button data-href="{{action(\'RegionController@destroy\', [$id])}}" class="btn btn-sm btn-danger delete_region_button"><i class="bx bxs-trash f-16 text-white"></i> @lang("global_lang.delete")</button>
+                        <button data-href="{{action(\'RegionController@destroy\', [$id])}}" class="btn btn-sm btn-danger delete_region_button"><i class="bx bxs-trash f-16 text-white"></i> @lang("lang.delete")</button>
 
                     </div>'
                 )
 
                 ->removeColumn('id')
-                ->rawColumns(['action','village','city'])
+                ->rawColumns(['action', 'name','district_name','country_name','province_name','city_name'])
                 ->make(true);
         }
 
@@ -40,8 +65,13 @@ class RegionController extends Controller
      */
     public function create()
     {
-        return view('admin\global_configuration\regions.create');
-    }
+
+        if (!auth()->user()->can('discount.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $system_settings_id = session()->get('user.system_settings_id');
+        $countries=$this->commonUtil->allCountries();
+        return view('admin\global_configuration\regions.create')->with(compact('countries'));    }
 
     /**
      * Store a newly created resource in storage.
@@ -52,7 +82,7 @@ class RegionController extends Controller
     public function store(Request $request)
     {
         try {
-            $input = $request->only(['city','village']);
+            $input = $request->only(['name','country_id','province_id','district_id','city_id']);
             $system_settings_id = $request->session()->get('user.system_settings_id');
             $user_id = $request->session()->get('user.id');
             $input['system_settings_id'] = $system_settings_id;
@@ -60,13 +90,13 @@ class RegionController extends Controller
             $region = Region::create($input);
             $output = ['success' => true,
                             'data' => $region,
-                            'msg' => __("region.added_success")
+                            'msg' => __("lang.added_success")
                         ];
         } catch (\Exception $e) {
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
             $output = ['success' => false,
-                            'msg' => __("global_lang.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
         }
 
@@ -92,11 +122,14 @@ class RegionController extends Controller
      */
     public function edit($id)
     {
-        if (request()->ajax()) {
-            $region = Region::find($id);
-            return view('admin\global_configuration\region.edit')
-                ->with(compact('region'));
-        }
+
+            $system_settings_id = session()->get('user.system_settings_id');
+            $countries=$this->commonUtil->allCountries();
+            $region = Region::where('system_settings_id', $system_settings_id)->find($id);
+            $provinces = Province::forDropdown($system_settings_id, false, $region->country_id);
+            $districts = District::forDropdown($system_settings_id, false, $region->province_id);
+            $cities = City::forDropdown($system_settings_id, false, $region->city_id);
+            return view('admin\global_configuration\regions.edit')->with(compact('countries', 'districts', 'provinces','cities','region'));
     }
 
     /**
@@ -108,28 +141,25 @@ class RegionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (request()->ajax()) {
             try {
-                $input = $request->only(['cat_name','description']);
-
+                $input = $request->only(['name','country_id','province_id','district_id','city_id']);
                 $region = Region::findOrFail($id);
-                $region->cat_name = $input['cat_name'];
-                $region->description= $input['description'];
+                $region->fill($input);
                 $region->save();
 
                 $output = ['success' => true,
-                            'msg' => __("region.updated_success")
+                            'msg' => __("lang.updated_success")
                             ];
             } catch (\Exception $e) {
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
                 $output = ['success' => false,
-                            'msg' => __("global_lang.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
             }
 
             return $output;
-        }
+        
     }
 
     /**
@@ -146,13 +176,13 @@ class RegionController extends Controller
                 $region->delete();
 
                 $output = ['success' => true,
-                            'msg' => __("region.deleted_success")
+                            'msg' => __("lang.deleted_success")
                             ];
             } catch (\Exception $e) {
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
 
                 $output = ['success' => false,
-                            'msg' => __("global_lang.something_went_wrong")
+                            'msg' => __("lang.something_went_wrong")
                         ];
             }
 

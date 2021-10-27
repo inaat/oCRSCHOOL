@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use DB;
 
 
 class Session extends Model
@@ -33,16 +34,18 @@ class Session extends Model
      *
      * @return array
      */
-    public static function forDropdown($show_none = false)
+    public static function forDropdown($show_none = false ,$passed=false)
     {
 
-        $session=Session::orderBy('title', 'asc')
-                    ->pluck('title', 'id');
-
-        if ($show_none) {
-            $session->prepend(__('global_lang.none'), '');
+        $query = Session::select('id', DB::raw("concat(title, ' - ' '(', status, ') ') as info"))->orderBy('status', 'asc');
+        if ($passed) {
+            $query->where('status','!=','PASSED');
         }
-
-        return $session;
+      
+        $sessions=$query->pluck('info', 'id');
+        if ($show_none) {
+            $sessions->prepend(__('lang.none'), '');
+        }
+        return $sessions;
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Utils;
 
 use App\User;
+use App\Models\ReferenceCount;
 use App\Models\Currency;
+use App\Models\SystemSetting;
 
 use DB;
 use GuzzleHttp\Client;
@@ -15,30 +17,30 @@ class Util
     public function getDays()
     {
       return [
-            'sunday' => __('global_lang.sunday'),
-            'monday' => __('global_lang.monday'),
-            'tuesday' => __('global_lang.tuesday'),
-            'wednesday' => __('global_lang.wednesday'),
-            'thursday' => __('global_lang.thursday'),
-            'friday' => __('global_lang.friday'),
-            'saturday' => __('global_lang.saturday')
+            'sunday' => __('lang.sunday'),
+            'monday' => __('lang.monday'),
+            'tuesday' => __('lang.tuesday'),
+            'wednesday' => __('lang.wednesday'),
+            'thursday' => __('lang.thursday'),
+            'friday' => __('lang.friday'),
+            'saturday' => __('lang.saturday')
         ];
     }
     public function getMonthList()
     {
         $months = array(
-            1  => __('global_lang.january'),
-            2  => __('global_lang.february'),
-            3  => __('global_lang.march'),
-            4  => __('global_lang.april'),
-            5  => __('global_lang.may'),
-            6  => __('global_lang.june'),
-            7  => __('global_lang.july'),
-            8  => __('global_lang.august'),
-            9  => __('global_lang.september'),
-            10 => __('global_lang.october'),
-            11 => __('global_lang.november'),
-            12 => __('global_lang.december'));
+            1  => __('lang.january'),
+            2  => __('lang.february'),
+            3  => __('lang.march'),
+            4  => __('lang.april'),
+            5  => __('lang.may'),
+            6  => __('lang.june'),
+            7  => __('lang.july'),
+            8  => __('lang.august'),
+            9  => __('lang.september'),
+            10 => __('lang.october'),
+            11 => __('lang.november'),
+            12 => __('lang.december'));
         return $months;
     }
        /**
@@ -53,6 +55,18 @@ class Util
                 ->pluck('info', 'id');
 
         return $currencies;
+    }
+     /**
+     * Gives a list of all countries
+     *
+     * @return array
+     */
+    public function allCountries()
+    {
+        $countries = Currency::orderBy('country')
+                ->pluck('country', 'id');
+
+        return $countries;
     }
      /**
      * Gives a list of all timezone
@@ -178,5 +192,122 @@ class Util
         }
         
         return !empty($date) ? \Carbon::createFromTimestamp(strtotime($date))->format($format) : null;
+    }
+
+
+
+    /**
+     * Increments reference count for a given type and given business
+     * and gives the updated reference count
+     *
+     * @param string $type
+     * @param int $business_id
+     *
+     * @return int
+     */
+    public function setAndGetReferenceCount($type, $before = false, $after = false)
+    {
+       
+        $system_settings_id = session()->get('user.system_settings_id');
+
+        $ref = ReferenceCount::where('ref_type', $type)
+                          ->where('system_settings_id', $system_settings_id)
+                          ->first();
+        if (!empty($ref)) {
+            if($before){
+                $ref->ref_count += 1;
+                return $ref->ref_count;
+            }
+            if($after){
+                $ref->ref_count += 1;
+                $ref->save();
+                return $ref->ref_count;
+            }
+            
+        } else {
+            $new_ref = ReferenceCount::create([
+                'ref_type' => $type,
+                'system_settings_id' => $system_settings_id,
+                'system_settings_id' => $system_settings_id,
+                'ref_count' => 1
+            ]);
+            return $new_ref->ref_count;
+        }
+    }
+     /**
+     * Increments reference count for a given type and given business
+     * and gives the updated reference count
+     *
+     * @param string $type
+     * @param int $business_id
+     *
+     * @return int
+     */
+    public function setAndGetRollNoCount($type, $before = false, $after = false ,$session_id)
+    {
+       
+        $system_settings_id = session()->get('user.system_settings_id');
+        $ref = ReferenceCount::where('ref_type', $type)
+                          ->where('system_settings_id', $system_settings_id)
+                         ->where('session_close','=','open')
+                          ->where('session_id','=',$session_id)
+                          ->first();
+        //dd($ref);
+        if (!empty($ref)) {
+
+            if($before){
+                $ref->ref_count += 1;
+                return $ref->ref_count;
+            }
+            if($after){
+                $ref->ref_count += 1;
+                $ref->save();
+                return $ref->ref_count;
+            }
+            
+        }
+    }
+
+     /**
+     * Generates reference number
+     *
+     * @param string $type
+     * @param int $business_id
+     *
+     * @return int
+     */
+    public function generateReferenceNumber($type, $ref_count, $system_settings_id = null, $default_prefix = null)
+    {
+        $prefix = '';
+        $system_settings_id = session()->get('user.system_settings_id');
+
+        if (session()->has('system_details') && !empty(request()->session()->get('system_details.ref_no_prefixes')[$type])) {
+            $prefix = request()->session()->get('system_details.ref_no_prefixes')[$type];
+        }
+        if (!empty($system_settings_id )) {
+            $system_details = SystemSetting::find($system_settings_id);
+            $prefixes = $system_details->ref_no_prefixes;
+            $prefix = !empty($prefixes[$type]) ? $prefixes[$type] : '';
+        }
+
+        if (!empty($default_prefix)) {
+            $prefix = $default_prefix;
+        }
+
+        $ref_digits =  str_pad($ref_count, 4, 0, STR_PAD_LEFT);
+        if($type == 'roll_no'){
+            $ref_number = $prefix .'-'. $ref_digits;
+
+        }else{
+            if (!in_array($type, ['admission_no'])) {
+                $ref_year = \Carbon::now()->year;
+                $ref_number = $prefix .'-'. $ref_year . '-' . $ref_digits;
+            } else {
+                $ref_number = $prefix . $ref_digits;
+            }
+        }
+        
+
+        return $ref_number;
     }
 }
