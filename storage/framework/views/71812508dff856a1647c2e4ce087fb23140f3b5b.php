@@ -1,1 +1,0 @@
-;;;<?php /**PATH C:\scsserver\htdocs\oCRSCHOOL\resources\views/pdf/receipt.blade.php ENDPATH**/ ?>

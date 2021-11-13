@@ -21,6 +21,9 @@ class AddCampusIdAccountsTable extends Migration
         Schema::table('accounts', function (Blueprint $table) {
             $table->integer('campus_id')->unsigned()->nullable()->after('system_settings_id');
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
+            $table->boolean('default_campus_account')->default(0)->after('campus_id');
+
+
         });
 }
 

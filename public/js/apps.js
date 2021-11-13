@@ -362,7 +362,11 @@ $(document).on("shown.bs.modal", ".view_modal", function (e) {
 $(document).on("show.bs.modal", function () {
     __currency_convert_recursively($(this));
 });
-
+$('#datetimepicker').datetimepicker({
+    format: moment_date_format + ' ' + moment_time_format,
+    ignoreReadonly: true,
+});
+    
 $(document).on("shown.bs.modal", ".view_modal", function (e) {
     if ($(this).find("#email_body").length) {
         tinymce.init({
@@ -387,6 +391,75 @@ $(window).scroll(function () {
     } else {
         $(".scrolltop").stop(true, true).fadeOut();
     }
+});
+$(document).on('change', '.payment_types_dropdown', function () {
+    var payment_type = $(this).val();
+    var to_show = null;
+
+    $(this)
+        .closest('.payment_row')
+        .find('.payment_details_div')
+        .each(function () {
+            if ($(this).attr('data-type') == payment_type) {
+                to_show = $(this);
+            } else {
+                if (!$(this).hasClass('d-none')) {
+                    $(this).addClass('d-none');
+                }
+            }
+        });
+
+    if (to_show && to_show.hasClass('d-none')) {
+        to_show.removeClass('d-none');
+        to_show.find('input').filter(':visible:first').focus();
+    }
+});
+
+$(document).on('change', '.payment_types_dropdown', function(e) {
+    var payment_type = $('#transaction_payment_add_form .payment_types_dropdown').val();
+    account_dropdown = $('#transaction_payment_add_form #account_id');
+    if (payment_type == 'advance') {
+        if (account_dropdown) {
+            account_dropdown.prop('disabled', true);
+            account_dropdown.closest('.form-group').addClass('d-none');
+        }
+    } else {
+        if (account_dropdown) {
+            account_dropdown.prop('disabled', false); 
+            account_dropdown.closest('.form-group').removeClass('d-none');
+        }    
+    }
+});
+$(document).on('click', 'a.pay_fee_due', function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: $(this).attr('href'),
+        dataType: 'html',
+        success: function (result) {
+            $('.pay_fee_due_modal').html(result).modal('show');
+            __currency_convert_recursively($('.pay_fee_due_modal'));
+            $('#datetimepicker').datetimepicker({
+                format: moment_date_format + ' ' + moment_time_format,
+                
+            });
+            $('.pay_fee_due_modal').find('form#pay_student_due_form').validate();
+        },
+    });
+});
+$(document).on('click', '.view_payment_modal', function(e) {
+    e.preventDefault();
+    var container = $('.payment_modal');
+
+    $.ajax({
+        url: $(this).attr('href'),
+        dataType: 'html',
+        success: function(result) {
+            $(container)
+                .html(result)
+                .modal('show');
+            __currency_convert_recursively(container);
+        },
+    });
 });
 $(function () {
     $(".scroll").click(function () {

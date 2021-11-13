@@ -524,9 +524,10 @@ function __is_online() {
 }
 
 function __disable_submit_button(element) {
-    if (__is_online()) {
         element.attr('disable', true);
-    }
+}
+function __enable_submit_button(element) {
+        element.attr('disable', false);
 }
 
 //Add dropdown for Provinces 
@@ -578,6 +579,67 @@ function __get_cities() {
         , success: function(result) {
             if (result) {
                 $('#city_ids').html(result);
+
+            }
+        }
+    , });
+}
+//Add dropdown for Regions
+function __get_regions() {
+    var city_id = $('#city_ids').val();
+    $.ajax({
+        method: 'GET'
+        , url: '/get_regions'
+        , dataType: 'html'
+        , data: {
+            city_id: city_id
+        }
+        , success: function(result) {
+            if (result) {
+                $('#region_ids').html(result);
+
+            }
+        }
+    , });
+}
+
+function __get_campus_class(doc) {
+    //Add dropdown for sub units if sub unit field is visible
+    var campus_id = doc.closest(".row")
+        .find(".global-campuses").val();
+    $.ajax({
+        method: 'GET'
+        , url: '/classes/get_campus_classes'
+        , dataType: 'html'
+        , data: {
+            campus_id: campus_id
+        }
+        , success: function(result) {
+            if (result) {
+                doc.closest(".row")
+                    .find(".global-classes").html(result);
+
+            }
+        }
+    , });
+}
+
+
+function __get_class_Section(doc) {
+    //Add dropdown for sub units if sub unit field is visible
+    var class_id = doc.closest(".row")
+        .find('.global-classes').val();
+    $.ajax({
+        method: 'GET'
+        , url: '/classes/get_class_section'
+        , dataType: 'html'
+        , data: {
+            class_id: class_id
+        }
+        , success: function(result) {
+            if (result) {
+                doc.closest(".row")
+                    .find('.global-class_sections').html(result);
 
             }
         }

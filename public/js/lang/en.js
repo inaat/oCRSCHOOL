@@ -1,4 +1,5 @@
 LANG = {
+    'fee_heads':'Please Select At Least One Fee Head',
     'required': 'Required',
     'sure': 'Are you sure ?',
     'remove_product': 'Are you sure to remove the product?',

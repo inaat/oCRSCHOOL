@@ -57,13 +57,13 @@
             </div>
             <div class="col-md-4 p-3">
             @php
-                    $addmission = '';
-                    if(!empty($general_settings->ref_no_prefixes['addmission'])){
-                        $addmission = $general_settings->ref_no_prefixes['addmission'];
+                    $admission = '';
+                    if(!empty($general_settings->ref_no_prefixes['admission'])){
+                        $admission = $general_settings->ref_no_prefixes['admission'];
                     }
                 @endphp
-                {!! Form::label('ref_no_prefixes[addmission]', __('lang_v1.addmission') . ':') !!}
-                {!! Form::text('ref_no_prefixes[addmission]', $addmission, ['class' => 'form-control']); !!}
+                {!! Form::label('ref_no_prefixes[admission]', __('lang_v1.admission') . ':') !!}
+                {!! Form::text('ref_no_prefixes[admission]', $admission, ['class' => 'form-control']); !!}
               
 
             </div>

@@ -51,10 +51,14 @@
             $.fn.dataTable.ext.errMode = 'throw';
         <?php endif; ?>
     });
-    
+        
     var financial_year = {
-        start: moment('<?php echo e(Session::get("financial_year.start"), false); ?>'),
-        end: moment('<?php echo e(Session::get("financial_year.end"), false); ?>'),
+        start: moment('2021-01-01'),
+        end: moment('2021-12-31'),
+    }
+    var admission_date_year = {
+        start: moment('2021-01-01'),
+        end: moment('2040-12-31'),
     }
     <?php if(file_exists(public_path('AdminLTE/plugins/select2/lang/' . session()->get('user.language', config('app.locale')) . '.js'))): ?>
     //Default setting for select2

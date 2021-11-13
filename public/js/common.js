@@ -362,6 +362,26 @@ var dateRangeSettings = {
     },
 };
 
+/// Admission
+ranges[LANG.this_financial_year] = [admission_date_year.start, admission_date_year.end];
+ranges[LANG.last_financial_year] = [
+    moment(admission_date_year.start._i).subtract(1, 'year'), 
+    moment(admission_date_year.end._i).subtract(1, 'year')
+];
+
+var dateRangeSettingsForAdmissionDate = {
+    ranges: ranges,
+    startDate: admission_date_year.start,
+    endDate: admission_date_year.end,
+    locale: {
+        cancelLabel: LANG.clear,
+        applyLabel: LANG.apply,
+        customRangeLabel: LANG.custom_range,
+        format: moment_date_format,
+        toLabel: '~',
+    },
+};
+
 //Check for number string in input field, if data-decimal is 0 then don't allow decimal symbol
 $(document).on('keypress', 'input.input_number', function(event) {
     var is_decimal = $(this).data('decimal');
@@ -603,3 +623,17 @@ $(document).on('change', '#provinces_ids', function() {
 $(document).on('change', '#district_ids', function() {
     __get_cities();
 }); 
+$(document).on('change', '#city_ids', function() {
+    __get_regions();
+}); 
+
+
+$(document).on('change', '.global-campuses', function() {
+    var doc = $(this);
+    __get_campus_class(doc);
+});
+
+$(document).on('change', '.global-classes', function() {
+    var doc = $(this);
+    __get_class_Section(doc);
+});

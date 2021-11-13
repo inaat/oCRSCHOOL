@@ -20,10 +20,6 @@ class AddSystemSettingSmsSettingsEmailSettingsTable extends Migration
             $table->text('common_settings')->nullable()->after('ref_no_prefixes');
             $table->char('theme_color', 20)->nullable()->after('ref_no_prefixes');
             $table->boolean('enable_tooltip')->default(1)->after('ref_no_prefixes');
-
-
-
-
         });
     }
 

@@ -189,4 +189,29 @@ class RegionController extends Controller
             return $output;
         }
     }
+
+     /**
+     * Gets the Cities .
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $district_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getRegions(Request $request)
+    {
+        if (!empty($request->input('city_id'))) {
+            $city_id = $request->input('city_id');
+            $system_settings_id = session()->get('user.system_settings_id');
+            $regions = Region::forDropdown($system_settings_id, false, $city_id);
+            $html = '<option value="">' . __('lang.please_select') . '</option>';
+            //$html = '';
+            if (!empty($regions)) {
+                foreach ($regions as $id => $name) {
+                    $html .= '<option value="' . $id .'">' . $name. '</option>';
+                }
+            }
+
+            return $html;
+        }
+    }
 }

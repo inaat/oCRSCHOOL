@@ -1,23 +1,273 @@
  @extends("admin_layouts.app")
-@section('wrapper')
-<div class="page-wrapper">
-    <div class="page-content">
-<div style="text-align:center">
-<h4>Pdf viewer testing</h4>
-   <h1>PDF Example with iframe</h1>
-    <iframe src="http://127.0.0.1:8000/uploads/pdf/{{ $pdf_name }}" frameborder="0" scrolling="no"width="100%" height="500px">
-    </iframe>
+ @section('wrapper')
+     <div class="page-wrapper">
+         <div class="page-content">
+             <!--breadcrumb-->
+             <div class="card">
+                 <div class="card-body">
+                     <div class="accordion" id="student-fillter">
+                         <div class="accordion-item">
+                             <h2 class="accordion-header" id="student-fillter">
+                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                     data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                     <h5 class="card-title">Students Fillters</h5>
+                                 </button>
+                             </h2>
+                             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="student-fillter"
+                                 data-bs-parent="#student-fillter" style="">
+                                 <div class="accordion-body">
+                                     <div class="row">
+                                         <div class="col-md-4 p-1">
+                                             {!! Form::label('campus.student', __('campus.campuses') . ':*') !!}
+                                             {!! Form::select('campus_id', $campuses, null, ['class' => 'form-select select2 global-campuses', 'required', 'id'=>'students_list_filter_campus_id','style' => 'width:100%', 'required', 'placeholder' => __('messages.all')]) !!}
+                                         </div>
+                                         <div class="col-md-4 p-1">
+                                             {!! Form::label('class.classes', __('class.classes') . ':*') !!}
+                                             {!! Form::select('adm_class_id', [], null, ['class' => 'form-select select2 global-classes', 'required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.all'), 'id' => 'students_list_filter_class_id']) !!}
+                                         </div>
+                                         <div class="col-md-4 p-1">
+                                             {!! Form::label('class_section.sections', __('class_section.sections') . ':*') !!}
+                                             {!! Form::select('adm_class_section_id', [], null, ['class' => 'form-select select2 global-class_sections', 'id' => 'students_list_filter_class_section_id', 'required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.all')]) !!}
+                                         </div>
+                                         <div class="clearfix"></div>
+                                         <div class="col-md-3 p-1">
+                                             {!! Form::label('admission_no', __('lang.admission_no'), ['classs' => 'form-lable']) !!}
+                                             {!! Form::text('admission_no', null, ['class' => 'form-control', 'id'=>'students_list_filter_admission_no','placeholder' => __('lang.admission_no')]) !!}
+                                         </div>
+                                         <div class="col-md-3 p-1">
+                                             {!! Form::label('roll_no', __('lang.roll_no')) !!}
+                                             {!! Form::text('roll_no', null, ['class' => 'form-control', 'placeholder' => __('lang.roll_no'), 'id' => 'students_list_filter_roll_no']) !!}
+                                         </div>
+                                         <div class="col-md-3 p-1">
+                                             {!! Form::label('lang.admission_date', __('lang.admission_date') . ':*') !!}
+                                             <div class="input-group flex-nowrap"> <span class="input-group-text"
+                                                     id="addon-wrapping"><i class="fa fa-calendar"></i></span>
+                                                 {!! Form::text('student_list_filter_date_range', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'id' =>'student_list_filter_date_range','class' => 'form-control', 'readonly']) !!}
+
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+
+
+
+
+
+               <div class="card">
+            <div class="card-body">
+                            <h5 class="card-title text-primary">@lang('lang.student_list')</h5>
+
+                <div class="d-lg-flex align-items-center mb-4 gap-3">
+                    <div class="ms-auto"><a class="btn btn-primary radius-30 mt-2 mt-lg-0" href="{{ action('StudentController@create') }}">
+                            <i class="bx bxs-plus-square"></i>@lang('lang.add_new_admission')</a></div>
+                </div>
+
+
+                <hr>
+
+                <div class="table-responsive">
+                    <table class="table mb-0" width="100%" id="students_table">
+                        <thead class="table-light" width="100%">
+                            <tr>
+                                {{-- <th>#</th> --}}
+                                <th>@lang('lang.action')</th>
+                                <th>@lang('lang.student_name')</th>
+                                <th>@lang('lang.father_name')</th>
+                                <th>@lang('lang.status')</th>
+                                <th>@lang('lang.roll_no')</th>
+                                <th>@lang('lang.admission_no')</th>
+                                <th>@lang('lang.admission_date')</th>
+                                <th>@lang('campus.campus_name')</th>
+                                <th>@lang('lang.admission_class')</th>
+                                <th>@lang('lang.current_class')</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+         </div>
+     </div>
+     <div class="modal fade admission_fee_modal contains_select2" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
   </div>
-    </div>
-</div>
-@endsection
+     <div class="modal fade pay_fee_due_modal contains_select2" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+  </div>
+ @endsection
 
-@section('javascript')
+ @section('javascript')
 
-<script type="text/javascript">
+     <script type="text/javascript">
+  $(document).ready(function() {
+      //If change in amount amount update amount including tax and line total
+            {{-- $('table#admisssion-table tbody').on('keyup', 'input.amount', function () {
+              alert(5)
+
+            
+            }); --}}
+         $('.admission_fee_modal > table#admisssion-table tbody').on('keyup', 'input.amount',  function() {
+             alert(5);
+        });
+            $(document).on('change', 'input.amount,input.fee-head-check', function(){
+        var total = 0;
+        var table = $(this).closest('table');
+        table.find('tbody tr').each( function(){
+            if($(this).find('input.fee-head-check').is(':checked')){
+            var denomination = $(this).find('input.amount').val() ? parseInt($(this).find('input.amount').val()) : 0;
+            var subtotal = denomination;
+            total = total + subtotal;
+            }
+        });
+         table.find('span.final_total').text(__currency_trans_from_en(total, true));
+        $('input#final_total').val(total);
+        
+        });
+        //Date range as a button
+        $('#student_list_filter_date_range').daterangepicker(
+           dateRangeSettingsForAdmissionDate,
+            function (start, end) {
+                $('#student_list_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
+                students_table.ajax.reload();
+            }
+        );
+        $('#student_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
+            $('#student_list_filter_date_range').val('');
+            students_table.ajax.reload();
+        });
+        $(document).on('change', '#students_list_filter_campus_id,#students_list_filter_class_id,#students_list_filter_class_section_id',  function() {
+            students_table.ajax.reload();
+        });
+        $(document).on('keyup', '#students_list_filter_admission_no,#students_list_filter_roll_no',  function() {
+            students_table.ajax.reload();
+        });
+                //students_table
+        var students_table = $("#students_table").DataTable({
+            processing: true
+            , serverSide: true,
+               "ajax": {
+            "url": "/students",
+            "data": function ( d ) {
+                 if($('#student_list_filter_date_range').val()) {
+                    var start = $('#student_list_filter_date_range').data('daterangepicker').startDate.format('YYYY-MM-DD');
+                    var end = $('#student_list_filter_date_range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+                    d.start_date = start;
+                    d.end_date = end;
+                }
+                
+                if($('#students_list_filter_campus_id').length) {
+                    d.campus_id = $('#students_list_filter_campus_id').val();
+                }
+                if($('#students_list_filter_class_id').length) {
+                    d.class_id = $('#students_list_filter_class_id').val();
+                }
+                if($('#students_list_filter_class_section_id').length) {
+                    d.class_section_id = $('#students_list_filter_class_section_id').val();
+                }
+                if($('#students_list_filter_admission_no').length) {
+                    d.admission_no = $('#students_list_filter_admission_no').val();
+                }
+                if($('#students_list_filter_roll_no').length) {
+                    d.roll_no = $('#students_list_filter_roll_no').val();
+                }
+                d = __datatable_ajax_callback(d);
+            }
+        }
+
+            , columns: [{
+                    data: "action"
+                    , name: "action"
+                }
+               
+                , {
+                    data: "student_name"
+                    , name: "student_name"
+                }
+                , {
+                    data: "father_name"
+                    , name: "father_name"
+                }
+                 , {
+                    data: "status"
+                    , name: "status"
+                }
+                , {
+                    data: "roll_no"
+                    , name: "roll_no"
+                }
+                , {
+                    data: "admission_no"
+                    , name: "admission_no"
+                }
+                , {
+                    data: "admission_date"
+                    , name: "admission_date"
+                }
+                 , {
+                    data: "campus_name"
+                    , name: "campus_name"
+                }
+                , {
+                    data: "adm_class"
+                    , name: "adm_class"
+                }
+                , {
+                    data: "current_class"
+                    , name: "current_class"
+                }
+               
+            , ]
+        , });
+
+ $(document).on("click", ".admission_add_button", function () {
+        $("div.admission_fee_modal").load($(this).data("href"), function () {
+            $(this).modal("show");
+             
+            $("form#admission_fee_add_form").submit(function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var data = form.serialize();
+                var boxes = $('.fee-head-check');
+                    if (boxes.length > 0) {
+                        if ($('.fee-head-check:checked').length < 1) {
+                            toastr.error(LANG.fee_heads);
+                            boxes[0].focus();
+                                return false;
+                            }
+                    }
+                $.ajax({
+                    method: "POST",
+                    url: $(this).attr("action"),
+                    dataType: "json",
+                    data: data,
+                    beforeSend: function (xhr) {
+                        __disable_submit_button(
+                            form.find('button[type="submit"]')
+                        );
+                    },
+                    success: function (result) {
+                        if (result.success == true) {
+                            $("div.admission_fee_modal").modal("d-none");
+                            toastr.success(result.msg);
+                           students_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            });
+        });
+    });
+        
 
 
-</script>
-@endsection 
 
+    });
 
+     </script>
+ @endsection

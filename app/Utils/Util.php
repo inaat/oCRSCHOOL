@@ -6,6 +6,9 @@ use App\User;
 use App\Models\ReferenceCount;
 use App\Models\Currency;
 use App\Models\SystemSetting;
+use App\Models\FeeHead;
+use App\Models\Session;
+use App\Models\Account;
 
 use DB;
 use GuzzleHttp\Client;
@@ -91,7 +94,7 @@ class Util
      *
      * @return string
      */
-    public function uploadFile($request, $file_name, $dir_name, $file_type = 'document')
+    public function uploadFile($request, $file_name, $dir_name, $file_type = 'document',$roll_file_name=null)
     {
         //If app environment is demo return null
         if (config('app.env') == 'demo') {
@@ -115,10 +118,17 @@ class Util
             }
             
             if ($request->$file_name->getSize() <= config('constants.document_size_limit')) {
+                if(!empty($roll_file_name)){
+                    $new_file_name = $roll_file_name.'.'. $request->$file_name->getClientOriginalExtension();
+                    if ($request->$file_name->storeAs($dir_name, $new_file_name)) {
+                        $uploaded_file_name = $new_file_name;
+                    }
+                }else{
                 $new_file_name = time() . '_' . $request->$file_name->getClientOriginalName();
                 if ($request->$file_name->storeAs($dir_name, $new_file_name)) {
                     $uploaded_file_name = $new_file_name;
                 }
+            }
             }
         }
 
@@ -299,15 +309,149 @@ class Util
             $ref_number = $prefix .'-'. $ref_digits;
 
         }else{
-            if (!in_array($type, ['admission_no'])) {
+            if (in_array($type, ['admission'])) {
                 $ref_year = \Carbon::now()->year;
                 $ref_number = $prefix .'-'. $ref_year . '-' . $ref_digits;
             } else {
-                $ref_number = $prefix . $ref_digits;
+                $ref_year = \Carbon::now()->year;
+                $ref_number = $ref_year .'-'. $ref_digits;
             }
         }
         
 
         return $ref_number;
     }
+
+
+     /**
+     * This function formats a number and returns them in specified format
+     *
+     * @param int $input_number
+     * @param boolean $add_symbol = false
+     * @param array $systems_details = null
+     * @param boolean $is_quantity = false; If number represents quantity
+     *
+     * @return string
+     */
+    public function num_f($input_number, $add_symbol = false, $systems_details = null, $is_quantity = false)
+    {
+        $thousand_separator = !empty($systems_details) ? $systems_details->thousand_separator : session('currency')['thousand_separator'];
+        $decimal_separator = !empty($systems_details) ? $systems_details->decimal_separator : session('currency')['decimal_separator'];
+
+        $currency_precision = config('constants.currency_precision', 2);
+
+        if ($is_quantity) {
+            $currency_precision = config('constants.quantity_precision', 2);
+        }
+
+        $formatted = number_format($input_number, $currency_precision, $decimal_separator, $thousand_separator);
+
+        if ($add_symbol) {
+            $currency_symbol_placement = !empty($systems_details) ? $systems_details->currency_symbol_placement : session('systems_details.currency_symbol_placement');
+            $symbol = !empty($systems_details) ? $systems_details->currency_symbol : session('currency')['symbol'];
+
+            if ($currency_symbol_placement == 'after') {
+                $formatted = $formatted . ' ' . $symbol;
+            } else {
+                $formatted = $symbol . ' ' . $formatted;
+            }
+        }
+
+        return $formatted;
+    }
+
+    public function getFeeHeads($campus_id,$class_id)
+    {
+            $query=FeeHead::whereNotIn('description',['Admission','Prospectus','Security','Tuition','Transport']);
+       
+            // $query=FeeHead::where('campus_id', $campus_id)
+            // ->where('class_id', $class_id)->whereNotIn('description',['Admission','Prospectus','Security','Tuition','Transport']);
+       
+            $fee_heads = $query->get();
+            return $fee_heads;
+ 
+        
+    }
+    public function getAdmissionFeeHeads($campus_id,$class_id )
+    {
+            $query=FeeHead::whereIn('description',['Admission','Prospectus','Security']);
+           
+            // $query=FeeHead::where('campus_id', $campus_id)
+            // ->where('class_id', $class_id)->whereIn('description',['Admission','Prospectus','Security']);
+           
+            $fee_heads = $query->get();
+            return $fee_heads;
+ 
+        
+    }
+    public function getActiveSession()
+    {
+        $session = Session::where('status', 'ACTIVE')->first();
+        return $session->id;
+    }
+/**
+     * Defines available Payment Types
+     *
+     * @return array
+     */
+    public function payment_types($location = null, $show_advance = false, $business_id = null)
+    {
+        // if(!empty($location)){
+        //     $location = is_object($location) ? $location : BusinessLocation::find($location);
+
+        //     //Get custom label from business settings
+        //     $custom_labels = Business::find($location->business_id)->custom_labels;
+        //     $custom_labels = json_decode($custom_labels, true);
+        // } else {
+        //     if (!empty($business_id)) {
+        //         $custom_labels = Business::find($business_id)->custom_labels;
+        //         $custom_labels = json_decode($custom_labels, true);
+        //     } else {
+        //         $custom_labels = [];
+        //     }
+        // }
+        
+        $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'cheque' => __('lang_v1.cheque'), 'bank_transfer' => __('lang_v1.bank_transfer'), 'other' => __('lang_v1.other')];
+
+        // $payment_types['custom_pay_1'] = !empty($custom_labels['payments']['custom_pay_1']) ? $custom_labels['payments']['custom_pay_1'] : __('lang_v1.custom_payment', ['number' => 1]);
+        // $payment_types['custom_pay_2'] = !empty($custom_labels['payments']['custom_pay_2']) ? $custom_labels['payments']['custom_pay_2'] : __('lang_v1.custom_payment', ['number' => 2]);
+        // $payment_types['custom_pay_3'] = !empty($custom_labels['payments']['custom_pay_3']) ? $custom_labels['payments']['custom_pay_3'] : __('lang_v1.custom_payment', ['number' => 3]);
+        // $payment_types['custom_pay_4'] = !empty($custom_labels['payments']['custom_pay_4']) ? $custom_labels['payments']['custom_pay_4'] : __('lang_v1.custom_payment', ['number' => 4]);
+        // $payment_types['custom_pay_5'] = !empty($custom_labels['payments']['custom_pay_5']) ? $custom_labels['payments']['custom_pay_5'] : __('lang_v1.custom_payment', ['number' => 5]);
+        // $payment_types['custom_pay_6'] = !empty($custom_labels['payments']['custom_pay_6']) ? $custom_labels['payments']['custom_pay_6'] : __('lang_v1.custom_payment', ['number' => 6]);
+        // $payment_types['custom_pay_7'] = !empty($custom_labels['payments']['custom_pay_7']) ? $custom_labels['payments']['custom_pay_7'] : __('lang_v1.custom_payment', ['number' => 7]);
+
+        // //Unset payment types if not enabled in business location
+        // if (!empty($location)) {
+        //     $location_account_settings = !empty($location->default_payment_accounts) ? json_decode($location->default_payment_accounts, true) : [];
+        //     $enabled_accounts = [];
+        //     foreach ($location_account_settings as $key => $value) {
+        //         if (!empty($value['is_enabled'])) {
+        //             $enabled_accounts[] = $key;
+        //         }
+        //     }
+        //     foreach ($payment_types as $key => $value) {
+        //         if (!in_array($key, $enabled_accounts)) {
+        //             unset($payment_types[$key]);
+        //         }
+        //     }
+        // }
+
+        // if ($show_advance) {
+        //   $payment_types = ['advance' => __('lang_v1.advance')] + $payment_types;
+        // }
+
+        return $payment_types;
+    }
+    public function accountsDropdown($system_settings_id,$campus_id, $prepend_none = false, $closed = false, $default_campus_account=false, $show_balance = false)
+    {
+        $dropdown = [];
+
+        // if ($this->isModuleEnabled('account')) {
+            $dropdown = Account::forDropdown($system_settings_id, $campus_id,$prepend_none, $closed,$default_campus_account, $show_balance);
+        //}
+
+        return $dropdown;
+    }
+
 }

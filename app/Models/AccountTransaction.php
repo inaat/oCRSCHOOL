@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Models\FeeTransactionPayment;
 class AccountTransaction extends Model
 {
     use SoftDeletes;
@@ -39,17 +39,19 @@ class AccountTransaction extends Model
      * @return string
      */
     public static function getAccountTransactionType($tansaction_type)
+    
     {
+        
         $account_transaction_types = [
-            'sell' => 'credit',
+            'fee' => 'credit',
+            'opening_balance' => 'credit',
             'purchase' => 'debit',
             'expense' => 'debit',
             'purchase_return' => 'credit',
-            'sell_return' => 'debit',
+            'fee_adjustment' => 'debit',
             'payroll' => 'debit',
             'expense_refund' => 'credit'
         ];
-
         return $account_transaction_types[$tansaction_type];
     }
 
@@ -86,19 +88,33 @@ class AccountTransaction extends Model
      */
     public static function updateAccountTransaction($transaction_payment, $transaction_type)
     {
+
         if (!empty($transaction_payment->account_id)) {
             $account_transaction = AccountTransaction::where(
                 'transaction_payment_id',
                 $transaction_payment->id
-            )
-                    ->first();
-            if (!empty($account_transaction)) {
-                $account_transaction->amount = $transaction_payment->amount;
-                $account_transaction->account_id = $transaction_payment->account_id;
-                $account_transaction->save();
-                return $account_transaction;
+            )->first();
+            if (!empty($transaction_payment->parent_id)) {
+                $payment = FeeTransactionPayment::find($transaction_payment->id);
+                $parent_payment = FeeTransactionPayment::find($transaction_payment->parent_id);
+                $parent_payment_amount = $parent_payment->amount - ($payment->amount - $transaction_payment->amount);
+                $parent_account_transaction = AccountTransaction::where(
+                    'transaction_payment_id',
+                    $transaction_payment->parent_id)->first();
+
+                    $parent_account_transaction->amount = $parent_payment_amount;
+                    $parent_account_transaction->account_id = $transaction_payment->account_id;
+                    $parent_account_transaction->save();
+                    return $parent_account_transaction;
+
             } else {
-                $accnt_trans_data = [
+                if (!empty($account_transaction)) {
+                    $account_transaction->amount = $transaction_payment->amount;
+                    $account_transaction->account_id = $transaction_payment->account_id;
+                    $account_transaction->save();
+                    return $account_transaction;
+                } else {
+                    $accnt_trans_data = [
                     'amount' => $transaction_payment->amount,
                     'account_id' => $transaction_payment->account_id,
                     'type' => self::getAccountTransactionType($transaction_type),
@@ -108,12 +124,13 @@ class AccountTransaction extends Model
                     'transaction_payment_id' => $transaction_payment->id
                 ];
 
-                //If change return then set type as debit
-                if ($transaction_payment->transaction->type == 'sell' && $transaction_payment->is_return == 1) {
-                    $accnt_trans_data['type'] = 'debit';
-                }
+                    // //If change return then set type as debit
+                    // if ($transaction_payment->transaction->type == 'sell' && $transaction_payment->is_return == 1) {
+                    //     $accnt_trans_data['type'] = 'debit';
+                    // }
 
-                self::createAccountTransaction($accnt_trans_data);
+                    self::createAccountTransaction($accnt_trans_data);
+                }
             }
         }
     }

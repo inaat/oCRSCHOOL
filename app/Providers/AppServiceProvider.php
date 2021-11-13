@@ -81,7 +81,7 @@ class AppServiceProvider extends ServiceProvider
             return "<?php if($status == 'ordered'){
                 echo 'bg-aqua';
             }elseif($status == 'pending'){
-                echo 'bg-red';
+                echo 'bg-danger';
             }elseif ($status == 'received') {
                 echo 'bg-light-green';
             }?>";
@@ -90,15 +90,15 @@ class AppServiceProvider extends ServiceProvider
         //Blade directive to return appropiate class according to transaction status
         Blade::directive('payment_status', function ($status) {
             return "<?php if($status == 'partial'){
-                echo 'bg-aqua';
+                echo 'bg-info ';
             }elseif($status == 'due'){
-                echo 'bg-yellow';
+                echo ' bg-warning ';
             }elseif ($status == 'paid') {
-                echo 'bg-light-green';
+                echo 'bg-success';
             }elseif ($status == 'overdue') {
-                echo 'bg-red';
+                echo 'bg-danger';
             }elseif ($status == 'partial-overdue') {
-                echo 'bg-red';
+                echo 'bg-danger';
             }?>";
         });
 

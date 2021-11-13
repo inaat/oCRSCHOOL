@@ -31,7 +31,10 @@ File: app.css
 
 
 /* General */
-
+:root {
+	--primary: #8833ff;
+	--btn-primary-hover: #8531fa;
+  }
 
 body {
 
@@ -79,48 +82,9 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/*accordion*/
-.cursor-pointer, .accordion-panel .accordion__header {
-	cursor: pointer;
-  }
+
   
-  .accordion-panel .accordion__header {
-	/* background: #1665D8; */
-	/* color: #fff; */
-	/* padding: 8px 15px; */
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-  }
-  .accordion-panel .accordion__header:hover {
-	 color: #fff;
-	 background: #145ac1; 
-  }
-  .accordion-panel .accordion__header h3 {
-	margin: 0;
-  }
-  .accordion-panel .accordion__header .accordion__button {
-	width: 30px;
-	height: 30px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	/* border: 1px solid #3680eb; */
-	/* -webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	-ms-border-radius: 4px;
-	-o-border-radius: 4px; */
-  }
-  
-  .accordion-panel .accordion__body {
-	/* border-top: 1px solid #b8babe; */
-	/* padding: 20px; */
-	display: none;
-  }
-  .accordion-panel .accordion__body p:last-child {
-	margin: 0;
-  }
-  /*accordion*/
+
 .wrapper {
 
 
@@ -256,7 +220,7 @@ input[type=number] {
 	letter-spacing: 1px;
 
 
-	color: #8833ff;
+	color: var(--primary);
 
 
 }
@@ -271,7 +235,7 @@ input[type=number] {
 	cursor: pointer;
 
 
-	color: #8833ff;
+	color: var(--primary);
 
 
 }
@@ -677,7 +641,7 @@ input[type=number] {
 .sidebar-wrapper .metismenu .mm-active>a {
 
 
-	color: #8833ff;
+	color: var(--primary);
 	
     text-decoration: none;
 	
@@ -988,7 +952,7 @@ input[type=number] {
 	right: 12px;
 
 
-	background-color: #8833ff;
+	background-color: var(--primary);
 
 
 	z-index: 5;
@@ -1390,7 +1354,7 @@ input[type=number] {
 .fm-menu .list-group a:hover {
 
 
-	background: #8833ff;
+	background: var(--primary);
 
 
 	color: #ffffff;
@@ -1978,7 +1942,7 @@ input[type=number] {
 	margin-bottom: 20px;
 
 
-	border-bottom: 1px solid #8833ff
+	border-bottom: 1px solid var(--primary)
 
 
 }
@@ -2050,7 +2014,7 @@ input[type=number] {
 	margin-top: 0;
 
 
-	color: #8833ff
+	color: var(--primary)
 
 
 }
@@ -2086,7 +2050,7 @@ input[type=number] {
 	padding-left: 6px;
 
 
-	border-left: 6px solid #8833ff;
+	border-left: 6px solid var(--primary);
 
 
 	background: #e7f2ff;
@@ -2167,7 +2131,7 @@ input[type=number] {
 	font-weight: 400;
 
 
-	color: #8833ff;
+	color: var(--primary);
 
 
 	font-size: 1.2em
@@ -2203,7 +2167,7 @@ input[type=number] {
 	font-size: 1.6em;
 
 
-	background: #8833ff
+	background: var(--primary)
 
 
 }
@@ -2221,7 +2185,7 @@ input[type=number] {
 .invoice table .total {
 
 
-	background: #8833ff;
+	background: var(--primary);
 
 
 	color: #fff
@@ -2278,13 +2242,13 @@ input[type=number] {
 .invoice table tfoot tr:last-child td {
 
 
-	color: #8833ff;
+	color: var(--primary);
 
 
 	font-size: 1.4em;
 
 
-	border-top: 1px solid #8833ff
+	border-top: 1px solid var(--primary)
 
 
 }
@@ -2716,7 +2680,7 @@ input[type=number] {
 .chat-tab-menu .nav-pills .show>.nav-link {
 
 
-	color: #8833ff;
+	color: var(--primary);
 
 
 	background-color: rgb(0 123 255 / 0%);
@@ -3193,7 +3157,7 @@ input[type=number] {
 .email-navigation a.list-group-item.active {
 
 
-	color: #8833ff;
+	color: var(--primary);
 
 
 	font-weight: 600;
@@ -3493,10 +3457,10 @@ input[type=number] {
 .nav-primary.nav-tabs .nav-link.active {
 
 
-	color: #8833ff;
+	color: var(--primary);
 
 
-	border-color: #8833ff #8833ff #fff;
+	border-color: var(--primary) var(--primary) #fff;
 
 
 }
@@ -4023,7 +3987,7 @@ input[type=number] {
 
 .authentication-header {
     position: absolute;
-    background: #8833ff;
+    background: var(--primary);
     top: 0;
     left: 0;
     right: 0;
@@ -5240,7 +5204,7 @@ input::placeholder {
 	font-size: 24px;
 
 
-	background: #8833ff;
+	background: var(--primary);
 
 
 	box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, .13);
@@ -5854,3 +5818,5 @@ input::placeholder {
     margin: 4px;
     display: inline-block;
 }
+
+

@@ -13,7 +13,7 @@ class Account extends Model
     
     protected $guarded = ['id'];
 
-    public static function forDropdown($system_settings_id, $prepend_none, $closed = false, $show_balance = false)
+    public static function forDropdown($system_settings_id, $campus_id, $prepend_none, $closed = false, $default_campus_account=false, $show_balance = false)
     {
         $query = Account::where('system_settings_id', $system_settings_id);
 
@@ -23,17 +23,23 @@ class Account extends Model
                 $join->on('AT.account_id', '=', 'accounts.id');
                 $join->whereNull('AT.deleted_at');
             })
-            ->select('accounts.name', 
-                    'accounts.id', 
-                    DB::raw("SUM( IF(AT.type='credit', amount, -1*amount) ) as balance")
-                )->groupBy('accounts.id');
+            ->select(
+                'accounts.name',
+                'accounts.id',
+                DB::raw("SUM( IF(AT.type='credit', amount, -1*amount) ) as balance")
+            );
         }
-
+        if (!empty($campus_id)) {
+            $query->where('accounts.campus_id', $campus_id);
+        }
         if (!$closed) {
-            $query->where('is_closed', 0);
+            $query->where('accounts.is_closed', 0);
+        }
+        if ($default_campus_account) {
+            $query->where('accounts.default_campus_account', 1);
         }
 
-        $accounts = $query->get();
+        $accounts = $query->groupBy('accounts.id')->get();
 
         $dropdown = [];
         if ($prepend_none) {

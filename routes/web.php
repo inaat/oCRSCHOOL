@@ -24,9 +24,20 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     Route::get('/get_provinces', 'ProvinceController@getProvinces');
     Route::get('/get_districts', 'DistrictController@getDistricts');
     Route::get('/get_cities', 'CityController@getCities');
+    Route::get('/get_regions', 'RegionController@getRegions');
+    Route::get('/add_sibling', 'StudentController@addSibling');
+    Route::get('/add_admission_fee/{id}', 'StudentController@addAdmissionFee');
+    Route::post('/post_admission_fee', 'StudentController@postAdmissionFee');
+    
+    Route::get('student/getByClassAndSection', 'StudentController@getByClassAndSection');
+    Route::get('student/getStudentRecordByID', 'StudentController@getStudentRecordByID');
+    Route::get('/payments/pay-student-due/{student_id}', 'FeeTransactionPaymentController@getPayStudentDue');
+    Route::post('/payments/pay-student-due', 'FeeTransactionPaymentController@postPayStudentDue');
 
 
 
+
+    Route::resource('fee_payment', 'FeeTransactionPaymentController');
     Route::resource('setting', 'SystemSettingController');
     Route::resource('designation', 'DesignationController');
     Route::resource('campuses', 'CampusController');
@@ -42,6 +53,9 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
 
     Route::resource('regions', 'RegionController');
     Route::resource('students', 'StudentController');
+    Route::resource('fee-allocation', 'FeeAllocationController');
+    Route::post('fees-assign-search', 'FeeAllocationController@feesAssignSearch')->name('fees-assign-search');
+
 
     Route::group(['prefix' => 'account'], function () {
         Route::resource('/account', 'AccountController');
