@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\FeeTransaction;
 use App\Models\FeeTransactionPayment;
 use App\Events\FeeTransactionPaymentUpdated;
+use App\Events\FeeTransactionPaymentAdded;
 
 use App\Utils\FeeTransactionUtil;
 use DB;
@@ -51,6 +52,58 @@ class FeeTransactionPaymentController extends Controller
             $payment_types = $this->feeTransactionUtil->payment_types();
             return view('fee_transaction_payment.show_payments')
                     ->with(compact('transaction', 'payments', 'payment_types', 'accounts_enabled'));
+        }
+    }
+
+       /**
+     * Adds new payment to the given transaction.
+     *
+     * @param  int  $transaction_id
+     * @return \Illuminate\Http\Response
+     */
+    public function addPayment($transaction_id)
+    {
+        if (!auth()->user()->can('purchase.payments') && !auth()->user()->can('sell.payments') && !auth()->user()->can('all_expense.access') && !auth()->user()->can('view_own_expense')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            $system_settings_id = request()->session()->get('user.system_settings_id');
+
+            $transaction = FeeTransaction::where('system_settings_id', $system_settings_id)
+                                        ->with(['student', 'campus'])
+                                        ->findOrFail($transaction_id);
+            if ($transaction->payment_status != 'paid') {
+                $payment_types = $this->feeTransactionUtil->payment_types();
+
+                $paid_amount = $this->feeTransactionUtil->getTotalPaid($transaction_id);
+                $amount = $transaction->final_total - $paid_amount;
+                if ($amount < 0) {
+                    $amount = 0;
+                }
+
+                $amount_formated = $this->feeTransactionUtil->num_f($amount);
+
+                $payment_line = new FeeTransactionPayment();
+                $payment_line->amount = $amount;
+                $payment_line->method = 'cash';
+                $payment_line->paid_on = \Carbon::now()->toDateTimeString();
+
+                //Accounts
+                $accounts =$this->feeTransactionUtil->accountsDropdown($system_settings_id,$transaction->campus_id,false,false,true,true);
+
+                $view = view('fee_transaction_payment.payment_row')
+                ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts'))->render();
+
+                $output = [ 'status' => 'due',
+                                    'view' => $view];
+            } else {
+                $output = [ 'status' => 'paid',
+                                'view' => '',
+                                'msg' => __('purchase.amount_already_paid')  ];
+            }
+
+            return json_encode($output);
         }
     }
     /**
@@ -99,6 +152,11 @@ class FeeTransactionPaymentController extends Controller
                 DB::raw("COALESCE(SUM(IF(t.type = 'fee' AND t.status = 'final', final_total, 0)),0)-COALESCE(SUM(IF(t.type = 'fee' AND t.status = 'final', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM fee_transaction_payments WHERE fee_transaction_payments.fee_transaction_id=t.id), 0)),0)
                 +COALESCE(SUM(IF(t.type = 'opening_balance', final_total, 0)),0) -COALESCE(SUM(IF(t.type = 'opening_balance', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM fee_transaction_payments WHERE fee_transaction_payments.fee_transaction_id=t.id), 0)),0)
                 +COALESCE(SUM(IF(t.type = 'admission_fee', final_total, 0)),0) -COALESCE(SUM(IF(t.type = 'admission_fee', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM fee_transaction_payments WHERE fee_transaction_payments.fee_transaction_id=t.id), 0)),0) as total_due")
+            ]);
+            $query->addSelect([
+                DB::raw("COALESCE(SUM(IF(t.type = 'fee' AND t.status = 'final', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM fee_transaction_payments WHERE fee_transaction_payments.fee_transaction_id=t.id), 0)),0)
+                +COALESCE(SUM(IF(t.type = 'opening_balance', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM fee_transaction_payments WHERE fee_transaction_payments.fee_transaction_id=t.id), 0)),0)
+                +COALESCE(SUM(IF(t.type = 'admission_fee', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM fee_transaction_payments WHERE fee_transaction_payments.fee_transaction_id=t.id), 0)),0) as total_paid")
             ]);
             $student_details = $query->first();
             $payment_line = new FeeTransactionPayment();
@@ -199,6 +257,74 @@ class FeeTransactionPaymentController extends Controller
             return view('fee_transaction_payment.edit_payment_row')
                         ->with(compact('transaction', 'payment_types', 'payment_line', 'accounts'));
         }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+       try {
+            $system_settings_id = $request->session()->get('user.system_settings_id');
+            $transaction_id = $request->input('transaction_id');
+            $transaction = FeeTransaction::where('system_settings_id', $system_settings_id)->with(['student'])->findOrFail($transaction_id);
+
+            $transaction_before = $transaction->replicate();
+
+            if (!(auth()->user()->can('purchase.payments') || auth()->user()->can('sell.payments') || auth()->user()->can('all_expense.access') || auth()->user()->can('view_own_expense'))) {
+                abort(403, 'Unauthorized action.');
+            }
+            if ($transaction->payment_status != 'paid') {
+                $inputs = $request->only(['amount', 'method', 'note', 'card_number', 'card_holder_name',
+                'card_transaction_number', 'card_type', 'card_month', 'card_year', 'card_security',
+                'cheque_number', 'bank_account_number']);
+                $inputs['paid_on'] = $this->feeTransactionUtil->uf_date($request->input('paid_on'), true);
+                $inputs['fee_transaction_id'] = $transaction->id;
+                $inputs['amount'] = $this->feeTransactionUtil->num_uf($inputs['amount']);
+                $inputs['created_by'] = auth()->user()->id;
+                $inputs['payment_for'] = $transaction->student_id;
+                $inputs['account_id'] = $request->input('account_id');
+                $inputs['session_id']=$this->feeTransactionUtil->getActiveSession();
+
+
+                $prefix_type = 'fee_payment';
+                DB::beginTransaction();
+
+                $ref_count = $this->feeTransactionUtil->setAndGetReferenceCount($prefix_type, false, true);
+                        //Generate reference number
+                $inputs['payment_ref_no'] = $this->feeTransactionUtil->generateReferenceNumber($prefix_type, $ref_count, $system_settings_id);
+
+                $inputs['system_settings_id'] = $request->session()->get('system_details.id');
+                $inputs['document'] = $this->feeTransactionUtil->uploadFile($request, 'document', 'documents');
+
+                //Pay from advance balance
+                $payment_amount = $inputs['amount'];
+                if (!empty($inputs['amount'])) {
+                    $tp = FeeTransactionPayment::create($inputs);
+                    $inputs['transaction_type'] = $transaction->type;
+                    event(new FeeTransactionPaymentAdded($tp, $inputs));
+                }
+
+                //update payment status
+                $payment_status = $this->feeTransactionUtil->updatePaymentStatus($transaction_id, $transaction->final_total);
+                
+                DB::commit();
+            }
+
+            $output = ['success' => true,
+                            'msg' => __('purchase.payment_added_success')
+                        ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = __('messages.something_went_wrong');
+            $output = ['success' => false,
+                          'msg' => $msg
+                      ];
+        }
+        return redirect()->back()->with(['status' => $output]);
     }
 /**
      * Update the specified resource in storage.
@@ -306,7 +432,7 @@ class FeeTransactionPaymentController extends Controller
                     //Get customer advance share from payment and deduct from advance balance
                     $total_customer_advance = $payment->amount - $total_adjusted_amount;
                     // if ($total_customer_advance > 0) {
-                    //     $this->transactionUtil->updateContactBalance($payment->payment_for, $total_customer_advance , 'deduct');
+                    //     $this->feeTransactionUtil->updateContactBalance($payment->payment_for, $total_customer_advance , 'deduct');
                     // }
 
                     //Delete all child payments

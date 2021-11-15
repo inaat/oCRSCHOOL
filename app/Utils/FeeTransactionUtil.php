@@ -14,10 +14,8 @@ use App\Events\FeeTransactionPaymentAdded;
 
 class FeeTransactionUtil extends Util
 {
-    
-    public function createFeeTransaction($request,$type){
-       
-       
+    public function createFeeTransaction($request, $type)
+    {
         $user_id = $request->session()->get('user.id');
         $system_settings_id = $request->session()->get('user.system_settings_id');
         $final_total =  $this->num_uf($request->final_total);
@@ -44,10 +42,8 @@ class FeeTransactionUtil extends Util
            
         return $transaction;
     }
-    public function multiFeeTransaction($student,$type,$system_settings_id,$user_id, $lines_formatted,$final_total,$discount,$month){
-       
-       
-     
+    public function multiFeeTransaction($student, $type, $system_settings_id, $user_id, $lines_formatted, $final_total, $discount, $month)
+    {
         $final_total =  $this->num_uf($final_total);
         $now = \Carbon::now();
         //Update reference count
@@ -71,49 +67,45 @@ class FeeTransactionUtil extends Util
                     'final_total' => $final_total,
                     'created_by' => $user_id,
                 ]);
-                if (!empty($lines_formatted)) {
-                    $transaction->fee_lines()->saveMany($lines_formatted);
-                }
+        if (!empty($lines_formatted)) {
+            $transaction->fee_lines()->saveMany($lines_formatted);
+        }
         return $transaction;
     }
 
-    public function createFeeTransactionLines($fee_heads,$transaction){
+    public function createFeeTransactionLines($fee_heads, $transaction)
+    {
         $lines_formatted = [];
 
         foreach ($fee_heads as $key => $value) {
             # code...
 
-               if(!empty($value['is_enabled'])){
-                   $line=[
+            if (!empty($value['is_enabled'])) {
+                $line=[
                        'fee_head_id'=>$value['fee_head_id'],
                        'amount'=>$this->num_uf($value['amount'])
                    ];
                
                 $lines_formatted[]=new FeeTransactionLine($line);
-                
-               }
-
+            }
         }
 
         if (!empty($lines_formatted)) {
             $transaction->fee_lines()->saveMany($lines_formatted);
         }
     }
-    public function getFinalWithoutDiscount($fee_heads,$discount){
+    public function getFinalWithoutDiscount($fee_heads, $discount)
+    {
         $final_total =0;
 
         foreach ($fee_heads as $key => $value) {
-           
-              $final_total +=$value['amount'];
-
+            $final_total +=$value['amount'];
         }
         if (!empty($discount)) {
             if ($discount->discount_type == 'fixed') {
                 $final_total -= $discount->discount_amount;
             } else {
-              
-                 $final_total = $final_total-(($discount->discount_amount/100)*$final_total);
-         
+                $final_total = $final_total-(($discount->discount_amount/100)*$final_total);
             }
         }
         return $final_total;
@@ -128,7 +120,8 @@ class FeeTransactionUtil extends Util
             'cheque_number', 'bank_account_number']);
 
         $payment_types = $this->payment_types();
-       
+        $inputs['session_id']=$this->getActiveSession();
+
         if (!array_key_exists($inputs['method'], $payment_types)) {
             throw new \Exception("Payment method not found");
         }
@@ -172,7 +165,7 @@ class FeeTransactionUtil extends Util
 
         return $parent_payment;
     }
-        /**
+    /**
      * Pay student due at once
      *
      * @param obj $parent_payment, string $type
@@ -209,6 +202,7 @@ class FeeTransactionUtil extends Util
 
                     $array = [
                             'fee_transaction_id' => $transaction->id,
+                            'session_id'=>$this->getActiveSession(),
                             'system_settings_id' => $parent_payment->system_settings_id,
                             'method' => $parent_payment->method,
                             'transaction_no' => $parent_payment->method,
@@ -229,10 +223,9 @@ class FeeTransactionUtil extends Util
                             'updated_at' => $now
                         ];
 
-                    $prefix_type = 'purchase_payment';
-                    if (in_array($transaction->type, ['fee'])) {
-                        $prefix_type = 'fee_payment';
-                    }
+                
+                    $prefix_type = 'fee_payment';
+                    
                     $ref_count = $this->setAndGetReferenceCount($prefix_type, false, true);
                     //Generate reference number
                     $payment_ref_no = $this->generateReferenceNumber($prefix_type, $ref_count, $parent_payment->system_settings_id);
@@ -248,7 +241,7 @@ class FeeTransactionUtil extends Util
 
                         $total_amount = $total_amount - $due;
 
-                        //$this->activityLog($transaction, 'payment_edited', $transaction_before);
+                    //$this->activityLog($transaction, 'payment_edited', $transaction_before);
                     } else {
                         $array['amount'] = $total_amount;
                         $tranaction_payments[] = $array;
@@ -271,7 +264,7 @@ class FeeTransactionUtil extends Util
         }
         return $total_amount;
     }
-      /**
+    /**
      * Get total paid amount for a transaction
      *
      * @param int $transaction_id
@@ -288,7 +281,7 @@ class FeeTransactionUtil extends Util
         return $total_paid;
     }
 
-       /**
+    /**
     * common function to get
     * list sell
     * @param int $system_settings_id
@@ -327,7 +320,6 @@ class FeeTransactionUtil extends Util
                     DB::raw('(SELECT SUM(IF(TP.is_return = 1,-1*TP.amount,TP.amount)) FROM fee_transaction_payments AS TP WHERE
                         TP.fee_transaction_id=fee_transactions.id) as total_paid'),
                     'campus.campus_name as campus_name',
-                
                 )->orderBy('fee_transactions.transaction_date', 'desc');
 
         return $sells;
@@ -359,7 +351,6 @@ class FeeTransactionUtil extends Util
     public function calculatePaymentStatus($transaction_id, $final_amount = null)
     {
         $total_paid = $this->getTotalPaid($transaction_id);
-
         if (is_null($final_amount)) {
             $final_amount = FeeTransaction::find($transaction_id)->final_total;
         }
@@ -374,4 +365,17 @@ class FeeTransactionUtil extends Util
         return $status;
     }
 
+
+
+    public function getStudentDue($student_id, $session_id)
+    {
+        $fee_transaction =FeeTransaction::where('student_id', $student_id)
+        ->where('session_id','!=',$this->getActiveSession()) ->select(DB::raw('COALESCE(SUM(final_total),0)as total'))
+        ->first();
+        $query = FeeTransactionPayment::where('payment_for', $student_id)
+        ->where('session_id','!=',$this->getActiveSession()) ->select(DB::raw('COALESCE(SUM(IF( is_return = 0, amount, amount*-1)),0)as total_paid'))
+        ->first();
+    
+        return $fee_transaction->total - $query->total_paid;
+    }
 }

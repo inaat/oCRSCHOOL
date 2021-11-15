@@ -55,7 +55,9 @@ body {
 
 
 }
-
+.error{
+	color: red !important;
+}
 
 a {
 

@@ -1,65 +1,52 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-        <?php echo Form::open(['url' => action('FeeTransactionPaymentController@postPayStudentDue'), 'method' => 'post',  'id' => 'pay_student_due_form', 'files' => true]); ?>
 
+    <?php echo Form::open(['url' => action('FeeTransactionPaymentController@store'), 'method' => 'post', 'id' => 'transaction_payment_add_form', 'files' => true ]); ?>
+
+    <?php echo Form::hidden('transaction_id', $transaction->id); ?>
 
         <div class="modal-header bg-primary">
             <h5 class="modal-title" id="exampleModalLabel"><?php echo app('translator')->get('lang.add_payment'); ?>
                 </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <?php echo Form::hidden('student_id', $student_details->student_id); ?>
-
 
         <div class="modal-body">
-            <div class="row ">
+               <div class="row ">
                 <div class="col-md-6">
                     <div class="card card-body bg-light">
                         <p>
                             <strong><?php echo app('translator')->get('lang.student_name'); ?>:
-                            </strong><?php echo e(ucwords($student_details->student_name), false); ?><br>
+                            </strong>(<?php echo e(ucwords($transaction->student->first_name . ' ' . $transaction->student->last_name), false); ?>)<br>
                             <strong><?php echo app('translator')->get('lang.father_name'); ?>:
-                            </strong><?php echo e(ucwords($student_details->father_name), false); ?><br>
-                            <strong><?php echo app('translator')->get('lang.roll_no'); ?>: </strong><?php echo e(ucwords($student_details->roll_no), false); ?><br>
-                            <strong><?php echo app('translator')->get('lang.current_class'); ?>:
-                            </strong><?php echo e(ucwords($student_details->current_class), false); ?>
+                            </strong><?php echo e(ucwords($transaction->student->father_name), false); ?><br>
+                            <strong><?php echo app('translator')->get('lang.roll_no'); ?>: </strong><?php echo e(ucwords($transaction->student->roll_no), false); ?>
 
                         </p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card card-body bg-light">
-                        <p>
-                            <strong><?php echo app('translator')->get('lang.total_fee_amount'); ?>: </strong><span class="display_currency"
-                                data-currency_symbol="true"><?php echo e($student_details->total_fee + $student_details->total_admission_fee, false); ?></span><br>
-                            <strong><?php echo app('translator')->get('lang.total_paid_amount'); ?>: </strong><span class="display_currency"
-                                data-currency_symbol="true"><?php echo e($student_details->total_fee_paid + $student_details->total_admission_fee_paid, false); ?></span><br>
-                            <strong><?php echo app('translator')->get('lang.total_fee_due_amount'); ?>: </strong><span class="display_currency"
-                                data-currency_symbol="true"><?php echo e($student_details->total_fee - $student_details->total_fee_paid +($student_details->total_admission_fee- $student_details->total_admission_fee_paid), false); ?></span><br>
-                            <?php if(!empty($student_details->opening_balance) || $student_details->opening_balance != '0.00'): ?>
-                                <strong><?php echo app('translator')->get('lang.opening_balance'); ?>: </strong>
-                                <span class="display_currency" data-currency_symbol="true">
-                                    <?php echo e($student_details->opening_balance, false); ?></span><br>
-                                <strong><?php echo app('translator')->get('lang.opening_balance_due'); ?>: </strong>
-                                <span class="display_currency" data-currency_symbol="true">
-                                    <?php echo e($ob_due, false); ?></span><br>
-                            <?php endif; ?>
-                            <strong><?php echo app('translator')->get('lang.total_paid_amount'); ?>: </strong><span class="display_currency"
-                                data-currency_symbol="true"><?php echo e($student_details->total_paid, false); ?></span></strong><br>
-                            <strong><?php echo app('translator')->get('lang.total_due_amount'); ?>: </strong><span class="display_currency"
-                                data-currency_symbol="true"><?php echo e($student_details->total_due, false); ?></span></strong><br>
+                       <p>
+                            <strong><?php echo app('translator')->get('lang.challan_no'); ?>:
+                            </strong>(<?php echo e(ucwords($transaction->voucher_no), false); ?>)<br>
+                            <strong><?php echo app('translator')->get('lang.fee_transaction_date'); ?>:
+                            </strong><?php echo e(\Carbon::createFromTimestamp(strtotime($transaction->transaction_date))->format(session('system_details.date_format')), false); ?><br>
+                            <strong><?php echo app('translator')->get('lang.payment_status'); ?>: </strong><?php echo e(ucwords($transaction->payment_status), false); ?><br>
+                             <strong><?php echo app('translator')->get('lang.total_amount'); ?>: </strong><span class="display_currency" data-currency_symbol="true"><?php echo e($transaction->final_total, false); ?></span><br>
+
                         </p>
                     </div>
                 </div>
-            </div>
 
-            <div class="row payment_row">
+                 <div class="row payment_row">
                 <div class="col-md-4 p-1">
                     <?php echo Form::label('lang.amount', __('lang.amount') . ':*'); ?>
 
                     <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
                                 class="fas fa-money-bill-alt"></i></span>
+                        
                         <?php echo Form::text("amount", number_format($payment_line->amount, config('constants.currency_precision', 2), session('currency')['decimal_separator'], session('currency')['thousand_separator']), ['class' => 'form-control input_number', 'required', 'placeholder' => 'Amount', 'data-rule-max-value' =>$payment_line->amount, 'data-msg-max-value' => __('lang_v1.max_amount_to_be_paid_is', ['amount' =>number_format($payment_line->amount, config('constants.currency_precision', 2), session('currency')['decimal_separator'], session('currency')['thousand_separator'])])]); ?>
 
 
@@ -120,11 +107,13 @@
                     </div>
                 </div>
             </div>
-        </div>
+                </div>
+
+      
         <div class="modal-footer">
 
-            <button type="submit" class="btn btn-primary"><?php echo app('translator')->get( 'global_lang.save' ); ?></button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal"><?php echo app('translator')->get( 'global_lang.close' ); ?></button>
+            <button type="submit" class="btn btn-primary"><?php echo app('translator')->get( 'lang.save' ); ?></button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal"><?php echo app('translator')->get( 'lang.close' ); ?></button>
         </div>
     </div>
 
@@ -133,4 +122,4 @@
 
 </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
-<?php /**PATH C:\scsserver\htdocs\oCRSCHOOL\resources\views/fee_transaction_payment/pay_student_due_modal.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\scsserver\htdocs\oCRSCHOOL\resources\views/fee_transaction_payment/payment_row.blade.php ENDPATH**/ ?>

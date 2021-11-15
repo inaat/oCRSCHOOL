@@ -1,61 +1,48 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-        {!! Form::open(['url' => action('FeeTransactionPaymentController@postPayStudentDue'), 'method' => 'post',  'id' => 'pay_student_due_form', 'files' => true]) !!}
 
+    {!! Form::open(['url' => action('FeeTransactionPaymentController@store'), 'method' => 'post', 'id' => 'transaction_payment_add_form', 'files' => true ]) !!}
+    {!! Form::hidden('transaction_id', $transaction->id); !!}
         <div class="modal-header bg-primary">
             <h5 class="modal-title" id="exampleModalLabel">@lang('lang.add_payment')
                 {{-- ({{ ucwords($student->first_name . ' ' . $student->last_name) }}) --}}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        {!! Form::hidden('student_id', $student_details->student_id) !!}
 
         <div class="modal-body">
-            <div class="row ">
+               <div class="row ">
                 <div class="col-md-6">
                     <div class="card card-body bg-light">
                         <p>
                             <strong>@lang('lang.student_name'):
-                            </strong>{{ ucwords($student_details->student_name) }}<br>
+                            </strong>({{ ucwords($transaction->student->first_name . ' ' . $transaction->student->last_name) }})<br>
                             <strong>@lang('lang.father_name'):
-                            </strong>{{ ucwords($student_details->father_name) }}<br>
-                            <strong>@lang('lang.roll_no'): </strong>{{ ucwords($student_details->roll_no) }}<br>
-                            <strong>@lang('lang.current_class'):
-                            </strong>{{ ucwords($student_details->current_class) }}
+                            </strong>{{ ucwords($transaction->student->father_name) }}<br>
+                            <strong>@lang('lang.roll_no'): </strong>{{ ucwords($transaction->student->roll_no) }}
                         </p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card card-body bg-light">
-                        <p>
-                            <strong>@lang('lang.total_fee_amount'): </strong><span class="display_currency"
-                                data-currency_symbol="true">{{ $student_details->total_fee + $student_details->total_admission_fee }}</span><br>
-                            <strong>@lang('lang.total_paid_amount'): </strong><span class="display_currency"
-                                data-currency_symbol="true">{{ $student_details->total_fee_paid + $student_details->total_admission_fee_paid }}</span><br>
-                            <strong>@lang('lang.total_fee_due_amount'): </strong><span class="display_currency"
-                                data-currency_symbol="true">{{ $student_details->total_fee - $student_details->total_fee_paid +($student_details->total_admission_fee- $student_details->total_admission_fee_paid) }}</span><br>
-                            @if (!empty($student_details->opening_balance) || $student_details->opening_balance != '0.00')
-                                <strong>@lang('lang.opening_balance'): </strong>
-                                <span class="display_currency" data-currency_symbol="true">
-                                    {{ $student_details->opening_balance }}</span><br>
-                                <strong>@lang('lang.opening_balance_due'): </strong>
-                                <span class="display_currency" data-currency_symbol="true">
-                                    {{ $ob_due }}</span><br>
-                            @endif
-                            <strong>@lang('lang.total_paid_amount'): </strong><span class="display_currency"
-                                data-currency_symbol="true">{{ $student_details->total_paid }}</span></strong><br>
-                            <strong>@lang('lang.total_due_amount'): </strong><span class="display_currency"
-                                data-currency_symbol="true">{{ $student_details->total_due }}</span></strong><br>
+                       <p>
+                            <strong>@lang('lang.challan_no'):
+                            </strong>({{ ucwords($transaction->voucher_no) }})<br>
+                            <strong>@lang('lang.fee_transaction_date'):
+                            </strong>{{ @format_date($transaction->transaction_date) }}<br>
+                            <strong>@lang('lang.payment_status'): </strong>{{ ucwords($transaction->payment_status) }}<br>
+                             <strong>@lang('lang.total_amount'): </strong><span class="display_currency" data-currency_symbol="true">{{ $transaction->final_total }}</span><br>
+
                         </p>
                     </div>
                 </div>
-            </div>
 
-            <div class="row payment_row">
+                 <div class="row payment_row">
                 <div class="col-md-4 p-1">
                     {!! Form::label('lang.amount', __('lang.amount') . ':*') !!}
                     <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
                                 class="fas fa-money-bill-alt"></i></span>
+                        
                         {!! Form::text("amount", @num_format($payment_line->amount), ['class' => 'form-control input_number', 'required', 'placeholder' => 'Amount', 'data-rule-max-value' =>$payment_line->amount, 'data-msg-max-value' => __('lang_v1.max_amount_to_be_paid_is', ['amount' =>@num_format($payment_line->amount)])]); !!}
 
                     </div>
@@ -105,11 +92,13 @@
                     </div>
                 </div>
             </div>
-        </div>
+                </div>
+
+      
         <div class="modal-footer">
 
-            <button type="submit" class="btn btn-primary">@lang( 'global_lang.save' )</button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal">@lang( 'global_lang.close' )</button>
+            <button type="submit" class="btn btn-primary">@lang( 'lang.save' )</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal">@lang( 'lang.close' )</button>
         </div>
     </div>
 

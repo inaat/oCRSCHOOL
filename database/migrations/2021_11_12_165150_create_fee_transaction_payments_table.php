@@ -19,6 +19,7 @@ class CreateFeeTransactionPaymentsTable extends Migration
             $table->foreign('fee_transaction_id')->references('id')->on('fee_transactions')->onDelete('cascade');
             $table->integer('system_settings_id')->unsigned();
             $table->foreign('system_settings_id')->references('id')->on('system_settings')->onDelete('cascade');
+           
             $table->boolean('is_return')->default(false)->comment('Used during adjustment to return the change');
             $table->decimal('amount', 22, 4)->default(0);
             $table->enum('method', ['cash', 'card', 'cheque', 'bank_transfer', 'other']);

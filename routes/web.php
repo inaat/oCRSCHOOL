@@ -33,6 +33,8 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     Route::get('student/getStudentRecordByID', 'StudentController@getStudentRecordByID');
     Route::get('/payments/pay-student-due/{student_id}', 'FeeTransactionPaymentController@getPayStudentDue');
     Route::post('/payments/pay-student-due', 'FeeTransactionPaymentController@postPayStudentDue');
+    Route::get('/payments/add_payment/{transaction_id}', 'FeeTransactionPaymentController@addPayment');
+
 
 
 

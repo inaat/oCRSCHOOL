@@ -11,12 +11,16 @@ use App\Models\Student;
 use App\Models\FeeTransaction;
 use App\Models\Discount;
 use App\Models\FeeHead;
+use App\Models\FeeTransactionPayment;
 use App\Models\FeeTransactionLine;
 use Yajra\DataTables\Facades\DataTables;
 use App\Utils\StudentUtil;
 use App\Utils\FeeTransactionUtil;
+
 use Illuminate\Support\Facades\Validator;
 use DB;
+use PDFS;
+use File;
 
 class FeeAllocationController extends Controller
 {
@@ -58,7 +62,11 @@ class FeeAllocationController extends Controller
                      <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">'. __("lang.actions").'</button>
                      <ul class="dropdown-menu" style="">';
                 $html.='<li><a class="dropdown-item "href="' . action('StudentController@edit', [$row->id]) . '"><i class="bx bxs-edit "></i> ' . __("lang.edit") . '</a></li>';
-                $html .= '<li><a href="' . action('FeeTransactionPaymentController@show', [$row->id]) . '" class="view_payment_modal"><i class="fas fa-money-bill-alt"></i> ' . __("purchase.view_payments") . '</a></li>';
+              
+                if ($row->payment_status != "paid" && (auth()->user()->can("sell.create") || auth()->user()->can("direct_sell.access")) && auth()->user()->can("sell.payments")) {
+                    $html .= '<li><a href="' . action('FeeTransactionPaymentController@addPayment', [$row->id]) . '" class="dropdown-item add_payment_modal"><i class="fas fa-money-bill-alt"></i> ' . __("lang.add_payment") . '</a></li>';
+                }
+                $html .= '<li><a href="' . action('FeeTransactionPaymentController@show', [$row->id]) . '" class="dropdown-item view_payment_modal"><i class="fas fa-money-bill-alt"></i> ' . __("lang.view_payments") . '</a></li>';
 
                 $html .= '</ul></div>';
 
@@ -72,27 +80,23 @@ class FeeAllocationController extends Controller
                 return (string) view('fee_allocation.partials.payment_status', ['payment_status' => $payment_status, 'id' => $row->id]);
             }
         )
-        ->editColumn('student_name', function ($row)  {
-           return ucwords($row->student_name);
-            
+        ->editColumn('student_name', function ($row) {
+            return ucwords($row->student_name);
         })
-        ->editColumn('father_name', function ($row)  {
-           return ucwords($row->father_name);
-            
+        ->editColumn('father_name', function ($row) {
+            return ucwords($row->father_name);
         })
-        ->editColumn('roll_no', function ($row)  {
-           return ucwords($row->roll_no);
-            
+        ->editColumn('roll_no', function ($row) {
+            return ucwords($row->roll_no);
         })
-        ->editColumn('current_class', function ($row)  {
-           return ucwords($row->current_class);
-            
+        ->editColumn('current_class', function ($row) {
+            return ucwords($row->current_class);
         })
-           ->editColumn('status', function ($row)  {
-            $status_color = !empty($this->student_status_colors[$row->status]) ? $this->student_status_colors[$row->status] : 'bg-gray';
-            $status='<span class="badge badge-mark ' . $status_color .'">' .ucwords($row->status).   '</span>';
-            return $status;
-        })
+           ->editColumn('status', function ($row) {
+               $status_color = !empty($this->student_status_colors[$row->status]) ? $this->student_status_colors[$row->status] : 'bg-gray';
+               $status='<span class="badge badge-mark ' . $status_color .'">' .ucwords($row->status).   '</span>';
+               return $status;
+           })
         ->addColumn('total_remaining', function ($row) {
             $total_remaining =  $row->final_total - $row->total_paid;
             $total_remaining_html = '<span class="payment_due" data-orig-value="' . $total_remaining . '">' . $this->feeTransactionUtil->num_f($total_remaining, true) . '</span>';
@@ -211,7 +215,7 @@ class FeeAllocationController extends Controller
                         $lines_formatted[] = new FeeTransactionLine($line);
                     }
                 }
-                $fee_transaction=FeeTransaction::where('type', '=', 'fee')->where('student_id', $student_id)->where('month', $month)->first();
+                $fee_transaction=FeeTransaction::where('type', '=', 'fee')->where('session_id', $this->feeTransactionUtil->getActiveSession())->where('student_id', $student_id)->where('month', $month)->first();
                 if (empty($fee_transaction)) {
                     $tuition_fee=[
                 'fee_head_id'=>2,
@@ -230,13 +234,12 @@ class FeeAllocationController extends Controller
                 $final_total=$this->feeTransactionUtil->getFinalWithoutDiscount($lines_formatted, $discount);
                 if ($final_total !=0) {
                     $transaction=$this->feeTransactionUtil->multiFeeTransaction($student, 'fee', $system_settings_id, $user_id, $lines_formatted, $final_total, $discount, $month);
-                }
-                else{
+                } else {
                     $output = ['success' => false,
                    'msg' => __("lang.something_went_wrong")];
             
         
-                return redirect('students')->with('status', $output);
+                    return redirect('students')->with('status', $output);
                 }
             }
             DB::commit();
@@ -263,9 +266,124 @@ class FeeAllocationController extends Controller
      */
     public function show($id)
     {
-        //
+        $query = FeeTransaction::where('fee_transactions.student_id', 1)
+        ->where('session_id', $this->feeTransactionUtil->getActiveSession())
+        ->whereIn('type', ['fee','admission_fee','opening_balance'])
+        ->select(['month', DB::raw("SUM(IF(status = 'final', final_total, 0)) as total_invoice"),
+        ])->groupBy('month')->orderBy('month', 'asc')->get();
+        $old_due = $this->feeTransactionUtil->getStudentDue(1,9);
+       // dd($per_transaction);
+        $fee_transaction_payment=$this->__paymentQuery(1);
+        $transaction_formatted=$this->__transaction_format($query);
+        $payment_formatted=[];
+        // dd($query);
+        foreach ($fee_transaction_payment as $p) {
+            foreach (__('lang.short_months') as $key=>$month) {
+                if ($p->month == $key) {
+                    $payment_formatted[$month]=$p->total_paid;
+                } else {
+                    if (empty($payment_formatted[$month])) {
+                        $payment_formatted[$month]=0;
+                    }
+                }
+            }
+        }
+       $balance=$this->__transaction_paid_total_final_format($transaction_formatted,$payment_formatted,$old_due);
+       //dd($balance['bf']);
+        return view('fee_allocation.print')->with(compact('transaction_formatted','payment_formatted','balance'));
     }
+    /**
+     * Query to get payment details for a customer
+     *
+     */
+    private function __transaction_paid_total_final_format($fee_transaction,$payment_formatted,$old_due)
+    {   
+        $old_due=$old_due; 
+        $total=[1=>0,'Feb'=>0,'Mar'=>0,'Apr'=>0,'May'=>0,'Jun'=>0,'Jul'=>0,'Aug'=>0,'Sep'=>0,'Oct'=>0,'Nov'=>0,'Dec'=>0];
 
+        $bF=['Jan'=>0,'Feb'=>0,'Mar'=>0,'Apr'=>0,'May'=>0,'Jun'=>0,'Jul'=>0,'Aug'=>0,'Sep'=>0,'Oct'=>0,'Nov'=>0,'Dec'=>0];
+        $balance=['Jan'=>0,'Feb'=>0,'Mar'=>0,'Apr'=>0,'May'=>0,'Jun'=>0,'Jul'=>0,'Aug'=>0,'Sep'=>0,'Oct'=>0,'Nov'=>0,'Dec'=>0];
+        foreach($bF as $key => $b){
+            if($key=='Jan'){
+                $bF[$key]=$old_due;
+            }else{
+                $bF[$key]=$balance[$key];
+            }  
+        }
+        foreach($fee_transaction as $key => $t){
+            if($key=='Jan'){
+                $old_due +=$t;
+                $total[$key]=$old_due;
+
+            }   
+        }
+        foreach($payment_formatted as $key => $p){
+            if($key=='Jan'){
+                $balance[$key]=$total[$key]-$p;
+
+            }   
+        }
+        foreach($bF as $key => $b){
+            if($key=='Jan'){
+            }else{
+                $bF[$key]=$balance['Jan'];
+            }  
+        }
+        // $bF['Feb'] =$balance['Jan'];
+        // $total['Feb'] =$fee_transaction['Feb']+$bF['Feb'];
+     $details=['bf'=>$bF,'total'=>$total,'balance'=>$balance];
+     return $details;
+    }
+    private function __transaction_format($query){
+
+        $transaction_formatted=[];
+        foreach ($query as $q) {
+            foreach (__('lang.short_months') as $key=>$month) {
+                if ($q->month == $key) {
+                    $transaction_formatted[$month]=$q->total_invoice;
+                } else {
+                    if (empty($transaction_formatted[$month])) {
+                        $transaction_formatted[$month]=0;
+                    }
+                }
+            }
+        }
+       return $transaction_formatted;
+    }
+    private function __paymentQuery($student_id, $start=null, $end = null)
+    {
+        $business_id = request()->session()->get('user.business_id');
+
+        // $query = FeeTransactionPayment::leftJoin(
+        //     'fee_transactions as t',
+        //     'fee_transaction_payments.fee_transaction_id',
+        //     '=',
+        //     't.id'
+        // )
+        //     ->where('fee_transaction_payments.payment_for', $student_id)
+        //     //->whereNotNull('transaction_payments.transaction_id');
+        //     //->whereNull('transaction_payments.parent_id');
+
+        $query = FeeTransactionPayment::where('fee_transaction_payments.payment_for', $student_id)
+        //->whereNotNull('transaction_payments.transaction_id');
+        ->whereNull('fee_transaction_payments.parent_id')
+        ->where('session_id','=',$this->feeTransactionUtil->getActiveSession());
+        
+
+        if (!empty($start)  && !empty($end)) {
+            $query->whereDate('paid_on', '>=', $start)
+                    ->whereDate('paid_on', '<=', $end);
+        }
+
+        //if (!empty($start)  && empty($end)) {
+       // $query->whereDate('paid_on', '>', '2021-1-1');
+        // }
+        $query->select([DB::raw("SUM(amount) as total_paid"),
+    DB::raw('MONTH(paid_on) month')
+])->groupBy('month');
+
+        return $query->get();
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -300,7 +418,7 @@ class FeeAllocationController extends Controller
         //
     }
 
-       /**
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
