@@ -19,7 +19,6 @@ use App\Utils\FeeTransactionUtil;
 
 use Illuminate\Support\Facades\Validator;
 use DB;
-use PDFS;
 use File;
 
 class FeeAllocationController extends Controller
@@ -266,6 +265,7 @@ class FeeAllocationController extends Controller
      */
     public function show($id)
     {
+
         $query = FeeTransaction::where('fee_transactions.student_id', 1)
         ->where('session_id', $this->feeTransactionUtil->getActiveSession())
         ->whereIn('type', ['fee','admission_fee','opening_balance'])
@@ -278,7 +278,7 @@ class FeeAllocationController extends Controller
         $payment_formatted=[];
         // dd($query);
         foreach ($fee_transaction_payment as $p) {
-            foreach (__('lang.short_months') as $key=>$month) {
+            foreach (__('lang.index_months') as $key=>$month) {
                 if ($p->month == $key) {
                     $payment_formatted[$month]=$p->total_paid;
                 } else {
@@ -288,9 +288,50 @@ class FeeAllocationController extends Controller
                 }
             }
         }
-       $balance=$this->__transaction_paid_total_final_format($transaction_formatted,$payment_formatted,$old_due);
-       //dd($balance['bf']);
-        return view('fee_allocation.print')->with(compact('transaction_formatted','payment_formatted','balance'));
+        $balance=$this->__transaction_paid_total_final_format($transaction_formatted,$payment_formatted,$old_due);
+
+        $feeHeads=FeeHead::get();
+      
+        $logo = 'Pk';
+        if (File::exists(public_path('uploads/pdf/feecard.pdf'))) {
+            File::delete(public_path('uploads/pdf/feecard.pdf'));
+        }
+        $pdf_name='feecard'.'.pdf';
+        $snappy = \WPDF::loadView('feecard.feecard',compact('feeHeads','transaction_formatted','payment_formatted','balance'));
+        $headerHtml = view()->make('feecard._header', compact('logo'))->render();
+        $footerHtml = view()->make('feecard._footer')->render();
+        $snappy->setOption('header-html', $headerHtml);
+        $snappy->setOption('footer-html', $footerHtml);
+        $snappy->setPaper('a5')->setOption('orientation','landscape')->setOption('margin-top', 25)->setOption('margin-left', 0)->setOption('margin-right', 0)->setOption('margin-bottom', 10);
+        $snappy->save('uploads/pdf/'.$pdf_name);//save pdf file
+
+        return view('students.pdfindex')->with(compact('pdf_name'));
+        ;
+    //     $query = FeeTransaction::where('fee_transactions.student_id', 1)
+    //     ->where('session_id', $this->feeTransactionUtil->getActiveSession())
+    //     ->whereIn('type', ['fee','admission_fee','opening_balance'])
+    //     ->select(['month', DB::raw("SUM(IF(status = 'final', final_total, 0)) as total_invoice"),
+    //     ])->groupBy('month')->orderBy('month', 'asc')->get();
+    //     $old_due = $this->feeTransactionUtil->getStudentDue(1,9);
+    //    // dd($per_transaction);
+    //     $fee_transaction_payment=$this->__paymentQuery(1);
+    //     $transaction_formatted=$this->__transaction_format($query);
+    //     $payment_formatted=[];
+    //     // dd($query);
+    //     foreach ($fee_transaction_payment as $p) {
+    //         foreach (__('lang.index_months') as $key=>$month) {
+    //             if ($p->month == $key) {
+    //                 $payment_formatted[$month]=$p->total_paid;
+    //             } else {
+    //                 if (empty($payment_formatted[$month])) {
+    //                     $payment_formatted[$month]=0;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //    $balance=$this->__transaction_paid_total_final_format($transaction_formatted,$payment_formatted,$old_due);
+    //    //dd($balance['bf']);
+    //     return view('fee_allocation.print')->with(compact('transaction_formatted','payment_formatted','balance'));
     }
     /**
      * Query to get payment details for a customer
@@ -299,46 +340,38 @@ class FeeAllocationController extends Controller
     private function __transaction_paid_total_final_format($fee_transaction,$payment_formatted,$old_due)
     {   
         $old_due=$old_due; 
-        $total=[1=>0,'Feb'=>0,'Mar'=>0,'Apr'=>0,'May'=>0,'Jun'=>0,'Jul'=>0,'Aug'=>0,'Sep'=>0,'Oct'=>0,'Nov'=>0,'Dec'=>0];
-
-        $bF=['Jan'=>0,'Feb'=>0,'Mar'=>0,'Apr'=>0,'May'=>0,'Jun'=>0,'Jul'=>0,'Aug'=>0,'Sep'=>0,'Oct'=>0,'Nov'=>0,'Dec'=>0];
-        $balance=['Jan'=>0,'Feb'=>0,'Mar'=>0,'Apr'=>0,'May'=>0,'Jun'=>0,'Jul'=>0,'Aug'=>0,'Sep'=>0,'Oct'=>0,'Nov'=>0,'Dec'=>0];
-        foreach($bF as $key => $b){
-            if($key=='Jan'){
-                $bF[$key]=$old_due;
-            }else{
-                $bF[$key]=$balance[$key];
-            }  
-        }
+       // dd($payment_formatted);
+       if(empty($payment_formatted)){
+        $payment_formatted=[1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
+       }
+        $total=[1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
+        $bF=[1=>$old_due,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
+        $balance=[1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
         foreach($fee_transaction as $key => $t){
-            if($key=='Jan'){
-                $old_due +=$t;
-                $total[$key]=$old_due;
-
+            if($key==1){
+                $total[$key]=$bF[$key]+$t;
             }   
         }
-        foreach($payment_formatted as $key => $p){
-            if($key=='Jan'){
+        foreach ($payment_formatted as $key => $p) {
+            if ($key==1) {
                 $balance[$key]=$total[$key]-$p;
 
-            }   
-        }
-        foreach($bF as $key => $b){
-            if($key=='Jan'){
             }else{
-                $bF[$key]=$balance['Jan'];
-            }  
+                $bF[$key]=$balance[$key-1];
+                $total[$key]=$fee_transaction[$key]+$bF[$key];
+                $balance[$key]=$total[$key]-$p;
+            }    
         }
-        // $bF['Feb'] =$balance['Jan'];
-        // $total['Feb'] =$fee_transaction['Feb']+$bF['Feb'];
+    
      $details=['bf'=>$bF,'total'=>$total,'balance'=>$balance];
      return $details;
+
     }
     private function __transaction_format($query){
 
         $transaction_formatted=[];
         foreach ($query as $q) {
-            foreach (__('lang.short_months') as $key=>$month) {
+            foreach (__('lang.index_months') as $key=>$month) {
                 if ($q->month == $key) {
                     $transaction_formatted[$month]=$q->total_invoice;
                 } else {

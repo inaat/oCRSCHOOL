@@ -37,7 +37,7 @@
 
                               @foreach ($balance['total'] as  $t)
                                   <td>{{  @num_format($t) }}</td>
-                              @endforeach
+                              @endforeach 
                               </tr>
                             <td>paid</td>
 
@@ -47,7 +47,7 @@
                               </tr>
                             <td>Balance</td>
 
-                              @foreach ($balance['balance'] as  $b)
+                               @foreach ($balance['balance'] as  $b)
                                   <td>{{  @num_format($b) }}</td>
                               @endforeach
                               </tr>

@@ -37,7 +37,7 @@
 
                               <?php $__currentLoopData = $balance['total']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $t): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                   <td><?php echo e(number_format($t, config('constants.currency_precision', 2), session('currency')['decimal_separator'], session('currency')['thousand_separator']), false); ?></td>
-                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
                               </tr>
                             <td>paid</td>
 
@@ -47,7 +47,7 @@
                               </tr>
                             <td>Balance</td>
 
-                              <?php $__currentLoopData = $balance['balance']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                               <?php $__currentLoopData = $balance['balance']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                   <td><?php echo e(number_format($b, config('constants.currency_precision', 2), session('currency')['decimal_separator'], session('currency')['thousand_separator']), false); ?></td>
                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                               </tr>
