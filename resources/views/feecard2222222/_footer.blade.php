@@ -7,8 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-     <footer style=" text-align: center;">
-        <h6>Develope By Explainer Khan Group</h6>
+     <footer>
+        <h3>footer</h3>
     </footer>
 </body>
 </html>

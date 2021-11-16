@@ -60,7 +60,7 @@ class FeeAllocationController extends Controller
                 $html= '<div class="dropdown">
                      <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">'. __("lang.actions").'</button>
                      <ul class="dropdown-menu" style="">';
-                $html.='<li><a class="dropdown-item "href="' . action('StudentController@edit', [$row->id]) . '"><i class="bx bxs-edit "></i> ' . __("lang.edit") . '</a></li>';
+                $html.='<li><a class="dropdown-item "href="' . action('FeeAllocationController@show', [$row->id]) . '"><i class="bx bxs-print "></i> ' . __("lang.print") . '</a></li>';
               
                 if ($row->payment_status != "paid" && (auth()->user()->can("sell.create") || auth()->user()->can("direct_sell.access")) && auth()->user()->can("sell.payments")) {
                     $html .= '<li><a href="' . action('FeeTransactionPaymentController@addPayment', [$row->id]) . '" class="dropdown-item add_payment_modal"><i class="fas fa-money-bill-alt"></i> ' . __("lang.add_payment") . '</a></li>';
@@ -266,13 +266,13 @@ class FeeAllocationController extends Controller
     public function show($id)
     {
         $current_transaction=FeeTransaction::with(['session','campus','student','fee_lines.feeHead','student_class','student_class_section'])->find($id);
-       // dd($current_transaction);
+      $current_transaction_paid=$this->__paymentPaid($current_transaction->student_id,$current_transaction->session_id,$current_transaction->month);
         $query = FeeTransaction::where('fee_transactions.student_id', $current_transaction->student_id)
         ->where('session_id', $current_transaction->session_id)
         ->whereIn('type', ['fee','admission_fee','opening_balance'])
         ->select(['month', DB::raw("SUM(IF(status = 'final', final_total, 0)) as total_invoice"),
         ])->groupBy('month')->orderBy('month', 'asc')->get();
-        $old_due = $this->feeTransactionUtil->getStudentDue(1,9);
+        $old_due = $this->feeTransactionUtil->getStudentDue($current_transaction->student_id,$current_transaction->session_id);
        // dd($per_transaction);
         $fee_transaction_payment=$this->__paymentQuery($current_transaction->student_id,$current_transaction->session_id);
         $transaction_formatted=$this->__transaction_format($query);
@@ -297,14 +297,14 @@ class FeeAllocationController extends Controller
         }
 
         $pdf_name='feecard'.'.pdf';
-        $snappy  = \WPDF::loadView('feecard.feecard',compact('current_transaction','transaction_formatted','payment_formatted','balance'));
+        $snappy  = \WPDF::loadView('feecard.feecard',compact('current_transaction','current_transaction_paid','transaction_formatted','payment_formatted','balance'));
         $headerHtml = view()->make('feecard._header', compact('logo'))->render();
         $footerHtml = view()->make('feecard._footer')->render();
         $snappy->setOption('header-html', $headerHtml);
         $snappy->setOption('footer-html', $footerHtml);
-        $snappy->setPaper('a5')->setOption('orientation','landscape')->setOption('margin-top', 25)->setOption('margin-left', 0)->setOption('margin-right', 0)->setOption('margin-bottom', 5);
+        $snappy->setPaper('a5')->setOption('orientation','landscape')->setOption('margin-top',5)->setOption('margin-left', 5)->setOption('margin-right', 5)->setOption('margin-bottom',10);
        $snappy->save('uploads/pdf/'.$pdf_name);//save pdf file
-      // return $snappy->stream();
+      return $snappy->stream();
         return view('students.pdfindex')->with(compact('pdf_name'));
     }
     /**
@@ -314,7 +314,6 @@ class FeeAllocationController extends Controller
     private function __transaction_paid_total_final_format($fee_transaction,$payment_formatted,$old_due)
     {   
         $old_due=$old_due; 
-       // dd($payment_formatted);
        if(empty($payment_formatted)){
         $payment_formatted=[1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
        }
@@ -356,6 +355,20 @@ class FeeAllocationController extends Controller
             }
         }
        return $transaction_formatted;
+    }
+    private function __paymentPaid($student_id, $session_id,$month)
+    {
+
+        $query = FeeTransactionPayment::where('fee_transaction_payments.payment_for', $student_id)
+        //->whereNotNull('transaction_payments.transaction_id');
+        ->whereNull('fee_transaction_payments.parent_id')
+        ->whereMonth('paid_on', $month)
+        ->where('session_id','=',$session_id)
+        // ->where('session_id','=',$this->feeTransactionUtil->getActiveSession())
+        ->select(DB::raw("COALESCE(SUM(amount),0) as total_paid"))->first();
+        // ->where('fee_transaction_id','=',$transaction_id)->select(DB::raw("COALESCE(SUM(amount),0) as total_paid"))->first();
+        // $query->select(DB::raw("SUM(amount) as total_paid"))->get();
+        return $query;;
     }
     private function __paymentQuery($student_id, $session_id)
     {

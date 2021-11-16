@@ -7,8 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-     <footer>
-        
+     <footer style=" text-align: center;">
+        <h6>Develope By Explainer Khan Group</h6>
     </footer>
 </body>
 </html><?php /**PATH C:\scsserver\htdocs\oCRSCHOOL\resources\views/feecard/_footer.blade.php ENDPATH**/ ?>

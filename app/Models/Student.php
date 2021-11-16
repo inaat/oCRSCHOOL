@@ -27,7 +27,10 @@ class Student extends Model
     {
         return $this->hasOne(Campus::class, 'id', 'campus_id');
     }
-
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class, 'discount_id');
+    }
     public static function forDropdown($system_settings_id,$show_none = false,$class_id =null,$section_id =null)
     {
         // $query=Student::where('system_settings_id',$system_settings_id);

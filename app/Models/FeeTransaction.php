@@ -31,7 +31,7 @@ class FeeTransaction extends Model
     }
     public function student_class()
     {
-        return $this->belongsTo(Student::class, 'class_id');
+        return $this->belongsTo(Classes::class, 'class_id');
     }
     public function student_class_section()
     {
