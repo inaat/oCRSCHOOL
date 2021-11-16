@@ -17,8 +17,6 @@
             border-bottom: 2px solid black;
             width: 70%;
                         height:100px;
-
-
         }
         
     .adm-no {

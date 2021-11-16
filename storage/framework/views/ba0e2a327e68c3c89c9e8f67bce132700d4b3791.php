@@ -46,7 +46,7 @@
         width: 27%;
         border-bottom: 2px solid black;
         border-right: 2px solid black;
-        height:519px;
+        height:524px;
 
 
 

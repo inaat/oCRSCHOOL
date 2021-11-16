@@ -297,15 +297,14 @@ class FeeAllocationController extends Controller
         }
 
         $pdf_name='feecard'.'.pdf';
-        
-        $snappy = \WPDF::loadView('feecard.feecard',compact('current_transaction','transaction_formatted','payment_formatted','balance'));
+        $snappy  = \WPDF::loadView('feecard.feecard',compact('current_transaction','transaction_formatted','payment_formatted','balance'));
         $headerHtml = view()->make('feecard._header', compact('logo'))->render();
         $footerHtml = view()->make('feecard._footer')->render();
         $snappy->setOption('header-html', $headerHtml);
         $snappy->setOption('footer-html', $footerHtml);
         $snappy->setPaper('a5')->setOption('orientation','landscape')->setOption('margin-top', 25)->setOption('margin-left', 0)->setOption('margin-right', 0)->setOption('margin-bottom', 5);
-        $snappy->save('uploads/pdf/'.$pdf_name);//save pdf file
-
+       $snappy->save('uploads/pdf/'.$pdf_name);//save pdf file
+      // return $snappy->stream();
         return view('students.pdfindex')->with(compact('pdf_name'));
     }
     /**
