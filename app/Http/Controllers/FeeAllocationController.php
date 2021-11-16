@@ -265,18 +265,18 @@ class FeeAllocationController extends Controller
      */
     public function show($id)
     {
-
-        $query = FeeTransaction::where('fee_transactions.student_id', 1)
-        ->where('session_id', $this->feeTransactionUtil->getActiveSession())
+        $current_transaction=FeeTransaction::with(['session','campus','student','fee_lines.feeHead','student_class','student_class_section'])->find($id);
+       // dd($current_transaction);
+        $query = FeeTransaction::where('fee_transactions.student_id', $current_transaction->student_id)
+        ->where('session_id', $current_transaction->session_id)
         ->whereIn('type', ['fee','admission_fee','opening_balance'])
         ->select(['month', DB::raw("SUM(IF(status = 'final', final_total, 0)) as total_invoice"),
         ])->groupBy('month')->orderBy('month', 'asc')->get();
         $old_due = $this->feeTransactionUtil->getStudentDue(1,9);
        // dd($per_transaction);
-        $fee_transaction_payment=$this->__paymentQuery(1);
+        $fee_transaction_payment=$this->__paymentQuery($current_transaction->student_id,$current_transaction->session_id);
         $transaction_formatted=$this->__transaction_format($query);
         $payment_formatted=[];
-        // dd($query);
         foreach ($fee_transaction_payment as $p) {
             foreach (__('lang.index_months') as $key=>$month) {
                 if ($p->month == $key) {
@@ -290,48 +290,23 @@ class FeeAllocationController extends Controller
         }
         $balance=$this->__transaction_paid_total_final_format($transaction_formatted,$payment_formatted,$old_due);
 
-        $feeHeads=FeeHead::get();
       
         $logo = 'Pk';
         if (File::exists(public_path('uploads/pdf/feecard.pdf'))) {
             File::delete(public_path('uploads/pdf/feecard.pdf'));
         }
+
         $pdf_name='feecard'.'.pdf';
-        $snappy = \WPDF::loadView('feecard.feecard',compact('feeHeads','transaction_formatted','payment_formatted','balance'));
+        
+        $snappy = \WPDF::loadView('feecard.feecard',compact('current_transaction','transaction_formatted','payment_formatted','balance'));
         $headerHtml = view()->make('feecard._header', compact('logo'))->render();
         $footerHtml = view()->make('feecard._footer')->render();
         $snappy->setOption('header-html', $headerHtml);
         $snappy->setOption('footer-html', $footerHtml);
-        $snappy->setPaper('a5')->setOption('orientation','landscape')->setOption('margin-top', 25)->setOption('margin-left', 0)->setOption('margin-right', 0)->setOption('margin-bottom', 10);
+        $snappy->setPaper('a5')->setOption('orientation','landscape')->setOption('margin-top', 25)->setOption('margin-left', 0)->setOption('margin-right', 0)->setOption('margin-bottom', 5);
         $snappy->save('uploads/pdf/'.$pdf_name);//save pdf file
 
         return view('students.pdfindex')->with(compact('pdf_name'));
-        ;
-    //     $query = FeeTransaction::where('fee_transactions.student_id', 1)
-    //     ->where('session_id', $this->feeTransactionUtil->getActiveSession())
-    //     ->whereIn('type', ['fee','admission_fee','opening_balance'])
-    //     ->select(['month', DB::raw("SUM(IF(status = 'final', final_total, 0)) as total_invoice"),
-    //     ])->groupBy('month')->orderBy('month', 'asc')->get();
-    //     $old_due = $this->feeTransactionUtil->getStudentDue(1,9);
-    //    // dd($per_transaction);
-    //     $fee_transaction_payment=$this->__paymentQuery(1);
-    //     $transaction_formatted=$this->__transaction_format($query);
-    //     $payment_formatted=[];
-    //     // dd($query);
-    //     foreach ($fee_transaction_payment as $p) {
-    //         foreach (__('lang.index_months') as $key=>$month) {
-    //             if ($p->month == $key) {
-    //                 $payment_formatted[$month]=$p->total_paid;
-    //             } else {
-    //                 if (empty($payment_formatted[$month])) {
-    //                     $payment_formatted[$month]=0;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //    $balance=$this->__transaction_paid_total_final_format($transaction_formatted,$payment_formatted,$old_due);
-    //    //dd($balance['bf']);
-    //     return view('fee_allocation.print')->with(compact('transaction_formatted','payment_formatted','balance'));
     }
     /**
      * Query to get payment details for a customer
@@ -383,37 +358,16 @@ class FeeAllocationController extends Controller
         }
        return $transaction_formatted;
     }
-    private function __paymentQuery($student_id, $start=null, $end = null)
+    private function __paymentQuery($student_id, $session_id)
     {
-        $business_id = request()->session()->get('user.business_id');
-
-        // $query = FeeTransactionPayment::leftJoin(
-        //     'fee_transactions as t',
-        //     'fee_transaction_payments.fee_transaction_id',
-        //     '=',
-        //     't.id'
-        // )
-        //     ->where('fee_transaction_payments.payment_for', $student_id)
-        //     //->whereNotNull('transaction_payments.transaction_id');
-        //     //->whereNull('transaction_payments.parent_id');
 
         $query = FeeTransactionPayment::where('fee_transaction_payments.payment_for', $student_id)
         //->whereNotNull('transaction_payments.transaction_id');
         ->whereNull('fee_transaction_payments.parent_id')
-        ->where('session_id','=',$this->feeTransactionUtil->getActiveSession());
-        
-
-        if (!empty($start)  && !empty($end)) {
-            $query->whereDate('paid_on', '>=', $start)
-                    ->whereDate('paid_on', '<=', $end);
-        }
-
-        //if (!empty($start)  && empty($end)) {
-       // $query->whereDate('paid_on', '>', '2021-1-1');
-        // }
+        ->where('session_id','=',$session_id);
         $query->select([DB::raw("SUM(amount) as total_paid"),
-    DB::raw('MONTH(paid_on) month')
-])->groupBy('month');
+                      DB::raw('MONTH(paid_on) month')
+                      ])->groupBy('month');
 
         return $query->get();
     }

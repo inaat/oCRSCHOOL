@@ -313,6 +313,7 @@ class FeeTransactionUtil extends Util
                     'students.father_name',
                     'students.roll_no',
                     'students.status',
+
                     DB::raw("concat(sessions.title, ' - ' '(', sessions.status, ') ') as session_info"),
                     DB::raw("CONCAT(COALESCE(students.first_name, ''),' ',COALESCE(students.last_name,'')) as student_name"),
                     DB::raw('DATE_FORMAT(fee_transactions.transaction_date, "%Y/%m/%d") as fee_transaction_date'),

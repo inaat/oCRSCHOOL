@@ -20,11 +20,23 @@ class FeeTransaction extends Model
         return $this->hasMany(FeeTransactionLine::class);
     }
 
+    
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_id');
     }
-
+    public function session()
+    {
+        return $this->belongsTo(Session::class, 'session_id');
+    }
+    public function student_class()
+    {
+        return $this->belongsTo(Student::class, 'class_id');
+    }
+    public function student_class_section()
+    {
+        return $this->belongsTo(ClassSection::class, 'class_section_id');
+    }
     // public function payment_lines()
     // {
     //     return $this->hasMany(TransactionPayment::class, 'transaction_id');

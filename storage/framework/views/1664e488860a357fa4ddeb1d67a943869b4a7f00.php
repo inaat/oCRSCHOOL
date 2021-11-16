@@ -8,7 +8,7 @@
 </head>
 <body>
      <footer>
-        <h3>footer</h3>
+        
     </footer>
 </body>
 </html><?php /**PATH C:\scsserver\htdocs\oCRSCHOOL\resources\views/feecard/_footer.blade.php ENDPATH**/ ?>

@@ -37,7 +37,7 @@
     .fee-table-area {
         margin-left: 10px;
         width: 70%;
-        border-left: 2px solid black;
+        border: 2px solid black;
 
 
     }
@@ -45,8 +45,8 @@
     .fee-received {
         width: 27%;
         border-bottom: 2px solid black;
-        border-left: 2px solid black;
         border-right: 2px solid black;
+        height:519px;
 
 
 
@@ -54,6 +54,17 @@
 
     #head {
         width: 300px;
+        /* 70% of the parent*/
+        background: rgb(4, 101, 49);
+        text-align: center;
+        color: white;
+        padding: 3px;
+        margin: 1px auto;
+        border-radius: 5px;
+
+    }
+    #head1 {
+        width:80%;
         /* 70% of the parent*/
         background: rgb(4, 101, 49);
         text-align: center;
@@ -132,6 +143,7 @@
         overflow-x: hidden;
         overflow-y: hidden;
         table-layout: fixed;
+        
 
     }
 
@@ -146,24 +158,30 @@
         font-size: 12px;
     }
 
+
+.clear{
+            clear: both;
+
+}
+
 </style>
 </head>
 
 <body>
     <div class="div fee-table-area">
         <div id="head">
-            <h6>Fee Upto December Session(2020 - 2021)</h6>
+            <h6>Fee Upto December Session({{ $current_transaction->session->title }})</h6>
         </div>
         <div class="info" style="border:1px solid black;">
             <div class="column1">
                 <div class='row'>
                     <div class='label'> <strong>Name:</strong></div>
-                    <div class="mg-left"><strong>FAIZ ULLAH KHAN</strong></div>
+                    <div class="mg-left"><strong>{{ ucwords($current_transaction->student->first_name . ' ' . $current_transaction->student->last_name) }}</strong></div>
 
                 </div>
                 <div class='row'>
                     <div class='label'> <strong>Roll No:</strong></div>
-                    <div class="mg-left"><strong>F20-2505</strong></div>
+                    <div class="mg-left"><strong>{{ ucwords($current_transaction->student->roll_no) }}</strong></div>
                     <div class='label extra-left'> <strong>Class:</strong></div>
                     <div class="mg-left">
                         <p>Ist - Green</p>
@@ -172,7 +190,7 @@
                 </div>
                 <div class='row'>
                     <div class='label'> <strong>Father's Name:</strong></div>
-                    <div class="mg-left"><strong>NABI SALAR</strong></div>
+                    <div class="mg-left"><strong>{{ ucwords($current_transaction->student->father_name) }}</strong></div>
 
                 </div>
                 <div class='row'>
@@ -182,7 +200,7 @@
                 <div class='row'>
                     <div class='label'> <strong>Cell:</strong></div>
                     <div class="mg-left">
-                        <p>03428927305</p>
+                        <p><strong>{{ ucwords($current_transaction->student->mobile_no) }}</strong></p>
                     </div>
                 </div>
             </div>
@@ -256,21 +274,73 @@
         </table>
         <div class="space" style="margin-top:px; width:100%;  height:5px;">
         </div>
+       <h6 style="text-align:center">Current Fee</h6>
         <table>
             <thead class="table-light" width="100%">
                 <tr>
-                    @foreach ($feeHeads as $feeHead)
-                        <th>{{ $feeHead->description }}</th>
+                    @foreach ($current_transaction->fee_lines as $feeHead)
+                        <th>{{ $feeHead->feeHead->description }}</th>
 
                     @endforeach
                     <th>Total Current</th>
+                </tr>
+                <tr>
+                    @foreach ($current_transaction->fee_lines as $feeHead)
+                        <td>{{ number_format($feeHead->amount,0) }}</td>
+
+                    @endforeach
+                    <td>{{ number_format($current_transaction->final_total,0) }}</td>
                 </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
+         <div class="space" style="margin-top:px; width:100%;  height:5px; border-bottom:1px solid black;">
+            </div>
+         <div class="space" style="margin-top:px; width:100%;  height:5px;">
+            </div>
+          <div style=" width:50%; height:50; float:left">
+           <div class='row'>
+                <div class='label'> <strong>Adj:</strong></div>
+                <div class="underline"><strong></strong></div>
+
+            </div>
+             <div class="space" style="margin-top:px; width:100%;  height:10px;">
+            </div>
+           <div class='row'>
+                <div class='label extra-left'> <strong>Account Officer:</strong></div>
+                <div class="underline"><strong></strong></div>
+
+            </div>
+          </div>
+          <div style=" width:50%; height:50; float:right">
+           <table>
+            <thead class="table-light" width="100%">
+                <tr>
+                    <th>Net Total</th>
+                    <td>00</td>
+                </tr>
+                <tr>
+                    <th>Paid</th>
+                    <td>2600</td>
+                </tr>
+                <tr>
+                    <th>Balance</th>
+                    <td>00</td>
+                </tr>
+              
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+          </div>
     </div>
     <div class="div fee-received">
+    <div class="space" style="margin-top:px; width:100%;  height:5px;">
+            </div>
+     <div id="head1">
+            <span style="font-size:10px">Fee Upto December Session({{ $current_transaction->session->title }})</span>
+        </div>
         <div class="mg-left">
             <div class="space" style="margin-top:px; width:100%;  height:5px;">
             </div>
@@ -284,14 +354,14 @@
             <div class="space" style="margin-top:15px; width:100%;  height:5px;">
             </div>
             <div class='row'>
-                <div class='label'> <strong>Name:</strong></div>
-                <div class="mg-left"><strong>FAIZ ULLAH KHAN</strong></div>
+                    <div class='label'> <strong>Name:</strong></div>
+                    <div class="mg-left"><strong>{{ ucwords($current_transaction->student->first_name . ' ' . $current_transaction->student->last_name) }}</strong></div>
 
             </div>
 
             <div class='row'>
                 <div class='label'> <strong>Father's Name:</strong></div>
-                <div class="mg-left"><strong>NABI SALAR</strong></div>
+                <div class="mg-left"><strong>{{ ucwords($current_transaction->student->father_name) }}</strong></div>
 
             </div>
             <div class='row'>
@@ -301,6 +371,45 @@
                 </div>
 
             </div>
+            <div class="space" style="margin-top:px; width:100%;  height:45px;">
+            </div>
+              <div style=" margin:0 auto;width:80%;  text-align:center;">
+           <table>
+            <thead class="table-light" width="100%">
+                <tr>
+                    <th>Net Total</th>
+                    <td>00</td>
+                </tr>
+                <tr>
+                    <th>Paid</th>
+                    <td>2600</td>
+                </tr>
+                <tr>
+                    <th>Balance</th>
+                    <td>00</td>
+                </tr>
+              
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+          </div>
+              <div class="space" style="margin-top:px; width:100%;  height:30px;">
+            </div>
+          <div style=" width:100%; height:50; float:left">
+           <div class='row'>
+                <div class='label'> <strong>Adj:</strong></div>
+                <div class="underline"><strong></strong></div>
+
+            </div>
+             <div class="space" style="margin-top:px; width:100%;  height:10px;">
+            </div>
+           <div class='row'>
+                <div class='label'> <strong>Account Officer:</strong></div>
+                <div class="underline"><strong></strong></div>
+
+            </div>
+          </div>
         </div>
 
     </div>
