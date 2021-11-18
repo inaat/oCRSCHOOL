@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\Guardian;
 use App\Models\StudentGuardian;
 use App\Models\FeeTransaction;
+use DB;
 
 class StudentUtil extends Util
 {
@@ -247,10 +248,33 @@ class StudentUtil extends Util
         $studentGuardian = StudentGuardian::where('student_id',$student_id)->first();
         $studentGuardian->guardian_id=$guardian->id;
         $studentGuardian->save();
-            // $studentGuardian = StudentGuardian::create([
-            //     'student_id' => $student_id,
-            //     'guardian_id' => $guardian->id,
-            // ]);
+    }
+    public function getStudentList($system_settings_id,$class_id, $class_section_id){
+
+        
+        $query=Student::leftJoin('campuses', 'students.campus_id', '=', 'campuses.id')
+        ->leftJoin('classes as c-class', 'students.current_class_id', '=', 'c-class.id')
+         ->where('students.system_settings_id', $system_settings_id)
+         ->where('students.current_class_id', $class_id)
+         ->select(
+             'campuses.campus_name',
+             'c-class.title as current_class',
+             'students.father_name',
+             'students.roll_no',
+             'students.admission_no',
+             'students.gender',
+             'students.id as id',
+             'students.student_image',
+             'students.admission_date',
+             DB::raw("CONCAT(COALESCE(students.first_name, ''),' ',COALESCE(students.last_name,'')) as student_name")
+         );
+         
+        if (!empty($class_section_id)) {
+            $query->where('students.current_class_section_id', $class_section_id);
+        }
+        
+        return $query->get();
+       
 
     }
 }

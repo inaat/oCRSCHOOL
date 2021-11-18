@@ -165,6 +165,38 @@ class FeeTransactionUtil extends Util
 
         return $parent_payment;
     }
+    public function payStudentAdjustments($request, $format_data = true)
+    {
+        $student_id = $request->input('student_id');
+        $inputs = $request->only([ 'method', 'note', 'card_number', 'card_holder_name',
+        'card_transaction_number', 'card_type', 'card_month', 'card_year', 'card_security',
+        'cheque_number', 'bank_account_number']);
+        $inputs['paid_on'] = $this->uf_date($request->input('paid_on'), true);
+        $inputs['is_return'] = $transaction->id;
+        $inputs['amount'] = $this->num_uf($request->only(['adjustment_amount']));
+        $inputs['created_by'] = auth()->user()->id;
+        $inputs['payment_for'] = $student_id;
+        $inputs['account_id'] = $request->input('account_id');
+        $inputs['session_id']=$this->getActiveSession();
+
+
+        $prefix_type = 'fee_payment';
+        DB::beginTransaction();
+
+        $ref_count = $this->setAndGetReferenceCount($prefix_type, false, true);
+                //Generate reference number
+        $inputs['payment_ref_no'] = $this->generateReferenceNumber($prefix_type, $ref_count, $system_settings_id);
+
+        $inputs['system_settings_id'] = $request->session()->get('system_details.id');
+        //Pay from advance balance
+        $payment_amount = $inputs['amount'];
+        if (!empty($inputs['amount'])) {
+            $tp = FeeTransactionPayment::create($inputs);
+            $inputs['transaction_type'] = $transaction->type;
+            event(new FeeTransactionPaymentAdded($tp, $inputs));
+        }
+
+    }
     /**
      * Pay student due at once
      *
@@ -288,7 +320,7 @@ class FeeTransactionUtil extends Util
     *
     * @return object
     */
-    public function getListSells($system_settings_id)
+    public function getListFeeTransaction($system_settings_id)
     {
         $sells = FeeTransaction::leftJoin('students', 'fee_transactions.student_id', '=', 'students.id')
            

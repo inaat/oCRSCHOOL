@@ -39,6 +39,7 @@
         overflow-y: hidden;
         float: left;
         border: 1px solid #000;
+        page-break-inside: avoid;
 
 
 
@@ -51,6 +52,7 @@
         width: 29%;
         height: 524px;
         float: right;
+        page-break-inside: avoid;
 
 
 
@@ -385,13 +387,13 @@
 
                 </div>
 
-                <div class='row'>
+                <div class='row' style='padding-top:10px;'>
                     <div class='label'> <strong>@lang('lang.father_name'):</strong></div>
                     <div class="mg-left">
                         <strong>{{ ucwords($current_transaction->student->father_name) }}</strong></div>
 
                 </div>
-                <div class='row'>
+                <div class='row' style='padding-top:10px;'>
                     <div class='label'> <strong>@lang('lang.class')</strong></div>
                     <div class="mg-left">
                         <p>{{ $current_transaction->student_class->title . '  ' . $current_transaction->student_class_section->section_name }}
@@ -441,8 +443,7 @@
             </div>
         </div>
     </div>
-
-
+<p style="page-break:always"> <p>
 
 </body>
 

@@ -2,7 +2,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@lang('lang.fee_card'){{ ucwords(($current_transaction->voucher_no)) }}</title>
+<title>@lang('lang.fee_card')</title>
 <style>
     * {
         margin: 0;
@@ -39,6 +39,7 @@
         overflow-y: hidden;
         float: left;
         border: 1px solid #000;
+        page-break-inside: avoid;
 
 
 
@@ -51,6 +52,9 @@
         width: 29%;
         height: 524px;
         float: right;
+        font-size:15px;
+        page-break-inside: avoid;
+        
 
 
 
@@ -165,22 +169,23 @@
 </head>
 
 <body>
+                @foreach ($student as $std)
 
     <div class=" fee-table-area">
         <div class="space" style="width:100%;  height:1px;">
         </div>
         <div id="head">
-            <h6>@lang('lang.fee_upto_december_session')({{ $current_transaction->session->title }})</h6>
+            <h6>@lang('lang.fee_upto_december_session')({{ $std['current_transaction']->session->title }})</h6>
         </div>
         <div class="info" style="border:1px solid black;">
             <div class="column1">
                <div class='row'>
                     <div class='label'> <strong>@lang('lang.challan_no'):</strong></div>
-                    <div class="mg-left"><strong>{{ ucwords($current_transaction->voucher_no) }}</strong>
+                    <div class="mg-left"><strong>{{ ucwords($std['current_transaction']->voucher_no) }}</strong>
                     </div>
                     <div class='label extra-left'> <strong>@lang('lang.date'):</strong></div>
                     <div class="">
-                        <p>{{ @format_datetime($current_transaction->transaction_date) }}</p>
+                        <p>{{ @format_datetime($std['current_transaction']->transaction_date) }}</p>
                         </p>
                     </div>
 
@@ -188,17 +193,17 @@
                 <div class='row'>
                     <div class='label'> <strong>@lang('lang.name'):</strong></div>
                     <div class="mg-left">
-                        <strong>{{ ucwords($current_transaction->student->first_name . ' ' . $current_transaction->student->last_name) }}</strong>
+                        <strong>{{ ucwords($std['current_transaction']->student->first_name . ' ' . $std['current_transaction']->student->last_name) }}</strong>
                     </div>
 
                 </div>
                 <div class='row'>
                     <div class='label'> <strong>@lang('lang.roll_no'):</strong></div>
-                    <div class="mg-left"><strong>{{ ucwords($current_transaction->student->roll_no) }}</strong>
+                    <div class="mg-left"><strong>{{ ucwords($std['current_transaction']->student->roll_no) }}</strong>
                     </div>
                     <div class='label extra-left'> <strong>@lang('lang.class'):</strong></div>
                     <div class="mg-left">
-                        <p>{{ $current_transaction->student_class->title . '  ' . $current_transaction->student_class_section->section_name }}
+                        <p>{{ $std['current_transaction']->student_class->title . '  ' . $std['current_transaction']->student_class_section->section_name }}
                         </p>
                     </div>
 
@@ -206,30 +211,32 @@
                 <div class='row'>
                     <div class='label'> <strong>@lang('lang.father_name'):</strong></div>
                     <div class="mg-left">
-                        <strong>{{ ucwords($current_transaction->student->father_name) }}</strong></div>
+                        <strong>{{ ucwords($std['current_transaction']->student->father_name) }}</strong></div>
 
                 </div>
                 <div class='row'>
                     <div class='label'> <strong>@lang('lang.address'):</strong></div>
-                    <div class="mg-left">{{ ucwords($current_transaction->student->std_permanent_address) }}</div>
+                    <div class="mg-left">{{ ucwords($std['current_transaction']->student->std_permanent_address) }}</div>
 
                 </div>
                 <div class='row'>
                     <div class='label'> <strong>@lang('lang.cell'):</strong></div>
                     <div class="mg-left">
-                        <p><strong>{{ ucwords($current_transaction->student->mobile_no) }}</strong></p>
+                        <p><strong>{{ ucwords($std['current_transaction']->student->mobile_no) }}</strong></p>
                     </div>
-                    @if (!empty($current_transaction->student->discount))
+                    @if (!empty($std['current_transaction']->student->discount))
 
 
                         <div class='label extra-left'> <strong>@lang('lang.discount'):</strong></div>
-                        <div class="mg-left"><strong>@if ($current_transaction->student->discount->discount_type == 'fixed'){{ number_format($current_transaction->student->discount->discount_amount, 0) }}@else{{ number_format($current_transaction->student->discount->discount_amount, 0) . '%' }}@endif</strong></div>
+                        <div class="mg-left"><strong>@if ($std['current_transaction']->student->discount->discount_type == 'fixed'){{ number_format($std['current_transaction']->student->discount->discount_amount, 0) }}@else{{ number_format($std['current_transaction']->student->discount->discount_amount, 0) . '%' }}@endif</strong></div>
                     @endif
                 </div>
                 
             </div>
             <div class="column2">
-                <img width="150" height="140" src="@lang('student.img')" />
+                {{-- <img width="150" height="140" src="@base64($std['current_transaction']->student->student_image))" /> --}}
+                <img width="150" height="140" src="{{ $std['student_image'] }}" />
+
             </div>
         </div>
         <div style="height:1px; background:black;">
@@ -246,14 +253,14 @@
 
             <tr>
                 <td><strong>@lang('lang.b/f')</strong></td>
-                @foreach ($balance['bf'] as $b)
+                @foreach ($std['balance']['bf'] as $b)
                     <td><strong>{{ number_format($b, 0) }}</strong></td>
 
                 @endforeach
             </tr>
             <tr>
                 <td><strong>@lang('lang.current_fee')</strong></td>
-                @foreach ($transaction_formatted as $t)
+                @foreach ($std['transaction_formatted'] as $t)
                     @if ($t != 0)
                         <td><strong>{{ number_format($t, 0) }}</strong></td>
                     @else
@@ -264,14 +271,14 @@
             </tr>
             <tr>
                 <td><strong>@lang('lang.total')</strong></td>
-                @foreach ($balance['total'] as $t)
+                @foreach ($std['balance']['total'] as $t)
                     <td><strong>{{ number_format($t, 0) }}</strong></td>
 
                 @endforeach
             </tr>
             <tr>
                 <td><strong>@lang('lang.paid')</strong></td>
-                @foreach ($payment_formatted as $p)
+                @foreach ($std['payment_formatted'] as $p)
                     @if ($p != 0)
                         <td><strong>{{ number_format($p, 0) }}</strong></td>
                     @else
@@ -289,7 +296,7 @@
             </tr>
             <tr>
                 <td><strong>@lang('lang.balance')</strong></td>
-                @foreach ($balance['balance'] as $b)
+                @foreach ($std['balance']['balance'] as $b)
                     <td><strong>{{ number_format($b, 0) }}</strong></td>
 
                 @endforeach
@@ -302,18 +309,18 @@
         <table>
             <thead class="table-light" width="100%">
                 <tr>
-                    @foreach ($current_transaction->fee_lines as $feeHead)
+                    @foreach ($std['current_transaction']->fee_lines as $feeHead)
                         <th>{{ $feeHead->feeHead->description }}</th>
 
                     @endforeach
                     <th>@lang('lang.total_current_fee')</th>
                 </tr>
                 <tr>
-                    @foreach ($current_transaction->fee_lines as $feeHead)
+                    @foreach ($std['current_transaction']->fee_lines as $feeHead)
                         <td>{{ number_format($feeHead->amount, 0) }}</td>
 
                     @endforeach
-                    <td>{{ number_format($current_transaction->final_total, 0) }}</td>
+                    <td>{{ number_format($std['current_transaction']->final_total, 0) }}</td>
                 </tr>
             </thead>
             <tbody>
@@ -346,7 +353,7 @@
                     </tr>
                     <tr>
                         <th>@lang('lang.paid')</th>
-                        <td>{{ number_format($current_transaction_paid->total_paid,0) }}</td>
+                        <td>{{ number_format($std['current_transaction_paid']->total_paid,0) }}</td>
                     </tr>
                     <tr>
                         <th>@lang('lang.balance')</th>
@@ -364,14 +371,14 @@
             <div class="space" style=" width:100%;  height:2px;">
             </div>
             <div id="head1">
-                <span style="font-size:10px">@lang('lang.fee_upto_december_session')({{ $current_transaction->session->title }})</span>
+                <span style="font-size:10px">@lang('lang.fee_upto_december_session')({{ $std['current_transaction']->session->title }})</span>
             </div>
             <div class="">
                 <div class="space" style="margin-top:px; width:100%;  height:5px;">
                 </div>
                 <div id="row">
                     <h4 class='label mg-left'> <strong>@lang('lang.roll_no')</strong>
-                        <span class="mg-left"><strong>{{ ucwords($current_transaction->student->roll_no) }}</strong></span>
+                        <span class="mg-left"><strong>{{ ucwords($std['current_transaction']->student->roll_no) }}</strong></span>
                     </h4>
 
                 </div>
@@ -380,21 +387,21 @@
                 <div class='row'>
                     <div class='label'> <strong>@lang('lang.name'):</strong></div>
                     <div class="mg-left">
-                        <strong>{{ ucwords($current_transaction->student->first_name . ' ' . $current_transaction->student->last_name) }}</strong>
+                        <strong>{{ ucwords($std['current_transaction']->student->first_name . ' ' . $std['current_transaction']->student->last_name) }}</strong>
                     </div>
 
                 </div>
 
-                <div class='row'>
+                <div class='row' style='padding-top:10px;'>
                     <div class='label'> <strong>@lang('lang.father_name'):</strong></div>
                     <div class="mg-left">
-                        <strong>{{ ucwords($current_transaction->student->father_name) }}</strong></div>
+                        <strong>{{ ucwords($std['current_transaction']->student->father_name) }}</strong></div>
 
                 </div>
-                <div class='row'>
+                <div class='row' style='padding-top:10px;'>
                     <div class='label'> <strong>@lang('lang.class')</strong></div>
                     <div class="mg-left">
-                        <p>{{ $current_transaction->student_class->title . '  ' . $current_transaction->student_class_section->section_name }}
+                        <p>{{ $std['current_transaction']->student_class->title . '  ' . $std['current_transaction']->student_class_section->section_name }}
                         </p>
                     </div>
 
@@ -410,7 +417,7 @@
                             </tr>
                             <tr>
                                 <th>@lang('lang.paid')</th>
-                        <td>{{ number_format($current_transaction_paid->total_paid,0) }}</td>
+                        <td>{{ number_format($std['current_transaction_paid']->total_paid,0) }}</td>
                             </tr>
                             <tr >
                                 <th>@lang('lang.balance')</th>
@@ -441,8 +448,8 @@
             </div>
         </div>
     </div>
-
-
+<p style="page-break:always"> <p>
+  @endforeach
 
 </body>
 

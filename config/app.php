@@ -175,6 +175,7 @@ return [
 
 
 
+
       
 
 
@@ -256,6 +257,7 @@ return [
 
         'WPDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+
 
         
 

@@ -50,13 +50,22 @@
                     </div>
                 </div>
             </div>
+ <div class="row ">
+                <div class="col-md-4 p-1">
+                    {!! Form::label('lang.amount',  __('lang.adjustment').' '. __('lang.amount') ) !!}
+                    <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
+                                class="fas fa-money-bill-alt"></i></span>
+                        {!! Form::text("adjustment_amount",0, ['class' => 'form-control input_number', 'required', 'placeholder' => 'Amount', 'id'=>'adjustment_amount']); !!}
 
+                    </div>
+                </div>
+                </div>
             <div class="row payment_row">
                 <div class="col-md-4 p-1">
                     {!! Form::label('lang.amount', __('lang.amount') . ':*') !!}
                     <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
                                 class="fas fa-money-bill-alt"></i></span>
-                        {!! Form::text("amount", @num_format($payment_line->amount), ['class' => 'form-control input_number', 'required', 'placeholder' => 'Amount', 'data-rule-max-value' =>$payment_line->amount, 'data-msg-max-value' => __('lang_v1.max_amount_to_be_paid_is', ['amount' =>@num_format($payment_line->amount)])]); !!}
+                        {!! Form::text("amount", @num_format($payment_line->amount), ['class' => 'form-control input_number amount', 'required', 'placeholder' => 'Amount', 'data-rule-max-value' =>$payment_line->amount, 'data-msg-max-value' => __('lang_v1.max_amount_to_be_paid_is', ['amount' =>@num_format($payment_line->amount)])]); !!}
 
                     </div>
                 </div>

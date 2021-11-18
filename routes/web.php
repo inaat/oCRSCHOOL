@@ -35,7 +35,7 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     Route::post('/payments/pay-student-due', 'FeeTransactionPaymentController@postPayStudentDue');
     Route::get('/payments/add_payment/{transaction_id}', 'FeeTransactionPaymentController@addPayment');
 
-
+    
 
 
 
@@ -58,7 +58,7 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     Route::resource('fee-allocation', 'FeeAllocationController');
     Route::post('fees-assign-search', 'FeeAllocationController@feesAssignSearch')->name('fees-assign-search');
 
-
+    require_once 'printing.php';
     Route::group(['prefix' => 'account'], function () {
         Route::resource('/account', 'AccountController');
         Route::get('/fund-transfer/{id}', 'AccountController@getFundTransfer');
@@ -80,7 +80,7 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     });
     Route::resource('account-types', 'AccountTypeController');
 
-
+   
 });
 Auth::routes();
 

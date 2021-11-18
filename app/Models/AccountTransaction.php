@@ -45,7 +45,7 @@ class AccountTransaction extends Model
         $account_transaction_types = [
             'fee' => 'credit',
             'opening_balance' => 'credit',
-            'purchase' => 'debit',
+            'fee_adjustment' => 'debit',
             'expense' => 'debit',
             'purchase_return' => 'credit',
             'fee_adjustment' => 'debit',

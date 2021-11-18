@@ -16,7 +16,7 @@
         .logo-left {
             float: left;
             width: 70%;
-
+page-break-inside: avoid;
 
         }
 
@@ -24,6 +24,7 @@
             float: right;
             width: 30%;
             border-left: 3px solid black;
+            page-break-inside: avoid;
             
         }
 
@@ -48,4 +49,3 @@
 </body>
 
 </html>
-<?php /**PATH C:\scsserver\htdocs\oCRSCHOOL\resources\views/feecard/_header.blade.php ENDPATH**/ ?>

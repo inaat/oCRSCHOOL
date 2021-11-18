@@ -4282,7 +4282,7 @@ class TransactionUtil extends Util
     *
     * @return object
     */
-    public function getListSells($business_id)
+    public function getListFeeTransaction($business_id)
     {
         $sells = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
                 // ->leftJoin('transaction_payments as tp', 'transactions.id', '=', 'tp.transaction_id')

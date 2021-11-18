@@ -154,6 +154,27 @@
         $(document).on('keyup', '#students_list_filter_admission_no,#students_list_filter_roll_no',  function() {
             students_table.ajax.reload();
         });
+        $(document).on('change', '#adjustment_amount',  function() {
+             var adjustment_amount = __read_number($(this));
+             var amount =__number_uf($('.amount').val(),false);
+             var adjamount=amount - adjustment_amount;
+             if(adjamount>0){
+                $('.amount').attr('data-rule-max-value',adjamount);
+                $('.amount').attr('data-msg-max-value','Maximum value is '+adjamount);
+                $('.amount').val(adjamount);
+
+
+             }
+             else{
+                $('.amount').val(amount);
+                $('.amount').attr('data-rule-max-value',amount);
+                $(this).val(0);
+
+                toastr.error(LANG.fee_heads);
+
+             }
+
+        });
                 //students_table
         var students_table = $("#students_table").DataTable({
             processing: true

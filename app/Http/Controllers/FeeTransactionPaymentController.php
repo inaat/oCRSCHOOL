@@ -204,7 +204,7 @@ class FeeTransactionPaymentController extends Controller
 
     {
 
-        
+        dd($request);
         if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
         }

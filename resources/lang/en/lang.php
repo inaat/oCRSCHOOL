@@ -10,6 +10,7 @@ return [
     'all'=>'All',
     'status'=>'Status',
     'name'=>'Name',
+    'date' => 'Date',
     'filter'=>'Filter',
     'save'=>'Save',
     'fees'=>'Fees',
@@ -104,6 +105,24 @@ return [
 
    'fees_allocation'=>'Fees Allocation',
    'select_ground'=>'Select Ground',
+   'fee_card'=>'Fee Card',
+   'fee_upto_december_session'=>'Fee Upto December Session',
+   'challan_no'=>'Challan No',
+   'class'=>'Class',
+   'section'=>'Section',
+   'cell' => 'Cell',
+   'address'=>'Address',
+   'discount'=>'Discount',
+   'b/f'=>'B/F',
+   'total'=>'Total',
+   'paid'=>'Paid',
+   'current_fee'=>'Current Fee',
+   'balance'=>'Balance',
+   'total_current_fee'=>'Total Current Fee',
+   'account_officer'=>'Account Officer',
+   'adjustment' =>'Adjustment',
+   'net_total'=>'Net Total',
+'fee_card_printing'=>'Fee Card Printing',
 
 
 
