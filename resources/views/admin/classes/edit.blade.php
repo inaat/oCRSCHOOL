@@ -38,8 +38,24 @@
 
                 </div>
 
+                <div class="col-md-6 p-3">
+                    {!! Form::label('transport_fee', __('lang.transport_fee') . ':*') !!}
+                    {!! Form::text('transport_fee',@num_format($classes->transport_fee), ['class' => 'form-control input_number', 'required', 'placeholder' => __('lang.transport_fee')]) !!}
 
+                </div>
                 <div class="clearfix"></div>
+
+                <div class="col-md-6 p-3">
+                    {!! Form::label('security_fee', __('lang.security_fee') . ':*') !!}
+                    {!! Form::text('security_fee',@num_format($classes->security_fee), ['class' => 'form-control input_number', 'required', 'placeholder' => __('lang.security_fee')]) !!}
+
+                </div>
+
+                <div class="col-md-6 p-3">
+                    {!! Form::label('prospectus_fee', __('lang.prospectus_fee') . ':*') !!}
+                    {!! Form::text('prospectus_fee',@num_format($classes->prospectus_fee) ,['class' => 'form-control input_number', 'required', 'placeholder' => __('lang.prospectus_fee')]) !!}
+
+                </div>
             </div>
 
 
@@ -48,8 +64,8 @@
 
 
 
-                <button type="submit" class="btn btn-primary">@lang( 'global_lang.update' )</button>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">@lang( 'global_lang.close' )</button>
+                <button type="submit" class="btn btn-primary">@lang( 'lang.update' )</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">@lang( 'lang.close' )</button>
             </div>
         </div>
 

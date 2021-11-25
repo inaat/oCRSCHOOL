@@ -30,12 +30,12 @@
                                      <th>@lang('lang.fee_transaction_date')</th>
                                      <th>@lang('lang.challan_no')</th>
                                      <th>@lang('campus.campus_name')</th>
+                                    <th>@lang('lang.student_name')</th>
                                      <th>@lang('lang.payment_status')</th>
                                      <th>@lang('lang.final_total')</th>
                                      <th>@lang('lang.total_paid')</th>
                                      <th>@lang('lang.fee_due')</th>
                                      <th>@lang('lang.session')</th>
-                                     <th>@lang('lang.student_name')</th>
                                      <th>@lang('lang.father_name')</th>
                                      <th>@lang('lang.status')</th>
                                      <th>@lang('lang.roll_no')</th>
@@ -125,7 +125,7 @@
                          if (result.status == 'due') {
                              container.html(result.view).modal('show');
                              __currency_convert_recursively(container);
-                             $('#paid_on').datetimepicker({
+                             $('#datetimepicker').datetimepicker({
                                  format: moment_date_format + ' ' + moment_time_format,
                                  ignoreReadonly: true,
                              });
@@ -162,8 +162,8 @@
                      }
 
                      , {
-                         data: "fee_transaction_date",
-                         name: "fee_transaction_date"
+                         data: "transaction_date",
+                         name: "transaction_date"
                      }, {
                          data: "voucher_no",
                          name: "voucher_no"
@@ -172,6 +172,11 @@
                          name: "campus_name",
                          orderable: false,
                          "searchable": false
+                     },
+                     {
+                         data: "student_name",
+                         name: "student_name",
+                       
                      }, {
                          data: "payment_status",
                          name: "payment_status",
@@ -197,16 +202,10 @@
                          name: "session_info",
                          orderable: false,
                          "searchable": false
-                     }, {
-                         data: "student_name",
-                         name: "student_name",
-                         orderable: false,
-                         "searchable": false
-                     }, {
+                     },  {
                          data: "father_name",
                          name: "father_name",
-                         orderable: false,
-                         "searchable": false
+                      
                      }, {
                          data: "status",
                          name: "status",
@@ -214,7 +213,8 @@
                          "searchable": false
                      }, {
                          data: "roll_no",
-                         name: "roll_no"
+                         name: "roll_no",
+                       
                      }, {
                          data: "current_class",
                          name: "current_class",

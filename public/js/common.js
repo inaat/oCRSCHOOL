@@ -637,3 +637,19 @@ $(document).on('change', '.global-classes', function() {
     var doc = $(this);
     __get_class_Section(doc);
 });
+
+
+$(document).on('keyup', '#discount_amount',  function() {
+    var discount_amount = __read_number($(this));
+    var amount =__number_uf($('.amount').val(),false);
+    var discount_amount=amount - discount_amount;
+    if(discount_amount<0){
+       $('.amount').val(amount);
+       $('.amount').attr('data-rule-max-value',amount);
+       $(this).val(0);
+
+       toastr.error(LANG.discount_amount_exceeds_total_amount);
+
+    }
+
+});

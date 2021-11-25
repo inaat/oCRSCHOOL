@@ -49,7 +49,7 @@ class ClassController extends Controller
                         ->leftjoin('campuses as c', 'classes.campus_id', '=', 'c.id')
                         ->leftjoin('class_levels as l', 'classes.class_level_id', '=', 'l.id')
                         ->select(['classes.id', 'classes.title','l.title as class_level',
-                           'c.campus_name as campus_name','classes.tuition_fee', 'classes.admission_fee']);
+                           'c.campus_name as campus_name','classes.tuition_fee', 'classes.admission_fee','classes.admission_fee','classes.transport_fee','classes.security_fee','classes.prospectus_fee']);
 
             return DataTables::of($classes)
                            ->addColumn(
@@ -62,10 +62,24 @@ class ClassController extends Controller
                                </ul>
                            </div>'
                            )
+                           ->filterColumn('campus_name', function ($query, $keyword) {
+                            $query->where( function($q) use($keyword) {
+                                $q->where('c.campus_name', 'like', "%{$keyword}%");
+                            });
+                        })
+                           ->filterColumn('class_level', function ($query, $keyword) {
+                            $query->where( function($q) use($keyword) {
+                                $q->where('l.title', 'like', "%{$keyword}%");
+                            });
+                        })
+                           
                           ->editColumn('tuition_fee', '{{@num_format($tuition_fee)}}')
                           ->editColumn('admission_fee', '{{@num_format($admission_fee)}}')
+                          ->editColumn('transport_fee', '{{@num_format($transport_fee)}}')
+                          ->editColumn('security_fee', '{{@num_format($security_fee)}}')
+                          ->editColumn('prospectus_fee', '{{@num_format($prospectus_fee)}}')
                            ->removeColumn('id')
-                           ->rawColumns(['action', 'classes.title','campus_name','class_level','classes.tuition_fee', 'classes.admission_fee'])
+                           ->rawColumns(['action', 'classes.title','campus_name','class_level','classes.tuition_fee', 'classes.admission_fee','classes.transport_fee','classes.security_fee','classes.prospectus_fee'])
                            ->make(true);
         }
         return view('admin\classes.index');
@@ -99,13 +113,17 @@ class ClassController extends Controller
         }
 
         try {
-            $input = $request->only(['title','campus_id','class_level_id','tuition_fee', 'admission_fee']);
+            
+            $input = $request->only(['title','campus_id','class_level_id','tuition_fee', 'admission_fee','transport_fee','security_fee','prospectus_fee']);
             $system_settings_id = $request->session()->get('user.system_settings_id');
             $user_id = $request->session()->get('user.id');
             $input['system_settings_id'] = $system_settings_id;
             $input['created_by'] = $user_id;
             $input['tuition_fee'] =  $this->commonUtil->num_uf($input['tuition_fee']);
             $input['admission_fee'] =  $this->commonUtil->num_uf($input['admission_fee']);
+            $input['transport_fee'] =  $this->commonUtil->num_uf($input['transport_fee']);
+            $input['security_fee'] =  $this->commonUtil->num_uf($input['security_fee']);
+            $input['prospectus_fee'] =  $this->commonUtil->num_uf($input['prospectus_fee']);
             $classes = Classes::create($input);
             $output = ['success' => true,
                             'data' => $classes,
@@ -159,10 +177,13 @@ class ClassController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $input = $request->only(['title','campus_id','class_level_id','tuition_fee', 'admission_fee']);
+            $input = $request->only(['title','campus_id','class_level_id','tuition_fee', 'admission_fee','transport_fee','security_fee','prospectus_fee']);
             $system_settings_id = session()->get('user.system_settings_id');
             $input['tuition_fee'] =  $this->commonUtil->num_uf($input['tuition_fee']);
             $input['admission_fee'] =  $this->commonUtil->num_uf($input['admission_fee']);
+            $input['transport_fee'] =  $this->commonUtil->num_uf($input['transport_fee']);
+            $input['security_fee'] =  $this->commonUtil->num_uf($input['security_fee']);
+            $input['prospectus_fee'] =  $this->commonUtil->num_uf($input['prospectus_fee']);
     
             $classes = Classes::where('system_settings_id', $system_settings_id)->find($id);
             $classes->fill($input);

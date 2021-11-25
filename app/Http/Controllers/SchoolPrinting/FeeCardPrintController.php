@@ -49,7 +49,14 @@ class FeeCardPrintController extends Controller
         $fee_transaction_payment=$this->__paymentQuery($current_transaction->student_id, $current_transaction->session_id);
         $transaction_formatted=$this->__transaction_format($query);
         $payment_formatted=$this->__payment_format($fee_transaction_payment);
-        $balance=$this->__transaction_paid_total_final_format($transaction_formatted, $payment_formatted, $old_due);
+        
+        $fee_transaction_payment_discount=$this->__paymentQueryForDiscount($current_transaction->student_id, $current_transaction->session_id);
+        $discount_payment_formatted=$this->__payment_format($fee_transaction_payment_discount);
+//        dd($discount_payment_formatted);
+        
+        
+        
+        $balance=$this->__transaction_paid_total_final_format($transaction_formatted, $payment_formatted, $old_due,$discount_payment_formatted);
         
      
         $feeCards[]=[
@@ -57,6 +64,7 @@ class FeeCardPrintController extends Controller
             'current_transaction_paid'=>$current_transaction_paid,
             'transaction_formatted'=>$transaction_formatted,
             'payment_formatted'=>$payment_formatted,
+            'discount_payment_formatted'=>$discount_payment_formatted,
             'balance'=>$balance,
             'student_image'=>$this->__base64encode($current_transaction->student->student_image)
         ];
@@ -111,18 +119,24 @@ class FeeCardPrintController extends Controller
                 $fee_transaction_payment=$this->__paymentQuery($current_transaction->student_id, $current_transaction->session_id);
                 $transaction_formatted=$this->__transaction_format($query);
                 $payment_formatted=$this->__payment_format($fee_transaction_payment);
-                $balance=$this->__transaction_paid_total_final_format($transaction_formatted, $payment_formatted, $old_due);
-   
-         
+                $fee_transaction_payment_discount=$this->__paymentQueryForDiscount($current_transaction->student_id, $current_transaction->session_id);
+                $discount_payment_formatted=$this->__payment_format($fee_transaction_payment_discount);
+        //        dd($discount_payment_formatted);
+                
+                
+                
+                $balance=$this->__transaction_paid_total_final_format($transaction_formatted, $payment_formatted, $old_due,$discount_payment_formatted);
+                
+             
                 $feeCards[]=[
-            'current_transaction'=>$current_transaction,
-            'current_transaction_paid'=>$current_transaction_paid,
-            'transaction_formatted'=>$transaction_formatted,
-            'payment_formatted'=>$payment_formatted,
-            'balance'=>$balance,
-            'student_image'=>$this->__base64encode($current_transaction->student->student_image)
-
-        ];
+                    'current_transaction'=>$current_transaction,
+                    'current_transaction_paid'=>$current_transaction_paid,
+                    'transaction_formatted'=>$transaction_formatted,
+                    'payment_formatted'=>$payment_formatted,
+                    'discount_payment_formatted'=>$discount_payment_formatted,
+                    'balance'=>$balance,
+                    'student_image'=>$this->__base64encode($current_transaction->student->student_image)
+                ];
             }
         }
         $snappy=$this->generateFeeCard($feeCards);
@@ -133,11 +147,14 @@ class FeeCardPrintController extends Controller
     * Query to get payment details for a customer
     *
     */
-    private function __transaction_paid_total_final_format($fee_transaction, $payment_formatted, $old_due)
+    private function __transaction_paid_total_final_format($fee_transaction, $payment_formatted, $old_due,$discount_payment_formatted)
     {
         $old_due=$old_due;
         if (empty($payment_formatted)) {
             $payment_formatted=[1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
+        }
+        if (empty($discount_payment_formatted)) {
+            $discount_payment_formatted=[1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
         }
         $total=[1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
         $bF=[1=>$old_due,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
@@ -149,11 +166,11 @@ class FeeCardPrintController extends Controller
         }
         foreach ($payment_formatted as $key => $p) {
             if ($key==1) {
-                $balance[$key]=$total[$key]-$p;
+                $balance[$key]=$total[$key]-$p-$discount_payment_formatted[$key];
             } else {
                 $bF[$key]=$balance[$key-1];
                 $total[$key]=$fee_transaction[$key]+$bF[$key];
-                $balance[$key]=$total[$key]-$p;
+                $balance[$key]=$total[$key]-$p -$discount_payment_formatted[$key];
             }
         }
     
@@ -212,8 +229,21 @@ class FeeCardPrintController extends Controller
         $query = FeeTransactionPayment::where('fee_transaction_payments.payment_for', $student_id)
         //->whereNotNull('transaction_payments.transaction_id');
         ->whereNull('fee_transaction_payments.parent_id')
+        ->where('method', '!=', 'student_advance_amount')
         ->where('session_id', '=', $session_id);
-        $query->select([DB::raw("SUM(amount) as total_paid"),
+        $query->select([DB::raw("SUM(amount - discount_amount) as total_paid"),
+                      DB::raw('MONTH(paid_on) month')
+                      ])->groupBy('month');
+        return $query->get();
+    }
+    private function __paymentQueryForDiscount($student_id, $session_id)
+    {
+        $query = FeeTransactionPayment::where('fee_transaction_payments.payment_for', $student_id)
+        //->whereNotNull('transaction_payments.transaction_id');
+        ->whereNull('fee_transaction_payments.parent_id')
+        ->where('method', '!=', 'student_advance_amount')
+        ->where('session_id', '=', $session_id);
+        $query->select([DB::raw("SUM(discount_amount) as total_paid"),
                       DB::raw('MONTH(paid_on) month')
                       ])->groupBy('month');
 

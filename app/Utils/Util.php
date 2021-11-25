@@ -156,7 +156,34 @@ class Util
 
         return !empty($date_format) ? \Carbon::createFromFormat($date_format, $date)->format($mysql_format) : null;
     }
-
+    /**
+     * Converts time in business format to mysql format
+     *
+     * @param string $time
+     * @return strin
+     */
+    public function uf_time($time)
+    {
+        $time_format = 'H:i';
+        if (session('system_details.time_format') == 12) {
+            $time_format = 'h:i A';
+        }
+        return !empty($time_format) ? \Carbon::createFromFormat($time_format, $time)->format('H:i') : null;
+    }
+        /**
+     * Converts time in business format to mysql format
+     *
+     * @param string $time
+     * @return strin
+     */
+    public function format_time($time)
+    {
+        $time_format = 'H:i';
+        if (session('system_details.time_format') == 12) {
+            $time_format = 'h:i A';
+        }
+        return !empty($time) ? \Carbon::createFromFormat('H:i:s', $time)->format($time_format) : null;
+    }
     /**
      * This function unformats a number and returns them in plain eng format
      *
@@ -362,10 +389,10 @@ class Util
 
     public function getFeeHeads($campus_id,$class_id)
     {
-            $query=FeeHead::whereNotIn('description',['Admission','Prospectus','Security','Tuition','Transport']);
+            //$query=FeeHead::whereNotIn('description',['Admission','Prospectus','Security','Tuition','Transport']);
        
-            // $query=FeeHead::where('campus_id', $campus_id)
-            // ->where('class_id', $class_id)->whereNotIn('description',['Admission','Prospectus','Security','Tuition','Transport']);
+            $query=FeeHead::where('campus_id', $campus_id)
+            ->where('class_id', $class_id)->whereNotIn('description',['Admission','Prospectus','Security','Tuition','Transport']);
        
             $fee_heads = $query->get();
             return $fee_heads;
@@ -411,7 +438,7 @@ class Util
         //     }
         // }
         
-        $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'cheque' => __('lang_v1.cheque'), 'bank_transfer' => __('lang_v1.bank_transfer'), 'other' => __('lang_v1.other')];
+        $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'cheque' => __('lang_v1.cheque'), 'bank_transfer' => __('lang_v1.bank_transfer') , 'advance_pay'=>__('lang_v1.advance_pay'), 'other' => __('lang_v1.other')];
 
         // $payment_types['custom_pay_1'] = !empty($custom_labels['payments']['custom_pay_1']) ? $custom_labels['payments']['custom_pay_1'] : __('lang_v1.custom_payment', ['number' => 1]);
         // $payment_types['custom_pay_2'] = !empty($custom_labels['payments']['custom_pay_2']) ? $custom_labels['payments']['custom_pay_2'] : __('lang_v1.custom_payment', ['number' => 2]);

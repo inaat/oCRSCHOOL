@@ -60,7 +60,7 @@ class FeeAllocationController extends Controller
                 $html= '<div class="dropdown">
                      <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">'. __("lang.actions").'</button>
                      <ul class="dropdown-menu" style="">';
-                $html.='<li><a class="dropdown-item "href="' . action('SchoolPrinting\FeeCardPrintController@singlePrint', [$row->id]) . '"><i class="bx bxs-print "></i> ' . __("lang.print") . '</a></li>';
+                $html.='<li><a class="dropdown-item "href="' . action('SchoolPrinting\FeeCardPrintController@singlePrint', [$row->id]) . '"><i class="fas fa-print"></i> ' . __("lang.challan_print") . '</a></li>';
               
                 if ($row->payment_status != "paid" && (auth()->user()->can("sell.create") || auth()->user()->can("direct_sell.access")) && auth()->user()->can("sell.payments")) {
                     $html .= '<li><a href="' . action('FeeTransactionPaymentController@addPayment', [$row->id]) . '" class="dropdown-item add_payment_modal"><i class="fas fa-money-bill-alt"></i> ' . __("lang.add_payment") . '</a></li>';
@@ -111,13 +111,27 @@ class FeeAllocationController extends Controller
             'final_total',
             '<span class="final-total" data-orig-value="{{$final_total}}">@format_currency($final_total)</span>'
         )
-        ->editColumn('fee_transaction_date', '{{@format_date($fee_transaction_date)}}')
-
+        ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
+        ->filterColumn('roll_no', function ($query, $keyword) {
+            $query->where( function($q) use($keyword) {
+                $q->where('students.roll_no', 'like', "%{$keyword}%");
+            });
+        })
+        ->filterColumn('student_name', function ($query, $keyword) {
+            $query->where( function($q) use($keyword) {
+                $q->where('students.first_name', 'like', "%{$keyword}%");
+            });
+        })
+        ->filterColumn('father_name', function ($query, $keyword) {
+            $query->where( function($q) use($keyword) {
+                $q->where('students.father_name', 'like', "%{$keyword}%");
+            });
+        })
         ->removeColumn('id');
      
       
 
-            $rawColumns = ['action','status','campus_name','fee_transaction_date','voucher_no','payment_status','final_total','total_remaining','total_paid' ];
+            $rawColumns = ['action','status','campus_name','transaction_date','voucher_no','payment_status','final_total','total_remaining','total_paid','roll_no'];
         
             return $datatable->rawColumns($rawColumns)
               ->make(true);

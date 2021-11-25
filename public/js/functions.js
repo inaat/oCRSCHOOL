@@ -527,7 +527,12 @@ function __disable_submit_button(element) {
         element.attr('disable', true);
 }
 function __enable_submit_button(element) {
-        element.attr('disable', false);
+        element.removeAttr('disabled');
+       
+}
+function __removeAttr(element) {
+        element.removeAttr('required');
+       
 }
 
 //Add dropdown for Provinces 
@@ -644,4 +649,11 @@ function __get_class_Section(doc) {
             }
         }
     , });
+}
+function __printErrorMsg (msg) {
+    $.each( msg, function( key, value ) {
+      $('.'+key+'_err').text(value);
+      toastr.error(value);
+      $('input[name="'+key+'"]').focus();
+    });
 }

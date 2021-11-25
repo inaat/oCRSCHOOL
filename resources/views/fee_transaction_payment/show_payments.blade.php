@@ -59,9 +59,13 @@
                                 <td>{{$payment->payment_account->name ?? ''}}</td>
                               @endif
                               <td class="no-print" style="display: flex;">
+                                  @if($payment->method != 'advance_pay')
+
                                 <button type="button" class="btn btn-info btn-xs edit_payment" 
                                 data-href="{{action('FeeTransactionPaymentController@edit', [$payment->id]) }}"><i class="glyphicon glyphicon-edit"></i></button>
-                                &nbsp; <button type="button" class="btn btn-danger btn-xs delete_payment" 
+                                &nbsp; 
+                                @endif
+                                <button type="button" class="btn btn-danger btn-xs delete_payment" 
                                 data-href="{{ action('FeeTransactionPaymentController@destroy', [$payment->id]) }}"
                                 ><i class="fa fa-trash" aria-hidden="true"></i></button>
                                 &nbsp;

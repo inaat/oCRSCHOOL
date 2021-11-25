@@ -21,8 +21,9 @@ class CreateFeeTransactionPaymentsTable extends Migration
             $table->foreign('system_settings_id')->references('id')->on('system_settings')->onDelete('cascade');
            
             $table->boolean('is_return')->default(false)->comment('Used during adjustment to return the change');
+            $table->decimal('discount_amount', 22, 4)->default(0);
             $table->decimal('amount', 22, 4)->default(0);
-            $table->enum('method', ['cash', 'card', 'cheque', 'bank_transfer', 'other']);
+            $table->enum('method', ['cash', 'card', 'cheque', 'bank_transfer', 'other','advance_pay','student_advance_amount']);
             $table->string('transaction_no')->nullable();
             $table->string('card_transaction_number')->nullable();
             $table->string('card_number')->nullable();

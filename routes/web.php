@@ -17,6 +17,7 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
  
     Route::resource('session', 'SessionController');
     Route::put('session/activate-session/{id}', 'SessionController@activateSession');
+    Route::post('student/update-status', 'StudentController@updateStatus');
     Route::get('/sessions/get_roll_no', 'SessionController@getRollNo');
     Route::get('/classes/get_campus_classes', 'ClassController@getCampusClass');
     Route::get('/classes/get_class_fee', 'ClassController@getClassFee');
@@ -34,6 +35,8 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     Route::get('/payments/pay-student-due/{student_id}', 'FeeTransactionPaymentController@getPayStudentDue');
     Route::post('/payments/pay-student-due', 'FeeTransactionPaymentController@postPayStudentDue');
     Route::get('/payments/add_payment/{transaction_id}', 'FeeTransactionPaymentController@addPayment');
+    Route::get('/payments/add_student_advance_amount_payment/{student_id}', 'FeeTransactionPaymentController@addStudentAdvanceAmountPayment');
+    Route::post('/payments/post_advance_amount_payment', 'FeeTransactionPaymentController@postAdvanceAmount');
 
     
 
@@ -52,6 +55,7 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     Route::resource('provinces', 'ProvinceController');
     Route::resource('districts', 'DistrictController');
     Route::resource('cities', 'CityController');
+    Route::resource('fee-heads', 'FeeHeadController');
 
     Route::resource('regions', 'RegionController');
     Route::resource('students', 'StudentController');
@@ -59,6 +63,7 @@ Route::middleware(['auth','SetSessionData','timezone','superadmin','AdminSidebar
     Route::post('fees-assign-search', 'FeeAllocationController@feesAssignSearch')->name('fees-assign-search');
 
     require_once 'printing.php';
+    require_once 'hrm.php';
     Route::group(['prefix' => 'account'], function () {
         Route::resource('/account', 'AccountController');
         Route::get('/fund-transfer/{id}', 'AccountController@getFundTransfer');

@@ -44,7 +44,7 @@ class AddAccountTransaction
         // //Create new account transaction
         if (!empty($event->formInput['account_id'])) {
             $account_transaction_data = [
-                'amount' => $event->formInput['amount'],
+                'amount' => $event->formInput['amount']-$event->formInput['discount_amount'],
                 'account_id' => $event->formInput['account_id'],
                 'type' => AccountTransaction::getAccountTransactionType($event->formInput['transaction_type']),
                 'operation_date' => $event->feeTransactionPayment->paid_on,

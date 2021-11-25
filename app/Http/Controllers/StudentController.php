@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\ClassSection;
 use App\Models\Classes;
 use App\Models\Campus;
-use App\Models\Session;
+use App\Mlang;
 use App\Models\Category;
 use App\Models\District;
 use App\Models\City;
 use App\Models\Province;
 use App\Models\Region;
 use App\Models\Student;
+use App\Models\Session;
 use App\Models\Guardian;
 use App\Models\StudentGuardian;
 use App\Models\FeeTransaction;
@@ -43,10 +44,10 @@ class StudentController extends Controller
         $this->feeTransactionUtil = $feeTransactionUtil;
             $this->student_status_colors = [
             'active' => 'bg-success',
-            'packed' => 'bg-info',
-            'shipped' => 'bg-navy',
-            'delivered' => 'bg-green',
-            'cancelled' => 'bg-red',
+            'inactive' => 'bg-info',
+            'struct_up' => 'bg-navy',
+            'pass_out' => 'bg-danger',
+            //'cancelled' => 'bg-red',
         ];
     }
     /**
@@ -141,6 +142,10 @@ class StudentController extends Controller
                    if ($row->total_due!=0) {
                        $html.='<li><a class="dropdown-item pay_fee_due "href="' . action('FeeTransactionPaymentController@getPayStudentDue', [$row->id]) . '"><i class="fas fa-money-bill-alt "></i> ' . __("lang.pay_due_amount") . '</a></li>';
                    }
+                   $html.='<li><a class="dropdown-item pay_fee_due "href="' . action('FeeTransactionPaymentController@addStudentAdvanceAmountPayment', [$row->id]) . '"><i class="fas fa-money-bill-alt "></i> ' . __("lang.add_advance_amount") . '</a></li>';
+                   $html .= '<li><a href="#" data-student_id="' . $row->id .
+                   '" data-status="' . $row->status . '" class="update_status"><i class="fas fa-edit" aria-hidden="true" ></i>' . __("lang_v1.update_status") . '</a></li>';
+
                    $html .= '</ul></div>';
 
                     return $html;
@@ -156,9 +161,25 @@ class StudentController extends Controller
             })
                ->editColumn('status', function ($row)  {
                 $status_color = !empty($this->student_status_colors[$row->status]) ? $this->student_status_colors[$row->status] : 'bg-gray';
-                // $status = lass="label ' . $status_color .'">' . $shipping_statuses[$row->shipping_status] . '</span></a>' : '';
-                $status='<span class="badge badge-mark ' . $status_color .'">' .ucwords($row->status).   '</span>';
+                $status ='<a href="#"'.'data-student_id="' . $row->id .
+                '" data-status="' . $row->status . '" class="update_status">';
+                $status .='<span class="badge badge-mark ' . $status_color .'">' .__('lang.'.$row->status).   '</span></a>';
                 return $status;
+            })
+            ->filterColumn('roll_no', function ($query, $keyword) {
+                $query->where( function($q) use($keyword) {
+                    $q->where('students.roll_no', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('student_name', function ($query, $keyword) {
+                $query->where( function($q) use($keyword) {
+                    $q->where('students.first_name', 'like', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('father_name', function ($query, $keyword) {
+                $query->where( function($q) use($keyword) {
+                    $q->where('students.father_name', 'like', "%{$keyword}%");
+                });
             })
             ->editColumn('admission_date', '{{@format_date($admission_date)}}')
 
@@ -243,19 +264,28 @@ class StudentController extends Controller
     
             if (!empty($input['guardian_link_id']) && !empty($input['sibling_id'])) {
                 $this->studentUtil->studentCreate($request, $input['guardian_link_id']);
+                $this->studentUtil->setAndGetReferenceCount('admission_no', false, true);
+
+                $this->studentUtil->setAndGetRollNoCount('roll_no', false, true, $input['adm_session_id']);
+    
+    
+                $output = ['success' => true,
+                        'msg' => __("session.updated_success")
+                        ];
             } else {
                 $this->studentUtil->studentCreate($request);
+                $this->studentUtil->setAndGetReferenceCount('admission_no', false, true);
+
+                $this->studentUtil->setAndGetRollNoCount('roll_no', false, true, $input['adm_session_id']);
+    
+    
+                $output = ['success' => true,
+                        'msg' => __("session.updated_success")
+                        ];
             }
-
-            $this->studentUtil->setAndGetReferenceCount('admission_no', false, true);
-
-            $this->studentUtil->setAndGetRollNoCount('roll_no', false, true, $input['adm_session_id']);
-
             DB::commit();
 
-            $output = ['success' => true,
-                    'msg' => __("session.updated_success")
-                    ];
+           
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
@@ -265,7 +295,7 @@ class StudentController extends Controller
                 ];
         }
         return redirect('students')->with('status', $output);
-    }
+ }
 
     /**
      * Display the specified resource.
@@ -446,7 +476,9 @@ class StudentController extends Controller
         $system_settings_id = session()->get('user.system_settings_id');
         $student=Student::with(['guardian','guardian.student_guardian'])->find($id);
         $fee_heads=$this->studentUtil->getAdmissionFeeHeads($student->campus_id,$student->current_class_id);
-        return view('students/partials.admission_fee')->with(compact('student','fee_heads'));
+        $classes=Classes::find($student->adm_class_id);
+        //dd($classes->admission_fee);
+        return view('students/partials.admission_fee')->with(compact('student','fee_heads','classes'));
     }
     public function postAdmissionFee(Request $request)
     {
@@ -469,5 +501,40 @@ class StudentController extends Controller
                 ];
         }
         return $output;
+    }
+
+    public function updateStatus(Request $request)
+  
+
+    {
+               if (!auth()->user()->can('session.update')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            try {
+
+                DB::beginTransaction();
+
+                $student = Student::find($request->student_id);
+                $student->status = $request->status;
+                $student->save();
+                
+                DB::commit();
+
+                $output = ['success' => true,
+                            'msg' => __("lang.updated_success")
+                            ];
+            } catch (\Exception $e) {
+                DB::rollBack();
+                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+
+                $output = ['success' => false,
+                            'msg' => __("lang.something_went_wrong")
+                        ];
+            }
+
+            return $output;
+        }
     }
 }

@@ -31,7 +31,13 @@ return [
     'fee_due'=>'Fee Due',
     'ref_no'=>'Ref No',
     'date'=>'Date',
-
+    'sunday' => 'Sunday',
+    'monday' => 'Monday',
+    'tuesday' => 'Tuesday',
+    'wednesday' => 'Wednesday',
+    'thursday' => 'Thursday',
+    'friday' => 'Friday',
+    'saturday' => 'Saturday',
     'all_fee_transaction'=>'All Fee Transaction',
     'months' => [
         1 => 'January',
@@ -93,16 +99,27 @@ return [
    'updated_success'=>'Updated Successfully',
    'deleted_success'=>'Deleted Successfully',
    'something_went_wrong'=>'Something Went Wrong',
+'students_flitters'=>'Students Filters',
+'std_status'=>[
+    'active'=>'Active','inactive'=>'Inactive','struck_up'=>'Struck Up','pass_out'=>'Pass Out'
 
-
+],
+'students'=>'Students',
    'create_admission_voucher'=>'Create Admission Voucher',
    'admission_fee_details'=>'Admission Fee Details',
    'fee_heads'=>'Fee Headings',
    'enable'=>'Enable',
    'amount' => 'Amount',
+   'student_information'=>'Student Information',
    //Fees Allocation
-
-
+    'fees_collection'=>'Fees Collection',
+    'fee_head' => 'Fee Head',
+    'fee_amount'=>'Fee Amount',
+    'manage_your_heads'=>'Mana Your Heads',
+    'fee_head_list'=>'Fee Head List',
+    'add_new_fee_head'=>'Add New Fee Head',
+    'edit_fee_head'=>'Edit Fee Head',
+    'fee_head_name'=>'Fee Head Name',
    'fees_allocation'=>'Fees Allocation',
    'select_ground'=>'Select Ground',
    'fee_card'=>'Fee Card',
@@ -123,14 +140,30 @@ return [
    'adjustment' =>'Adjustment',
    'net_total'=>'Net Total',
 'fee_card_printing'=>'Fee Card Printing',
+'advance_amount'=>'Advance Amount',
+'add_advance_amount'=>'Add Advance Amount',
+'challan_print'=>'Challan Print',
+'print'=>'Print',
+'advance_pay'=>'Advance Pay',
+'advance_amount_exception'=>'Advance amount is less than Due amount',
 
-
-
+'card_number' => 'Card No.',
+'transaction_number' => 'Transaction Number',
+'card_holder_name' => 'Card holder name',
+'card_number' => 'Card number',
+'card_transaction_number' => 'Card transaction No',
+'cheque_number' => 'Cheque number',
 
 
 
 ///student_categories///
 'student_category'=>'Student Category',
+'inactive'=>'In Active',
+'pass_out'=>'Pass Out',
+'struck_up'=>'Struck Up',
+'active'=>'Active',
+'update_status'=>'Update Status',
+'student_status'=>'Student Status',
 
    //Province/////
    'provinces'=>'Provinces',
@@ -161,6 +194,7 @@ return [
    'region_list'=>'Region List',
    'manage_your_regions'=>'Manage Your Regions',
    ///Students////
+   'previous_school_name'=>'Previous School Name',
    'add_new_admission'=>'Add New Admission',
    'student_name'=>'Student Name',
    'admission_no'=> 'Admission Number',
@@ -174,6 +208,7 @@ return [
 'gender'=>'Gender',
 'date_of_birth'=>'Date of Birth',
 'student_categories'=> 'Student Categories',
+'min_amount_100'=>'Minimum amount is : 100',
 
 'religion' =>'Religion',
 'caste'=>'Caste',
@@ -220,6 +255,8 @@ return [
 'add_sibling' =>'Add Sibling',
 'medical_history'=>'Medical History',
 'remove_sibling'=>'Remove Sibling',
+'student_details'=>'Student Details',
+'collect_fee'=>'Collect Fee',
 
 ///Session ////
 "sessions" => 'Sessions',
@@ -253,5 +290,25 @@ return [
 'prefix'=>'Prefix',
 'start_date'=>'Start Date',
 'end_date'=>'End Date',
+///Classes////
+"classes" => 'Classes',
+"your_classes_details" => 'Your Classes Details',
+"classes_details" => 'Classes Details',
+"edit_class" => 'Edit Class',
+"add_new_class" => 'Add New Class',
+"class_list" => 'Class List',
+"title" => 'Class Title',
+"tuition_fee" => 'Tuition Fee',
+"admission_fee" => 'Admission Fee',
+'manage_your_classes' => 'Manage your Classes',
+'all_your_classes' => 'All Your Classes',
+'added_success' => 'Class added successfully',
+'updated_success' => 'Class updated successfully',
+'deleted_success' => 'Class deleted successfully',
+'classes_type' => 'Class Type',
+
+'transport_fee'=>'Transport Fee',
+'security_fee'=>'Security Fee',
+'prospectus_fee' =>'Prospectus Fee',
    
 ];

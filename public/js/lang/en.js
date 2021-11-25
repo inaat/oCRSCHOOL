@@ -1,5 +1,6 @@
 LANG = {
     'fee_heads':'Please Select At Least One Fee Head',
+    'discount_amount_exceeds_total_amount':'Discount Amount Exceeds Total Amount',
     'required': 'Required',
     'sure': 'Are you sure ?',
     'remove_product': 'Are you sure to remove the product?',

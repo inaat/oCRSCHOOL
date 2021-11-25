@@ -33,6 +33,7 @@
                         <tbody>
                          
                           @foreach ($fee_heads as $fee_head)
+                               @if($fee_head->description=='Admission')
                                    <tr>
                                 <td class="text-center"><div class="mt-2">{{ $fee_head->description }}</div></td>
                                 <td class="text-center">
@@ -40,16 +41,53 @@
                                
                                      {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']); !!}                                 </td>
 
-                        
+
                                 </td>
 
                                 <td class="text-center ">
-                                    <input  name="fee_heads[{{ $loop->iteration }}][amount]" type="number" value={{ @num_format($fee_head->amount) }} class="form-control amount"
-                                        value="0">
+                                    {!! Form::text('fee_heads[{{ $loop->iteration }}][amount]',@num_format($classes->admission_fee), ['class' => 'form-control input_number amount']) !!}
+
                                     <input type="hidden" name="fee_heads[{{ $loop->iteration }}][fee_head_id]" value="{{ $fee_head->id }}">
 
                                 </td>
                             </tr> 
+                               @elseif($fee_head->description=='Prospectus')
+                                   <tr>
+                                <td class="text-center"><div class="mt-2">{{ $fee_head->description }}</div></td>
+                                <td class="text-center">
+                                        {{-- <input class="" name='fee_heads[{{ $loop->iteration }}][check]'  type="checkbox" value="0"  id="flexCheckChecked"> --}}
+                               
+                                     {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']); !!}                                 </td>
+
+
+                                </td>
+
+                                <td class="text-center ">
+                                    {!! Form::text('fee_heads[{{ $loop->iteration }}][amount]',@num_format($classes->prospectus_fee), ['class' => 'form-control input_number amount']) !!}
+
+                                    <input type="hidden" name="fee_heads[{{ $loop->iteration }}][fee_head_id]" value="{{ $fee_head->id }}">
+
+                                </td>
+                            </tr> 
+                               @elseif($fee_head->description=='Security')
+                                   <tr>
+                                <td class="text-center"><div class="mt-2">{{ $fee_head->description }}</div></td>
+                                <td class="text-center">
+                                        {{-- <input class="" name='fee_heads[{{ $loop->iteration }}][check]'  type="checkbox" value="0"  id="flexCheckChecked"> --}}
+                               
+                                     {!! Form::checkbox('fee_heads[' . $loop->iteration  . '][is_enabled]', 1, null, ['class' => 'form-check-input mt-2 fee-head-check']); !!}                                 </td>
+
+
+                                </td>
+
+                                <td class="text-center ">
+                                    {!! Form::text('fee_heads[{{ $loop->iteration }}][amount]',@num_format($classes->security_fee), ['class' => 'form-control input_number amount']) !!}
+
+                                    <input type="hidden" name="fee_heads[{{ $loop->iteration }}][fee_head_id]" value="{{ $fee_head->id }}">
+
+                                </td>
+                            </tr> 
+                            @endif
                             @endforeach
                              <tfoot>
                       <tr>

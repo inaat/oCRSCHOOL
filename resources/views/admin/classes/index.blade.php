@@ -4,13 +4,13 @@
     <div class="page-content">
         <!--breadcrumb-->
         <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-            <div class="breadcrumb-title pe-3">@lang('class.manage_your_classes')</div>
+            <div class="breadcrumb-title pe-3">@lang('lang.manage_your_classes')</div>
             <div class="ps-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">@lang('class.classes')</li>
+                        <li class="breadcrumb-item active" aria-current="page">@lang('lang.classes')</li>
                     </ol>
                 </nav>
             </div>
@@ -19,14 +19,14 @@
 
         <div class="card">
             <div class="card-body">
-                            <h5 class="card-title text-primary">@lang('class.class_list')</h5>
+                            <h5 class="card-title text-primary">@lang('lang.class_list')</h5>
 
                <div class="d-lg-flex align-items-center mb-4 gap-3">
                     <div class="ms-auto"><button type="button"
                                 class="btn btn-primary radius-30 mt-2 mt-lg-0 btn-modal"
                                 data-href="{{ action('ClassController@create') }}"
                                 data-container=".classes_modal">
-                                <i class="bx bxs-plus-square"></i>@lang('class.add_new_class')</button></div>
+                                <i class="bx bxs-plus-square"></i>@lang('lang.add_new_class')</button></div>
                 </div>
 
 
@@ -40,9 +40,12 @@
                                 <th>@lang('global_lang.action')</th>
                                 <th>@lang('campus.campus_name')</th>
                                 <th>@lang('class_level.class_level')</th>
-                                <th>@lang('class.title')</th>
-                                <th>@lang('class.tuition_fee')</th>
-                                <th>@lang('class.admission_fee')</th>
+                                <th>@lang('lang.title')</th>
+                                <th>@lang('lang.tuition_fee')</th>
+                                <th>@lang('lang.admission_fee')</th>
+                                <th>@lang('lang.transport_fee')</th>
+                                <th>@lang('lang.security_fee')</th>
+                                <th>@lang('lang.prospectus_fee')</th>
                             </tr>
                         </thead>
 
@@ -67,7 +70,9 @@
             , ajax: "/classes"
             , columns: [{
                     data: "action"
-                    , name: "action"
+                    , name: "action",
+                         orderable: false,
+                         "searchable": false
                 }
                 , {
                     data: "campus_name"
@@ -79,15 +84,39 @@
                 }
                  , {
                     data: "title"
-                    , name: "title"
+                    , name: "title",
+                         orderable: false,
+                         "searchable": false
                 }
                 , {
                     data: "tuition_fee"
-                    , name: "tuition_fee"
+                    , name: "tuition_fee",
+                         orderable: false,
+                         "searchable": false
                 }
                 , {
                     data: "admission_fee"
-                    , name: "admission_fee"
+                    , name: "admission_fee",
+                         orderable: false,
+                         "searchable": false
+                }
+                , {
+                    data: "transport_fee"
+                    , name: "transport_fee",
+                         orderable: false,
+                         "searchable": false
+                }
+                , {
+                    data: "security_fee"
+                    , name: "security_fee",
+                         orderable: false,
+                         "searchable": false
+                }
+                , {
+                    data: "prospectus_fee"
+                    , name: "prospectus_fee",
+                         orderable: false,
+                         "searchable": false
                 }
             , ]
         , });

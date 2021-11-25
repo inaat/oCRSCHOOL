@@ -36,15 +36,19 @@
                         </p>
                     </div>
                 </div>
-
-                 <div class="row payment_row">
-                <div class="col-md-4 p-1">
                     {!! Form::label('lang.amount', __('lang.amount') . ':*') !!}
                     <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
                                 class="fas fa-money-bill-alt"></i></span>
                         
-                        {!! Form::text("amount", @num_format($payment_line->amount), ['class' => 'form-control input_number', 'required', 'placeholder' => 'Amount', 'data-rule-max-value' =>$payment_line->amount, 'data-msg-max-value' => __('lang_v1.max_amount_to_be_paid_is', ['amount' =>@num_format($payment_line->amount)])]); !!}
+                        {!! Form::text("amount", @num_format($payment_line->amount), ['class' => 'form-control amount input_number', 'required', 'placeholder' => 'Amount', 'data-rule-max-value' =>$payment_line->amount, 'data-msg-max-value' => __('lang_v1.max_amount_to_be_paid_is', ['amount' =>@num_format($payment_line->amount)])]); !!}
 
+                    </div>
+                </div>
+                    <div class="col-md-4 p-1">
+                    {!! Form::label('lang.amount',  __('lang.discount').' '. __('lang.amount') ) !!}
+                    <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
+                                class="fas fa-money-bill-alt"></i></span>
+                        {!! Form::text("discount_amount",0, ['class' => 'form-control input_number', 'required', 'placeholder' => 'Amount', 'id'=>'discount_amount']); !!}
                     </div>
                 </div>
                 <div class="col-md-4 p-1" id="datetimepicker"
@@ -55,6 +59,8 @@
                         {!! Form::text('paid_on', @format_datetime($payment_line->paid_on), ['class' => 'form-control datetimepicker-input', 'data-target' => '#datetimepicker', 'required']) !!}
                     </div>
                 </div>
+            <div class="clearfix"></div>
+
                 <div class="col-md-4 p-1">
                     {!! Form::label('method', __('lang.payment_method') . ':*') !!}
                     <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i

@@ -10,7 +10,7 @@
                              <h2 class="accordion-header" id="student-fillter">
                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                      data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                     <h5 class="card-title">Students Fillters</h5>
+                                     <h5 class="card-title"><?php echo app('translator')->get('lang.students_flitters'); ?></h5>
                                  </button>
                              </h2>
                              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="student-fillter"
@@ -111,6 +111,8 @@
   </div>
      <div class="modal fade pay_fee_due_modal contains_select2" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
   </div>
+<?php echo $__env->make('students.partials.update_student_status_modal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
  <?php $__env->stopSection(); ?>
 
  <?php $__env->startSection('javascript'); ?>
@@ -119,6 +121,43 @@
   $(document).ready(function() {
       //If change in amount amount update amount including tax and line total
             
+
+             $(document).on('click', '.update_status', function(e) {
+            e.preventDefault();
+            $('#update_student_status_form').find('#status').val($(this).data('status'));
+            $('#update_student_status_form').find('#student_id').val($(this).data('student_id'));
+            $('#update_student_status_modal').modal('show');
+            });
+
+            
+        $(document).on('submit', '#update_student_status_form', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var data = form.serialize();
+
+            $.ajax({
+                method: 'POST',
+                url: $(this).attr('action'),
+                dataType: 'json',
+                data: data,
+                beforeSend: function(xhr) {
+                    __disable_submit_button(form.find('button[type="submit"]'));
+                },
+                success: function(result) {
+                    if (result.success == true) {
+                        $('#update_student_status_modal').modal('hide');
+                        toastr.success(result.msg);
+                        students_table.ajax.reload();
+                        $('#update_student_status_form')
+                            .find('button[type="submit"]')
+                            .attr('disabled', false);
+                    } else {
+                        toastr.error(result.msg);
+                    }
+                },
+            });
+        });
+
          $('.admission_fee_modal > table#admisssion-table tbody').on('keyup', 'input.amount',  function() {
              alert(5);
         });
@@ -127,8 +166,8 @@
         var table = $(this).closest('table');
         table.find('tbody tr').each( function(){
             if($(this).find('input.fee-head-check').is(':checked')){
-            var denomination = $(this).find('input.amount').val() ? parseInt($(this).find('input.amount').val()) : 0;
-            var subtotal = denomination;
+            var line = __read_number($(this).find('input.amount'));
+            var subtotal = line;
             total = total + subtotal;
             }
         });
@@ -154,27 +193,7 @@
         $(document).on('keyup', '#students_list_filter_admission_no,#students_list_filter_roll_no',  function() {
             students_table.ajax.reload();
         });
-        $(document).on('change', '#adjustment_amount',  function() {
-             var adjustment_amount = __read_number($(this));
-             var amount =__number_uf($('.amount').val(),false);
-             var adjamount=amount - adjustment_amount;
-             if(adjamount>0){
-                $('.amount').attr('data-rule-max-value',adjamount);
-                $('.amount').attr('data-msg-max-value','Maximum value is '+adjamount);
-                $('.amount').val(adjamount);
-
-
-             }
-             else{
-                $('.amount').val(amount);
-                $('.amount').attr('data-rule-max-value',amount);
-                $(this).val(0);
-
-                toastr.error(LANG.fee_heads);
-
-             }
-
-        });
+ 
                 //students_table
         var students_table = $("#students_table").DataTable({
             processing: true
@@ -210,7 +229,9 @@
 
             , columns: [{
                     data: "action"
-                    , name: "action"
+                    , name: "action",
+                         orderable: false,
+                         "searchable": false
                 }
                
                 , {
@@ -223,7 +244,9 @@
                 }
                  , {
                     data: "status"
-                    , name: "status"
+                    , name: "status",
+                         orderable: false,
+                         "searchable": false
                 }
                 , {
                     data: "roll_no"
@@ -239,15 +262,21 @@
                 }
                  , {
                     data: "campus_name"
-                    , name: "campus_name"
+                    , name: "campus_name",
+                         orderable: false,
+                         "searchable": false
                 }
                 , {
                     data: "adm_class"
-                    , name: "adm_class"
+                    , name: "adm_class",
+                         orderable: false,
+                         "searchable": false
                 }
                 , {
                     data: "current_class"
-                    , name: "current_class"
+                    , name: "current_class",
+                         orderable: false,
+                         "searchable": false
                 }
                
             , ]

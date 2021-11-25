@@ -278,8 +278,8 @@
                         {!! Form::textarea('std_current_address', null, ['class' => 'form-control ','rows' => 1, 'placeholder' => __('lang.current_address')]) !!}
                     </div>
                     <div class="col-md-3 p-1">
-                        {!! Form::label('lang.permanet_address', __('lang.permanet_address') . ':*') !!}
-                        {!! Form::textarea('std_permanent_address', null, ['class' => 'form-control ','rows' => 1, 'placeholder' => __('lang.permanet_address')]) !!}
+                        {!! Form::label('lang.permanent_address', __('lang.permanent_address') . ':*') !!}
+                        {!! Form::textarea('std_permanent_address', null, ['class' => 'form-control ','rows' => 1, 'placeholder' => __('lang.permanent_address')]) !!}
                     </div>
 
                     <div class="clearfix"></div>

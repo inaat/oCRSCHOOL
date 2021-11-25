@@ -69,7 +69,6 @@ $(document).ready(function () {
         });
     });
 
-  
 
  
 
@@ -461,6 +460,8 @@ $(document).on('click', '.view_payment_modal', function(e) {
         },
     });
 });
+
+
 $(function () {
     $(".scroll").click(function () {
         $("html,body").animate(
@@ -470,3 +471,7 @@ $(function () {
         return false;
     });
 });
+
+
+
+

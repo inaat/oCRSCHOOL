@@ -18,6 +18,9 @@ class CreateClassesTable extends Migration
             $table->string('title');
             $table->decimal('tuition_fee', 22, 4)->default(0);
             $table->decimal('admission_fee', 22, 4)->default(0);
+           $table->decimal('transport_fee', 22, 4)->default(0);
+           $table->decimal('security_fee', 22, 4)->default(0);
+           $table->decimal('prospectus_fee', 22, 4)->default(0);
             $table->integer('system_settings_id')->unsigned();
             $table->foreign('system_settings_id')->references('id')->on('system_settings')->onDelete('cascade');
             $table->integer('campus_id')->unsigned()->nullable();

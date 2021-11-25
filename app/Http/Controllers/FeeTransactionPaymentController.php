@@ -143,6 +143,7 @@ class FeeTransactionPaymentController extends Controller
                 'c-class.title as current_class',
                 'students.roll_no',
                 'students.father_name',
+                'students.advance_amount',
                 'students.id as student_id'
 
 
@@ -204,14 +205,35 @@ class FeeTransactionPaymentController extends Controller
 
     {
 
-        dd($request);
+        
         if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
         }
         $student_id = $request->input('student_id');
         try {
             DB::beginTransaction();
-            
+            $check_advance_cash=$request->input('method');
+             if ($check_advance_cash=='advance_pay') {
+                 $advance_amount=$this->feeTransactionUtil->num_uf($request->input('advance_amount'));
+                 $amount= $this->feeTransactionUtil->num_uf($request->input('amount'));
+                 $check_amount=$advance_amount- $amount;
+                 if ($check_amount<0) {
+                     //throw new \Exception("Advance amount is less than Due amount");
+
+                     DB::rollBack();
+                    // throw new \Exception(__('lang_v1.required_advance_balance_not_available'));
+                    $output = ['success' => false,
+                    'msg' => __('lang.advance_amount_exception')
+                      ];
+                      return redirect('students')->with(['status' => $output]);
+                 }
+                 else{
+                        $student_details = Student::findOrFail($student_id);
+                        $student_details->advance_amount = $student_details->advance_amount - $amount;
+                        $student_details->save();
+                 }
+                 
+             }
             $this->feeTransactionUtil->payStudent($request);
 
             DB::commit();
@@ -278,7 +300,7 @@ class FeeTransactionPaymentController extends Controller
                 abort(403, 'Unauthorized action.');
             }
             if ($transaction->payment_status != 'paid') {
-                $inputs = $request->only(['amount', 'method', 'note', 'card_number', 'card_holder_name',
+                $inputs = $request->only(['amount','discount_amount', 'method', 'note', 'card_number', 'card_holder_name',
                 'card_transaction_number', 'card_type', 'card_month', 'card_year', 'card_security',
                 'cheque_number', 'bank_account_number']);
                 $inputs['paid_on'] = $this->feeTransactionUtil->uf_date($request->input('paid_on'), true);
@@ -340,7 +362,7 @@ class FeeTransactionPaymentController extends Controller
         }
 
         try {
-            $inputs = $request->only(['amount', 'method', 'note', 'card_number', 'card_holder_name',
+            $inputs = $request->only(['amount','discount_amount', 'method', 'note', 'card_number', 'card_holder_name',
             'card_transaction_number', 'card_type', 'card_month', 'card_year', 'card_security',
             'cheque_number', 'bank_account_number']);
             $inputs['paid_on'] = $this->feeTransactionUtil->uf_date($request->input('paid_on'), true);
@@ -380,9 +402,14 @@ class FeeTransactionPaymentController extends Controller
             $payment_status = $this->feeTransactionUtil->updatePaymentStatus($payment->fee_transaction_id);
             $transaction->payment_status = $payment_status;
 
-
+            //dd($payment);
             DB::commit();
-
+            if(!empty($payment->parent_id)) {
+                $adjust_discount=FeeTransactionPayment::find($payment->parent_id);
+                //dd($adjust_discount);
+                $payment->amount=$payment->amount-$adjust_discount->discount_amount;
+                
+            }
             //event
             event(new FeeTransactionPaymentUpdated($payment, $transaction->type));
 
@@ -430,10 +457,12 @@ class FeeTransactionPaymentController extends Controller
                     $total_adjusted_amount = $adjusted_payments->sum('amount');
 
                     //Get customer advance share from payment and deduct from advance balance
-                    $total_customer_advance = $payment->amount - $total_adjusted_amount;
-                    // if ($total_customer_advance > 0) {
-                    //     $this->feeTransactionUtil->updateContactBalance($payment->payment_for, $total_customer_advance , 'deduct');
-                    // }
+                    if ($payment->method == 'advance_pay') {
+                        $total_customer_advance = $payment->amount - $total_adjusted_amount;
+                        $student_details = Student::findOrFail($payment->payment_for);
+                        $student_details->advance_amount = $student_details->advance_amount + $total_customer_advance;
+                        $student_details->save();
+                    }
 
                     //Delete all child payments
                     foreach ($adjusted_payments as $adjusted_payment) {
@@ -463,5 +492,75 @@ class FeeTransactionPaymentController extends Controller
 
             return $output;
         }
+    }
+
+    public function addStudentAdvanceAmountPayment($student_id){
+        if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            $system_settings_id = request()->session()->get('user.system_settings_id');
+
+            $student = Student::findOrFail($student_id);
+            $payment_types = $this->feeTransactionUtil->payment_types();
+            $payment_line=[];
+
+            return view('fee_transaction_payment.post_student_advance_amount')
+                        ->with(compact('student', 'payment_types','payment_line'));
+        }
+        
+    }
+    public function postAdvanceAmount(Request $request)
+    {
+        try {
+            $system_settings_id = $request->session()->get('user.system_settings_id');
+
+            if (!(auth()->user()->can('purchase.payments') || auth()->user()->can('sell.payments') || auth()->user()->can('all_expense.access') || auth()->user()->can('view_own_expense'))) {
+                abort(403, 'Unauthorized action.');
+            }
+                $inputs = $request->only(['amount', 'method', 'note', 'card_number', 'card_holder_name',
+                'card_transaction_number', 'card_type', 'card_month', 'card_year', 'card_security',
+                'cheque_number', 'bank_account_number']);
+                $inputs['paid_on'] = $this->feeTransactionUtil->uf_date($request->input('paid_on'), true);
+                $inputs['amount'] = $this->feeTransactionUtil->num_uf($inputs['amount']);
+                $inputs['created_by'] = auth()->user()->id;
+                $inputs['payment_for'] = $request->input('student_id');
+                $inputs['session_id']=$this->feeTransactionUtil->getActiveSession();
+
+
+                $prefix_type = 'student_advance_payment';
+                DB::beginTransaction();
+
+                $ref_count = $this->feeTransactionUtil->setAndGetReferenceCount($prefix_type, false, true);
+                        //Generate reference number
+                $inputs['payment_ref_no'] = $this->feeTransactionUtil->generateReferenceNumber($prefix_type, $ref_count, $system_settings_id);
+
+                $inputs['system_settings_id'] = $request->session()->get('system_details.id');
+
+                //Pay from advance balance
+                $payment_amount = $inputs['amount'];
+                if (!empty($inputs['amount'])) {
+                    $payment = FeeTransactionPayment::create($inputs);
+                    $student_details = Student::findOrFail($payment->payment_for);
+                    $student_details->advance_amount = $student_details->advance_amount + $payment->amount;
+                    $student_details->save();
+                }
+                
+                DB::commit();
+            
+
+            $output = ['success' => true,
+                            'msg' => __('purchase.payment_added_success')
+                        ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = __('messages.something_went_wrong');
+            $output = ['success' => false,
+                          'msg' => $msg
+                      ];
+        }
+        return redirect()->back()->with(['status' => $output]);   
+
     }
 }

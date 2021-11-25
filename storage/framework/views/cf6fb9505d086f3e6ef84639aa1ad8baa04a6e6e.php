@@ -25,6 +25,11 @@
                             <strong><?php echo app('translator')->get('lang.current_class'); ?>:
                             </strong><?php echo e(ucwords($student_details->current_class), false); ?>
 
+                            <br>
+                            <strong><?php echo app('translator')->get('lang.advance_amount'); ?>:
+                            </strong></strong><span class="display_currency"
+                                data-currency_symbol="true"><?php echo e(number_format($student_details->advance_amount, config('constants.currency_precision', 2), session('currency')['decimal_separator'], session('currency')['thousand_separator']), false); ?></span><br>
+                                <input type="hidden" name="advance_amount" value="<?php echo e($student_details->advance_amount, false); ?>">
                         </p>
                     </div>
                 </div>
@@ -52,19 +57,7 @@
                         </p>
                     </div>
                 </div>
-            </div>
- <div class="row ">
-                <div class="col-md-4 p-1">
-                    <?php echo Form::label('lang.amount',  __('lang.adjustment').' '. __('lang.amount') ); ?>
-
-                    <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
-                                class="fas fa-money-bill-alt"></i></span>
-                        <?php echo Form::text("adjustment_amount",0, ['class' => 'form-control input_number', 'required', 'placeholder' => 'Amount', 'id'=>'adjustment_amount']); ?>
-
-
-                    </div>
-                </div>
-                </div>
+       
             <div class="row payment_row">
                 <div class="col-md-4 p-1">
                     <?php echo Form::label('lang.amount', __('lang.amount') . ':*'); ?>
@@ -73,6 +66,15 @@
                                 class="fas fa-money-bill-alt"></i></span>
                         <?php echo Form::text("amount", number_format($payment_line->amount, config('constants.currency_precision', 2), session('currency')['decimal_separator'], session('currency')['thousand_separator']), ['class' => 'form-control input_number amount', 'required', 'placeholder' => 'Amount', 'data-rule-max-value' =>$payment_line->amount, 'data-msg-max-value' => __('lang_v1.max_amount_to_be_paid_is', ['amount' =>number_format($payment_line->amount, config('constants.currency_precision', 2), session('currency')['decimal_separator'], session('currency')['thousand_separator'])])]); ?>
 
+
+                    </div>
+                </div>
+                 <div class="col-md-4 p-1">
+                    <?php echo Form::label('lang.amount',  __('lang.discount').' '. __('lang.amount') ); ?>
+
+                    <div class="input-group flex-nowrap"> <span class="input-group-text" id="addon-wrapping"><i
+                                class="fas fa-money-bill-alt"></i></span>
+                        <?php echo Form::text("discount_amount",0, ['class' => 'form-control input_number', 'required', 'placeholder' => 'Amount', 'id'=>'discount_amount']); ?>
 
                     </div>
                 </div>
@@ -86,6 +88,7 @@
 
                     </div>
                 </div>
+                <div class="clearfix"></div>
                 <div class="col-md-4 p-1">
                     <?php echo Form::label('method', __('lang.payment_method') . ':*'); ?>
 

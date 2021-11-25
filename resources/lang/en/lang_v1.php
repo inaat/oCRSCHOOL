@@ -513,6 +513,7 @@ return [
     'cheque_number' => 'Cheque number',
     'commsn_percent_help' => "Used only if Sales Commission Agent Type setting is: 'Logged In user' or 'Select from users list'",
     'max_amount_to_be_paid_is' => 'Maximum amount is :amount',
+    'min_amount_100'=>'Minimum amount is : 100',
     'adjusted_for' => 'Adjusted For',
     'some_qty_returned' => 'Some quantities are returned from this purchase',
     'total_purchase_return' => 'Total Purchase Return',

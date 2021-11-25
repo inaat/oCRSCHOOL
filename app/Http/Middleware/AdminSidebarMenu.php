@@ -69,11 +69,7 @@ class AdminSidebarMenu
                             __('class_level.class_level'),
                             ['icon' => 'bx bx-menu ', 'active' => request()->segment(1) == 'class_levels']
                         );
-                        $sub->url(
-                            action('CategoryController@index'),
-                            __('lang.student_category'),
-                            ['icon' => 'bx bx-cabinet ', 'active' => request()->segment(1) == 'categories']
-                        );
+                      
                         $sub->url(
                             action('ProvinceController@index'),
                             __('lang.provinces'),
@@ -100,6 +96,55 @@ class AdminSidebarMenu
                 )->order(10);
             //}
             
+            $menu->dropdown(
+                __('lang.student_information'),
+                function ($sub) {
+                    $sub->url(
+                        action('StudentController@index'),
+                        __('lang.student_details'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'students' ]
+                    );
+                    $sub->url(
+                        action('StudentController@create'),
+                        __('lang.add_new_admission'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'students' &&  request()->segment(2) == 'create']
+                    );
+                    $sub->url(
+                        action('CategoryController@index'),
+                        __('lang.student_category'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'categories']
+                    );
+                  
+                 
+                 
+                },
+                ['icon' => 'bx bx-user-plus']
+            )->order(15);
+            //Fee Collector
+            $menu->dropdown(
+                __('lang.fees_collection'),
+                function ($sub) {
+                    $sub->url(
+                        action('FeeAllocationController@index'),
+                        __('lang.collect_fee'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'fee-allocation' ]
+                    );
+                    $sub->url(
+                        action('FeeAllocationController@create'),
+                        __('lang.fees_allocation'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'fee-allocation' || request()->segment(1) =='fees-assign-search' &&  request()->segment(2) == 'create'  ]
+                    );
+                    $sub->url(
+                        action('FeeHeadController@index'),
+                        __('lang.fee_heads'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'fee-heads' ]
+                    );
+                  
+                 
+                 
+                },
+                ['icon' => 'bx bx-money']
+            )->order(15);
             $menu->dropdown(
                 __('Academic'),
                 function ($sub) {

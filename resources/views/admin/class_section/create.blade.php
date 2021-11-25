@@ -17,17 +17,16 @@
                 </div>
                 <div class="col-md-6 p-3">
                     {!! Form::label('campus.campuses', __('campus.campuses') . ':*') !!}
-                    {!! Form::select('campus_id',$campuses,null, ['class' => 'form-select  select2 ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]) !!}
+                    {!! Form::select('campus_id',$campuses,null, ['class' => 'form-select  select2 global-campuses ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]) !!}
                 </div>
                 <div class="clearfix"></div>
 
                 <div class="col-md-6 p-3">
                     {!! Form::label('class.classes', __('class.classes') . ':*') !!}
-                    {!! Form::select('class_id',$classes,null, ['class' => 'form-select  select2 ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]) !!}
+                    {!! Form::select('class_id',[],null, ['class' => 'form-select  select2 global-classes ','required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]) !!}
                 </div>
                 <div class="clearfix"></div>
             </div>
-
 
             <div class="modal-footer">
 

@@ -30,12 +30,12 @@
                                      <th><?php echo app('translator')->get('lang.fee_transaction_date'); ?></th>
                                      <th><?php echo app('translator')->get('lang.challan_no'); ?></th>
                                      <th><?php echo app('translator')->get('campus.campus_name'); ?></th>
+                                    <th><?php echo app('translator')->get('lang.student_name'); ?></th>
                                      <th><?php echo app('translator')->get('lang.payment_status'); ?></th>
                                      <th><?php echo app('translator')->get('lang.final_total'); ?></th>
                                      <th><?php echo app('translator')->get('lang.total_paid'); ?></th>
                                      <th><?php echo app('translator')->get('lang.fee_due'); ?></th>
                                      <th><?php echo app('translator')->get('lang.session'); ?></th>
-                                     <th><?php echo app('translator')->get('lang.student_name'); ?></th>
                                      <th><?php echo app('translator')->get('lang.father_name'); ?></th>
                                      <th><?php echo app('translator')->get('lang.status'); ?></th>
                                      <th><?php echo app('translator')->get('lang.roll_no'); ?></th>
@@ -125,7 +125,7 @@
                          if (result.status == 'due') {
                              container.html(result.view).modal('show');
                              __currency_convert_recursively(container);
-                             $('#paid_on').datetimepicker({
+                             $('#datetimepicker').datetimepicker({
                                  format: moment_date_format + ' ' + moment_time_format,
                                  ignoreReadonly: true,
                              });
@@ -162,8 +162,8 @@
                      }
 
                      , {
-                         data: "fee_transaction_date",
-                         name: "fee_transaction_date"
+                         data: "transaction_date",
+                         name: "transaction_date"
                      }, {
                          data: "voucher_no",
                          name: "voucher_no"
@@ -172,6 +172,11 @@
                          name: "campus_name",
                          orderable: false,
                          "searchable": false
+                     },
+                     {
+                         data: "student_name",
+                         name: "student_name",
+                       
                      }, {
                          data: "payment_status",
                          name: "payment_status",
@@ -197,16 +202,10 @@
                          name: "session_info",
                          orderable: false,
                          "searchable": false
-                     }, {
-                         data: "student_name",
-                         name: "student_name",
-                         orderable: false,
-                         "searchable": false
-                     }, {
+                     },  {
                          data: "father_name",
                          name: "father_name",
-                         orderable: false,
-                         "searchable": false
+                      
                      }, {
                          data: "status",
                          name: "status",
@@ -214,7 +213,8 @@
                          "searchable": false
                      }, {
                          data: "roll_no",
-                         name: "roll_no"
+                         name: "roll_no",
+                       
                      }, {
                          data: "current_class",
                          name: "current_class",

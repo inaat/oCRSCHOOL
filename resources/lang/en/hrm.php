@@ -1,0 +1,82 @@
+<?php
+return[
+    'all_your_departments'=>'All Your Departments',
+    'departments'=>'Departments',
+    'settings'=>'Settings',
+    'department_list'=>'Department List',
+    'add_new_department'=>'Add New Department',
+    'department_name'=>'Department Name',
+    'update_department'=>'Update Department',
+    'department_title'=>'Department Title',
+    'register_new_department'=>'Register New Department',
+    'added_success' => 'Added successfully',
+    'updated_success' => ' Updated successfully',
+    'deleted_success' => ' Deleted successfully',
+    'description'=>'Description',
+
+
+    ///Designation///
+    'all_your_designations'=>'All Your Designations',
+    'designations'=>'Designations',
+    'settings'=>'Settings',
+    'designation_list'=>'Designation List',
+    'add_new_designation'=>'Add New Designation',
+    'designation_name'=>'Designation Name',
+    'update_designation'=>'Update Designation',
+    'designation_title'=>'Designation Title',
+    'register_new_designation'=>'Register New Designation',
+    ///education///
+    'all_your_educations'=>'All Your Educations',
+    'educations'=>'Educations',
+    'education_list'=>'Education List',
+    'add_new_education'=>'Add New Education',
+    'education_name'=>'Education Name',
+    'update_education'=>'Update Education',
+    'education_title'=>'Education Title',
+    'register_new_education'=>'Register New Education',
+    ///leave_category///
+    'all_your_leave_categories'=>'All Your Leave Categories',
+    'leave_categories'=>'Leave Categories',
+    'leave_category_list'=>'Leave Category List',
+    'add_new_leave_category'=>'Add New Leave Category',
+    'leave_category_name'=>'Leave Category Name',
+    'update_leave_category'=>'Update Leave Category',
+    'leave_category_title'=>'Leave Category Title',
+    'register_new_leave_category'=>'Register New Leave Category',
+    'leave_count_interval' => 'Leave count interval',
+    'current_month' => 'Current month',
+    'current_fy' => 'Current financial year',
+    'max_leave_count' => 'Max Leave Count',
+    'none'=>'None',
+
+    ///Shift////
+
+    'shift_type' => 'Shift Type',
+    'start_time' => 'Start Time',
+    'end_time' => 'End Time',
+    'holidays' => 'Holidays',
+    'action' => 'Action',
+    'all_your_shifts'=>'All Your Shifts',
+    'add_new_shift'=>'Add New Shift',
+    'shift_list'=>'Shift List',
+    'holiday'=>'Holiday',
+    'add_shift'=>'Add Shift',
+    'name' => 'Name',
+    'shift'=>'Shift',
+
+
+    'fixed_shift' => 'Fixed shift',
+    'flexible_shift' => 'Flexible shift',
+    'work_duration' => 'Work Duration',
+    'work_duration' => 'Work Duration',
+    'shift_type_tooltip' => '<b>Fixed Shift:</b> Fixed Clock in & Clock out time with grace time. <br>
+        <b>Flexible Shift:</b> No Clock in & Clock out time.',
+
+        'sunday' => 'Sunday',
+        'monday' => 'Monday',
+        'tuesday' => 'Tuesday',
+        'wednesday' => 'Wednesday',
+        'thursday' => 'Thursday',
+        'friday' => 'Friday',
+        'saturday' => 'Saturday',
+];
