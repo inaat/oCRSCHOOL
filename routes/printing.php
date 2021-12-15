@@ -18,3 +18,25 @@ Route::get('/create-class-wise-print', 'SchoolPrinting\FeeCardPrintController@cr
 Route::post('/class-wise-print', 'SchoolPrinting\FeeCardPrintController@classWisePrintPost');
 Route::post('/class-wise-print-all', 'SchoolPrinting\FeeCardPrintController@classWisePrint');
 
+Route::get('class-subject/create/{id}', [
+    'as' => 'class-subject.create',
+    'uses' => 'Curriculum\ClassSubjectLessonController@create'
+]);
+// Route::get('class-subject-progress/create/{id}', [
+//     'as' => 'class-subject-progress.create',
+//     'uses' => 'Curriculum\ClassSubjectProgressController@create'
+// ]);
+Route::get('class-curriculum/{class_id}', [
+    'as' => 'class-curriculum.index',
+    'uses' => 'Curriculum\CurriculumController@index'
+]);
+Route::get('class-curriculum/create/{id}', [
+    'as' => 'class-curriculum.create',
+    'uses' => 'Curriculum\CurriculumController@create'
+]);
+
+Route::resource('class-curriculum', 'Curriculum\CurriculumController',['except' => ['index','create']]);
+Route::resource('curriculum-class-subject', 'Curriculum\ClassSubjectController');
+Route::resource('class-subject', 'Curriculum\ClassSubjectLessonController',['except' => 'create']);
+Route::resource('class-subject-progress', 'Curriculum\ClassSubjectProgressController',['except' => 'create']);
+Route::get('get-chapter-lessons', 'Curriculum\ClassSubjectProgressController@getLessons');

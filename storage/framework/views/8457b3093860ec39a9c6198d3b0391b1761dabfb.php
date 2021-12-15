@@ -87,11 +87,13 @@
 <?php else: ?>
     <script src="<?php echo e(asset('js/lang/en.js?v=' . $asset_v), false); ?>"></script>
 <?php endif; ?>
+		<script src="<?php echo e(asset('/js/tinymce/tinymce.js?v=' . $asset_v), false); ?>"></script>
 
 <script src="<?php echo e(asset('js/functions.js?v=' . $asset_v), false); ?>"></script>
 <script src="<?php echo e(asset('js/common.js?v=' . $asset_v), false); ?>"></script>
 <script src="<?php echo e(asset('assets/js/app.js?v=' . $asset_v), false); ?>"></script>
 <script src="<?php echo e(asset('/js/apps.js?v=' . $asset_v), false); ?>"></script>
+
 
 <!-- TODO -->
 <?php if(file_exists(public_path('AdminLTE/plugins/select2/lang/' . session()->get('user.language', config('app.locale')) . '.js'))): ?>
@@ -109,8 +111,6 @@
 
 <?php endif; ?>
 <?php echo $__env->yieldContent('javascript'); ?>
-
-
 
 <script type="text/javascript">
     $(document).ready( function(){

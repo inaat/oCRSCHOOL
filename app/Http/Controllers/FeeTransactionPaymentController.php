@@ -112,6 +112,8 @@ class FeeTransactionPaymentController extends Controller
      * @param  int  $student_id
      * @return \Illuminate\Http\Response
      */
+    public function Due($student_id)
+    {}
     public function getPayStudentDue($student_id)
     {
         if (!auth()->user()->can('purchase.create')) {

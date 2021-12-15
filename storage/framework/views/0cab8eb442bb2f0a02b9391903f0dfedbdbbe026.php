@@ -17,9 +17,6 @@
     <link href="<?php echo e(asset('css/vendor.css'), false); ?>" rel="stylesheet" />
     <link href="<?php echo e(asset('css/icon.css'), false); ?>" rel="stylesheet" />
 
-    
-    <!-- loader-->
-    
     <!-- Bootstrap CSS -->
     <link href="<?php echo e(asset('assets/css/bootstrap.min.css'), false); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('assets/css/bootstrap-extended.css'), false); ?>" rel="stylesheet">
@@ -31,7 +28,6 @@
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/dark-theme.css'), false); ?>" />
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/semi-dark.css'), false); ?>" />
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/header-colors.css'), false); ?>" />
-    
 
     <title>Synadmin - Bootstrap5 Admin Template</title>
 </head>

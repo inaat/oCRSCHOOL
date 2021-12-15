@@ -172,8 +172,6 @@ $(document).ready(function() {
     var buttons = [
         { 
             extend: 'pdf',
-            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i> ' + LANG.export_to_pdf,
-            className: 'btn-sm btn-secondary',
             exportOptions: {
                 columns: ':visible',
             },
@@ -199,8 +197,6 @@ $(document).ready(function() {
         // },
         {
             extend: 'excel',
-            text: '<i class="fa fa-file-excel" aria-hidden="true"></i> ' + LANG.export_to_excel,
-            className: 'btn-sm btn-warning',
             exportOptions: {
                 columns: ':visible',
             },
@@ -208,8 +204,6 @@ $(document).ready(function() {
         },
         {
             extend: 'print',
-            text: '<i class="fa fa-print" aria-hidden="true"></i> ' + LANG.print,
-            className: 'btn-sm btn-primary',
             exportOptions: {
                 columns: ':visible',
                 stripHtml: true,
@@ -222,22 +216,21 @@ $(document).ready(function() {
                 if ($(win.document.body).find( 'table.hide-footer').length) {
                     $(win.document.body).find( 'table.hide-footer tfoot' ).remove();
                 }
-                // __currency_convert_recursively($(win.document.body).find( 'table' ));
+                 __currency_convert_recursively($(win.document.body).find( 'table' ));
             }
         },
         {
             extend: 'colvis',
-            text: '<i class="fa fa-columns" aria-hidden="true"></i> ' + LANG.col_vis,
-            className: 'btn-sm btn-dark btn-group',
+           
         },
     ];
 
     //Datables
     jQuery.extend($.fn.dataTable.defaults, {
-        fixedHeader: true,
-        dom:
-            '<"row margin-bottom-20 text-center"<"col-sm-2"l><"col-sm-7"B><"col-sm-3"f> r>tip',
-        buttons: [ 'copy', 'excel','colvis', 'pdf', 'print'],
+        // fixedHeader: true,
+         dom:
+         '<"row margin-bottom-20 text-center"<"col-sm-2"l><"col-sm-7"B><"col-sm-3"f> r>tip',
+        buttons: buttons,
         aLengthMenu: [[25, 50, 100, 200, 500, 1000, -1], [25, 50, 100, 200, 500, 1000, LANG.all]],
         iDisplayLength: __default_datatable_page_entries,
         language: {
@@ -525,22 +518,31 @@ $(document).on('shown.bs.modal', '.contains_select2', function(){
 })
 
 //common configuration : tinyMCE editor
-// tinymce.overrideDefaults({
-//     height: 300,
-//     theme: 'silver',
-//     plugins: [
-//       'advlist autolink link image lists charmap print preview hr anchor pagebreak',
-//       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-//       'table template paste help'
-//     ],
-//     toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |' +
-//       ' bullist numlist outdent indent | link image | print preview media fullpage | ' +
-//       'forecolor backcolor',
-//     menu: {
-//       favs: {title: 'My Favorites', items: 'code | searchreplace'}
-//     },
-//     menubar: 'favs file edit view insert format tools table help'
-// });
+tinymce.overrideDefaults({
+    height: 300,
+    theme: 'silver',
+    plugins: [
+      'advlist autolink link image lists charmap print preview hr anchor pagebreak',
+      'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+      'table template paste help mathEditor'
+    ],
+    height: 300,
+    content_css: ['matheditor/html/css/math.css'],
+    external_plugins: {
+      'mathEditor': 'matheditor/plugin.js',
+    },
+    //plugins: 'mathEditor',
+
+    //toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | mathEditor',
+
+    toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |' +
+      ' bullist numlist outdent indent | link image | print preview media fullpage | mathEditor |' +
+      'forecolor backcolor',
+    menu: {
+      favs: {title: 'My Favorites', items: 'code | searchreplace'}
+    },
+    menubar: 'favs file edit view insert format tools table help'
+});
 
 // Prevent Bootstrap dialog from blocking focusin
 $(document).on('focusin', function(e) {

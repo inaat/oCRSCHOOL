@@ -1,0 +1,2 @@
+<a href="{{ action('HRM\HrmTransactionPaymentController@show', [$id])}}" class="view_payment_modal payment-status-label" data-orig-value="{{$payment_status}}" data-status-name="{{__('lang_v1.' . $payment_status)}}"><span class="badge text-white text-uppercase  @payment_status($payment_status)">{{__('lang_v1.' . $payment_status)}}
+                        </span></a>

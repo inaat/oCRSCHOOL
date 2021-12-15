@@ -84,9 +84,7 @@
                 }
                  , {
                     data: "title"
-                    , name: "title",
-                         orderable: false,
-                         "searchable": false
+                    , name: "title"
                 }
                 , {
                     data: "tuition_fee"

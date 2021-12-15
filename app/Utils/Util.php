@@ -336,10 +336,11 @@ class Util
             $ref_number = $prefix .'-'. $ref_digits;
 
         }else{
-            if (in_array($type, ['admission'])) {
+            if (in_array($type, ['admission','employee'])) {
                 $ref_year = \Carbon::now()->year;
                 $ref_number = $prefix .'-'. $ref_year . '-' . $ref_digits;
-            } else {
+            }
+             else {
                 $ref_year = \Carbon::now()->year;
                 $ref_number = $ref_year .'-'. $ref_digits;
             }

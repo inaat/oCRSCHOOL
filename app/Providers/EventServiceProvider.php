@@ -28,6 +28,18 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\FeeTransactionPaymentDeleted::class => [
             \App\Listeners\DeleteAccountTransaction::class,
         ],
+
+        //Hrm
+        \App\Events\HrmTransactionPaymentAdded::class => [
+            \App\Listeners\HrmAddAccountTransaction::class,
+        ],
+        
+        \App\Events\HrmTransactionPaymentUpdated::class => [
+            \App\Listeners\HrmUpdateAccountTransaction::class,
+        ], 
+        \App\Events\HrmTransactionPaymentDeleted::class => [
+            \App\Listeners\HrmDeleteAccountTransaction::class,
+        ],
         
     ];
 

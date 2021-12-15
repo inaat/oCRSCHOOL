@@ -310,5 +310,46 @@ return [
 'transport_fee'=>'Transport Fee',
 'security_fee'=>'Security Fee',
 'prospectus_fee' =>'Prospectus Fee',
-   
+
+///Class Subject ////
+
+'class_subject'=>'Class Subject',
+   'all_your_class_subjects'=>'All Your Class Subject',
+    'class_subjects'=>'Class Subjects',
+    'settings'=>'Settings',
+    'class_subject_list'=>'Class Subject List',
+    'add_new_class_subject'=>'Add New Class Subject',
+    'class_subject_name'=>'Class Subject Name',
+    'update_class_subject'=>'Update Class Subject',
+    'passing_percentage'=>'Passing Percentage',
+    'chapters'=>'Chapters',
+    'campus_name'=>'Campus Name',
+    'class_name'=>'Class Name',
+    'description' => 'Description',
+    'class_subject_code'=>'Class Subject Code',
+    'manage_subject'=>'Manage Subject',
+    'subject_detail'=>'Subject Detail',
+    'lessons'=>'Lessons',
+    'subject_lessons'=>'Subject Lessons',
+    'chapter_number'=>'Chapter Number',
+    'chapter'=>'Chapter',
+    'add_new_lesson'=>'Add New Lesson',
+    'lesson_title'=>'Lesson Title',
+    'select_chapter'=>'Select Chapter',
+    ///Planning & Progress////////////////
+    'planning_&_progress' => 'Planning & Progress',
+    'select_lesson' => 'Select Lesson',
+    'lesson_already_planned_please_choose_another_lesson' => 'Lesson already planned. Please choose another lesson',
+    'planned_on' => 'Planned On',
+    'inprogress_reading'=>'Inprogress / Reading ',
+    'completed_on'=>'Completed On',
+    'mark_pending'=>'Mark Pending',
+    'mark_completed'=>'Mark Completed',
+    'mark_reading'=>'Mark Reading',
+    'curriculum'=>'Curriculum',
+
+
+    'register_new_subject_for_class'=>'Register New Subject For Class',
+    'class_curriculum'=>'Class Curriculum',
+    'question_bank'=>'Question Bank',
 ];

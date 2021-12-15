@@ -92,11 +92,13 @@
 @else
     <script src="{{ asset('js/lang/en.js?v=' . $asset_v) }}"></script>
 @endif
+		<script src="{{ asset('/js/tinymce/tinymce.js?v=' . $asset_v) }}"></script>
 
 <script src="{{ asset('js/functions.js?v=' . $asset_v) }}"></script>
 <script src="{{ asset('js/common.js?v=' . $asset_v) }}"></script>
 <script src="{{ asset('assets/js/app.js?v=' . $asset_v) }}"></script>
 <script src="{{ asset('/js/apps.js?v=' . $asset_v) }}"></script>
+
 
 <!-- TODO -->
 @if(file_exists(public_path('AdminLTE/plugins/select2/lang/' . session()->get('user.language', config('app.locale')) . '.js')))
@@ -113,8 +115,6 @@
     {!! $__system_settings['additional_js'] !!}
 @endif
 @yield('javascript')
-
-
 
 <script type="text/javascript">
     $(document).ready( function(){

@@ -17,11 +17,6 @@
     <link href="{{ asset('css/vendor.css')}}" rel="stylesheet" />
     <link href="{{ asset('css/icon.css')}}" rel="stylesheet" />
 
-    {{-- <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
-	<link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
-	<link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" /> --}}
-    <!-- loader-->
-    {{-- <link href="assets/css/pace.min.css" rel="stylesheet" /> --}}
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{ asset('assets/css/bootstrap-extended.css')}}" rel="stylesheet">
@@ -33,7 +28,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/dark-theme.css')}}" />
     <link rel="stylesheet" href="{{ asset('assets/css/semi-dark.css')}}" />
     <link rel="stylesheet" href="{{ asset('assets/css/header-colors.css')}}" />
-    {{-- <link href="https://getdatepicker.com/5-4/theme/css/tempusdominus-bootstrap-4.css" rel="stylesheet"> --}}
 
     <title>Synadmin - Bootstrap5 Admin Template</title>
 </head>

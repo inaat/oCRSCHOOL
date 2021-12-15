@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="renderer" content="webkit">
+  <script src="//cdn.staticfile.org/jquery/2.2.4/jquery.min.js"></script>
+  <!-- <script src='./api/api.js'></script> -->
+
+  <script src='tinymce.js'></script><!-- 必要 -->
+  <script>
+
+    tinymce.init({
+      selector: 'textarea',
+      height: 300,
+      content_css: ['matheditor/html/css/math.css'],
+      external_plugins: {
+        'mathEditor': 'matheditor/plugin.js',
+      },
+      plugins: 'mathEditor',
+
+      toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | mathEditor',
+      menu: {
+        favs: { title: 'My Favorites', items: 'code | searchreplace' }
+      },
+      menubar: 'favs file edit view insert format tools table help'
+    });
+
+  </script>
+</head>
+
+<body>
+
+
+  <textarea></textarea>
+</body>
+
+</html>
+
+
+

@@ -53,14 +53,29 @@ class ClassController extends Controller
 
             return DataTables::of($classes)
                            ->addColumn(
-                               'action',
-                               '<div class="dropdown">
-                               <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("lang.actions")</button>
-                               <ul class="dropdown-menu">
-                                   <li><a class="dropdown-item edit_class_button" data-href="{{action(\'ClassController@edit\',[$id])}}" data-container=".discounts_model"><i class="bx bxs-edit f-16 mr-15 "></i> @lang("lang.edit")</a>
-                                   </li>
-                               </ul>
-                           </div>'
+                        //        'action',
+                        //        '<div class="dropdown">
+                        //        <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> @lang("lang.actions")</button>
+                        //        <ul class="dropdown-menu">
+                        //            <li><a class="dropdown-item edit_class_button" data-href="{{action(\'ClassController@edit\',[$id])}}" data-container=".discounts_model"><i class="bx bxs-edit f-16 mr-15 "></i> @lang("lang.edit")</a>
+                        //            </li>
+                        //            <li><a class="dropdown-item href="{{action(\'Curriculum/CurriculumController@edit\',[$id])}}" ><i class="bx bxs-edit f-16 mr-15 "></i> Curriculum</a>
+                        //            </li>
+                        //        </ul>
+                        //    </div>'
+                        'action',
+                    function ($row) {
+                        $html= '<div class="dropdown">
+                             <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">'. __("lang.actions").'</button>
+                             <ul class="dropdown-menu" style="">';
+                        $html.='<li><a class="dropdown-item  edit_class_button" data-container=".discounts_model" data-href="' . action('ClassController@edit', [$row->id]) . '"><i class="bx bxs-edit bxs-edit f-16 mr-15 "></i> ' . __("lang.edit") . '</a></li>';               
+                        $html.='<li><a class="dropdown-item "href="' . action('Curriculum\CurriculumController@index', [$row->id]) . '"><i class="lni lni-eye "></i> ' . __("lang.manage_subject") . '</a></li>';               
+
+                       $html .= '</ul></div>';
+    
+                        return $html;
+                    }
+
                            )
                            ->filterColumn('campus_name', function ($query, $keyword) {
                             $query->where( function($q) use($keyword) {
@@ -72,14 +87,24 @@ class ClassController extends Controller
                                 $q->where('l.title', 'like', "%{$keyword}%");
                             });
                         })
-                           
+                           ->filterColumn('title', function ($query, $keyword) {
+                            $query->where( function($q) use($keyword) {
+                                $q->where('classes.title', 'like', "%{$keyword}%");
+                            });
+                        })
+                        ->editColumn('title', function ($row)  {
+                            return '<div><a  href="' . action('Curriculum\CurriculumController@index', [$row->id]) . '">
+                            '.ucwords($row->title).'
+                            </a></div>';
+                            
+                        })
                           ->editColumn('tuition_fee', '{{@num_format($tuition_fee)}}')
                           ->editColumn('admission_fee', '{{@num_format($admission_fee)}}')
                           ->editColumn('transport_fee', '{{@num_format($transport_fee)}}')
                           ->editColumn('security_fee', '{{@num_format($security_fee)}}')
                           ->editColumn('prospectus_fee', '{{@num_format($prospectus_fee)}}')
                            ->removeColumn('id')
-                           ->rawColumns(['action', 'classes.title','campus_name','class_level','classes.tuition_fee', 'classes.admission_fee','classes.transport_fee','classes.security_fee','classes.prospectus_fee'])
+                           ->rawColumns(['action', 'title'])
                            ->make(true);
         }
         return view('admin\classes.index');
