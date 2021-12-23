@@ -4,7 +4,7 @@ namespace App\Http\Controllers\HRM;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Hrm\HrmAllowance;
+use App\Models\HumanRM\HrmAllowance;
 use Yajra\DataTables\Facades\DataTables;
 
 class HrmAllowanceController extends Controller

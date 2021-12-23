@@ -46,5 +46,5 @@ Route::post('employee/employee-resign', 'HRM\HrmEmployeeController@employeeResig
 Route::post('/employee/register/check-email', 'HRM\HrmEmployeeController@postCheckEmail')->name('employee.postCheckEmail');
 
 Route::get('/shift/assign-users/{shift_id}', 'HRM\HrmShiftController@getAssignUsers');
-        Route::post('/shift/assign-users', 'HRM\HrmShiftController@postAssignUsers');
+Route::post('/shift/assign-users', 'HRM\HrmShiftController@postAssignUsers');
 

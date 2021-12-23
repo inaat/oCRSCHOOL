@@ -23,7 +23,11 @@
     <link href="<?php echo e(asset('assets/css/app.css'), false); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('assets/css/icons.css'), false); ?>" rel="stylesheet">
     
-
+    <link href="<?php echo e(asset('/js/tinymce/matheditor/html/css/math.css'), false); ?>" rel="stylesheet" />
+<script type="text/javascript">
+    //used for push notification
+    mathcss='<?php echo e(asset('/js/tinymce/matheditor/html/css/math.css'), false); ?>';
+    </script>
     <!-- Theme Style CSS -->
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/dark-theme.css'), false); ?>" />
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/semi-dark.css'), false); ?>" />

@@ -35,11 +35,11 @@ class AdminSidebarMenu
              //Accounts dropdown
             //if (auth()->user()->can('account.access')) {
                 $menu->dropdown(
-                    __('Globle'),
+                    __('lang.global_settings'),
                     function ($sub) {
                         $sub->url(
                             action('SystemSettingController@index'),
-                            __('settings.settings'),
+                            __('lang.general_setting'),
                             ['icon' => 'bx bx-cog ', 'active' => request()->segment(1) == 'setting']
                         );
                      
@@ -47,6 +47,11 @@ class AdminSidebarMenu
                             action('SessionController@index'),
                             __('session.sessions'),
                             ['icon' => 'bx bx-calendar ', 'active' => request()->segment(1) == 'session']
+                        );
+                        $sub->url(
+                            action('Curriculum\ClassTimeTablePeriodController@index'),
+                            __('lang.study_period'),
+                            ['icon' => 'lni lni-graduation', 'active' => request()->segment(1) == 'class-time-table-period']
                         );
 
                         $sub->url(
@@ -146,7 +151,7 @@ class AdminSidebarMenu
                 ['icon' => 'bx bx-money']
             )->order(15);
             $menu->dropdown(
-                __('Academic'),
+                __('lang.academic'),
                 function ($sub) {
                     $sub->url(
                         action('ClassController@index'),
@@ -162,6 +167,64 @@ class AdminSidebarMenu
                  
                 },
                 ['icon' => 'bx bx-globe']
+            )->order(15);
+            $menu->dropdown(
+                __('lang.hrm'),
+                function ($sub) {
+                    $sub->url(
+                        action('HRM\HrmEmployeeController@index'),
+                        __('hrm.employees'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-employee']
+                    );
+                    $sub->url(
+                        action('HRM\HrmEmployeeController@create'),
+                        __('hrm.add_new_employee'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-employee' &&  request()->segment(2) == 'create']
+                    );
+                    $sub->url(
+                        action('HRM\HrmDepartmentController@index'),
+                        __('hrm.departments'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-department']
+                    );
+                    $sub->url(
+                        action('HRM\HrmDesignationController@index'),
+                        __('hrm.designations'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-designation']
+                    );
+                    $sub->url(
+                        action('HRM\HrmEducationController@index'),
+                        __('hrm.educations'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-education']
+                    );
+                    $sub->url(
+                        action('HRM\HrmAllowanceController@index'),
+                        __('hrm.allowance'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-allowance']
+                    );
+                    $sub->url(
+                        action('HRM\HrmDeductionController@index'),
+                        __('hrm.deduction'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-deduction']
+                    );
+                    $sub->url(
+                        action('HRM\HrmPayrollController@index'),
+                        __('hrm.payroll'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-payroll']
+                    );
+                    $sub->url(
+                        action('HRM\HrmPrintController@create'),
+                        __('hrm.payroll_print'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'hrm-print']
+                    );
+                    $sub->url(
+                        action('HRM\HrmPrintController@employeeListPrintCreate'),
+                        __('hrm.employee_list_print'),
+                        ['icon' => 'bx bx-right-arrow-alt', 'active' => request()->segment(1) == 'employee-list-print']
+                    );
+                 
+                 
+                },
+                ['icon' => 'bx bx-group']
             )->order(15);
             //Accounts dropdown
             if (auth()->user()->can('account.access')) {

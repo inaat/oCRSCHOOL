@@ -93,11 +93,17 @@ class ClassController extends Controller
                             });
                         })
                         ->editColumn('title', function ($row)  {
-                            return '<div><a  href="' . action('Curriculum\CurriculumController@index', [$row->id]) . '">
+                            return '<div><a  href="' . action('ClassController@show', [$row->id]) . '">
                             '.ucwords($row->title).'
                             </a></div>';
                             
                         })
+                        // ->editColumn('title', function ($row)  {
+                        //     return '<div><a  href="' . action('Curriculum\CurriculumController@index', [$row->id]) . '">
+                        //     '.ucwords($row->title).'
+                        //     </a></div>';
+                            
+                        // })
                           ->editColumn('tuition_fee', '{{@num_format($tuition_fee)}}')
                           ->editColumn('admission_fee', '{{@num_format($admission_fee)}}')
                           ->editColumn('transport_fee', '{{@num_format($transport_fee)}}')
@@ -173,7 +179,9 @@ class ClassController extends Controller
      */
     public function show($id)
     {
-        //
+        $classes=Classes::find($id);
+        return view('admin\classes.profile')->with(compact('classes'));
+
     }
 
     /**

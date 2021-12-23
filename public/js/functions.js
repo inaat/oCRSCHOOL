@@ -547,7 +547,7 @@ function __get_chapter_lessons(subject_id,chapter_number) {
         }
         , success: function(result) {
             if (result) {
-                $('#lessons_ids').html(result);
+                $('.lessons').html(result);
 
             }
         }

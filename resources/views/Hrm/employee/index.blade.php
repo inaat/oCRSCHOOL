@@ -99,7 +99,70 @@
      <script type="text/javascript">
          $(document).ready(function() {
 
+  //employees_table
+             var employees_table = $("#employees_table").DataTable({
+                 processing: true,
+                 serverSide: true,
+                 "ajax": {
+                     "url": "/hrm-employee",
+                     "data": function(d) {
+                         if ($('#employees_list_filter_date_range').val()) {
+                             var start = $('#employees_list_filter_date_range').data('daterangepicker')
+                                 .startDate.format('YYYY-MM-DD');
+                             var end = $('#employees_list_filter_date_range').data('daterangepicker')
+                                 .endDate.format('YYYY-MM-DD');
+                             d.start_date = start;
+                             d.end_date = end;
+                         }
 
+                         if ($('#employees_list_filter_campus_id').length) {
+                             d.campus_id = $('#employees_list_filter_campus_id').val();
+                         }
+                         if ($('#employees_list_filter').length) {
+                             d.status = $('#employees_list_filter').val();
+                         }
+                         if ($('#employees_list_filter_employeeID').length) {
+                             d.employeeID = $('#employees_list_filter_employeeID').val();
+                         }
+                         d = __datatable_ajax_callback(d);
+                     }
+                 }
+
+                 ,
+                 columns: [{
+                         data: "action",
+                         name: "action",
+                         orderable: false,
+                         "searchable": false
+                     }
+
+                     , {
+                         data: "employee_name",
+                         name: "employee_name"
+                     }, {
+                         data: "father_name",
+                         name: "father_name"
+                     }, {
+                         data: "status",
+                         name: "status",
+                         orderable: false,
+                         "searchable": false
+                     }, {
+                         data: "employeeID",
+                         name: "employeeID"
+                     }, {
+                         data: "joining_date",
+                         name: "joining_date"
+                     }, {
+                         data: "campus_name",
+                         name: "campus_name",
+                         orderable: false,
+                         "searchable": false
+                     }
+
+                     ,
+                 ],
+             });
              $(document).on('click', '.update_status', function(e) {
                  e.preventDefault();
                  $('#update_employee_status_form').find('#status').val($(this).data('status'));
@@ -173,7 +236,7 @@
              });
 
 
-             //Date range as a button
+             {{-- //Date range as a button
              $('#employees_list_filter_date_range').daterangepicker(
                  dateRangeSettingsForAdmissionDate,
                  function(start, end) {
@@ -185,7 +248,7 @@
              $('#employees_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
                  $('#employees_list_filter_date_range').val('');
                  employees_table.ajax.reload();
-             });
+             }); --}}
              $(document).on('change',
                  '#employees_list_filter_campus_id,#employees_list_filter',
                  function() {
@@ -196,70 +259,7 @@
                      employees_table.ajax.reload();
                  });
 
-             //employees_table
-             var employees_table = $("#employees_table").DataTable({
-                 processing: true,
-                 serverSide: true,
-                 "ajax": {
-                     "url": "/hrm-employee",
-                     "data": function(d) {
-                         if ($('#employees_list_filter_date_range').val()) {
-                             var start = $('#employees_list_filter_date_range').data('daterangepicker')
-                                 .startDate.format('YYYY-MM-DD');
-                             var end = $('#employees_list_filter_date_range').data('daterangepicker')
-                                 .endDate.format('YYYY-MM-DD');
-                             d.start_date = start;
-                             d.end_date = end;
-                         }
-
-                         if ($('#employees_list_filter_campus_id').length) {
-                             d.campus_id = $('#employees_list_filter_campus_id').val();
-                         }
-                         if ($('#employees_list_filter').length) {
-                             d.status = $('#employees_list_filter').val();
-                         }
-                         if ($('#employees_list_filter_employeeID').length) {
-                             d.employeeID = $('#employees_list_filter_employeeID').val();
-                         }
-                         d = __datatable_ajax_callback(d);
-                     }
-                 }
-
-                 ,
-                 columns: [{
-                         data: "action",
-                         name: "action",
-                         orderable: false,
-                         "searchable": false
-                     }
-
-                     , {
-                         data: "employee_name",
-                         name: "employee_name"
-                     }, {
-                         data: "father_name",
-                         name: "father_name"
-                     }, {
-                         data: "status",
-                         name: "status",
-                         orderable: false,
-                         "searchable": false
-                     }, {
-                         data: "employeeID",
-                         name: "employeeID"
-                     }, {
-                         data: "joining_date",
-                         name: "joining_date"
-                     }, {
-                         data: "campus_name",
-                         name: "campus_name",
-                         orderable: false,
-                         "searchable": false
-                     }
-
-                     ,
-                 ],
-             });
+           
 
 
 

@@ -23,7 +23,11 @@
     <link href="{{ asset('assets/css/app.css')}}" rel="stylesheet">
     <link href="{{ asset('assets/css/icons.css')}}" rel="stylesheet">
     
-
+    <link href="{{ asset('/js/tinymce/matheditor/html/css/math.css')}}" rel="stylesheet" />
+<script type="text/javascript">
+    //used for push notification
+    mathcss='{{ asset('/js/tinymce/matheditor/html/css/math.css')}}';
+    </script>
     <!-- Theme Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/dark-theme.css')}}" />
     <link rel="stylesheet" href="{{ asset('assets/css/semi-dark.css')}}" />

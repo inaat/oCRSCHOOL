@@ -12,7 +12,7 @@
                  {!! Form::select('chapter', $chapters, null, ['class' => 'form-select select2 ', 'required', 'id' => 'chapter_progress', 'style' => 'width:100%', 'placeholder' => __('messages.all')]) !!}
              </div>
              <div class="col-sm-3">
-                 {!! Form::select('lesson_id', [], null, ['class' => 'form-select select2', 'required', 'id' => 'lessons_ids','style' => 'width:100%', 'placeholder' => __('messages.please_select')]) !!}
+                 {!! Form::select('lesson_id', [], null, ['class' => 'form-select select2 lessons', 'required', 'id' => 'lessons_ids','style' => 'width:100%', 'placeholder' => __('messages.please_select')]) !!}
              </div>
 
              <div class="col-sm-3 ">

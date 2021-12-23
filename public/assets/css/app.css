@@ -32,6 +32,14 @@ File: app.css
 
 /* General */
 :root {
+	/*--primary: #8833ff;
+	--btn-primary-hover: #8531fa;
+
+	  background: linear-gradient(#8db376,#295a4b);
+
+
+	--primary: #295a4b;
+	--btn-primary-hover: #8db376;	*/
 	--primary: #8833ff;
 	--btn-primary-hover: #8531fa;
   }
@@ -55,6 +63,48 @@ body {
 
 
 }
+.mcq {
+    position: relative;
+    box-shadow: 0 0 40px rgba(51, 51, 51, .1)
+}
+
+.mcq input {
+    text-indent: 30px;
+    border: 2px solid #d6d4d4
+}
+
+
+.form-control:focus {
+    box-shadow: none;
+    border: 2px solid var(--primary);
+}
+.select2:focus {
+    box-shadow: none;
+    border: 2px solid var(--primary);
+}
+.select2-container *:focus {
+	outline: none;
+	box-shadow: none;
+    border: 2px solid var(--primary);
+}
+.select2-container--focus:focus {
+	outline: none;
+	box-shadow: none;
+    border: 2px solid var(--primary);
+}
+.select2-container:focus {
+	outline: none;
+	box-shadow: none;
+    border: 2px solid var(--primary);
+}
+.select2-selection--single:focus
+{border: 2px solid var(--primary);}
+.mcq .mcq-badge {
+    position: absolute;
+    top: 10px;
+    left: 16px
+}
+
 .error{
 	color: red !important;
 }

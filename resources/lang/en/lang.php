@@ -1,5 +1,11 @@
 <?php
 return [
+    ///Settings///
+    "general_setting" => ' General Setting',
+    'global_settings' => 'Global Settings',
+    'academic'=>'Academic',
+    'hrm'=>'HRM',
+
     ///Message////
     'action' => 'Action',
     'actions' => 'Actions',
@@ -352,4 +358,56 @@ return [
     'register_new_subject_for_class'=>'Register New Subject For Class',
     'class_curriculum'=>'Class Curriculum',
     'question_bank'=>'Question Bank',
+    'question_type'=>[
+    'mcq'=>'Mcq',
+    'short_question'=>'Short Question',
+    'long_question'=>'Long Question',
+    'true_and_false'=>'True And False',
+    ],
+    'question'=>'Question',
+    'column_matching'=>'Column Matching',
+
+    'question_types'=>'Question Types',
+    'question'=>'Question',
+    'option_a'=>'Option A',
+    'option_b'=>'Option B',
+    'option_c'=>'Option C',
+    'option_d'=>'Option D',
+
+    'quest_options' =>[
+    'option_a'=>'Option A',
+    'option_b'=>'Option B',
+    'option_c'=>'Option C',
+    'option_d'=>'Option D',
+    ],
+    'true_false'=>[
+        'true'=>'True',
+        'false'=>'False',
+    ],
+    'hint'=>'Hint',
+    'answer'=>'Answer',
+    'type'=>'Type',
+    'marks'=>'Marks',
+    'add_new_question'=>'Add New Question',
+    'edit_question'=>'Edit Question',
+
+
+    ///time table////
+      'all_your_study_periods'=>'All Your Study Periods',
+      'registered_study_periods_routine'=>'Registered Study Periods Routine',
+      'start_time'=>'Start Time',
+        'end_time'=>'End Time',
+        'duration'=>'Duration',
+        'type'=>'Type',
+        'study_period_list'=>'Study Period List',
+        'study_period'=>'Study Period',
+        'add_new_period'=>'Add New Period',
+        'edit_period'=>'Edit Period',
+        'period_type'=>
+        [
+            'prayer_time'=>'Prayer Time',
+            'study_period'=>'Study Period',
+            'lunch_break'=>'Lunch Break',
+        ],
+        'assign_new_period'=>'Assign New Period',
 ];

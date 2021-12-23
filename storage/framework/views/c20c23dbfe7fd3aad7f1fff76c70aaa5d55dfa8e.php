@@ -43,7 +43,7 @@
                 <div class="col-md-12 p-2">
                     <?php echo Form::label('description', __( 'lang.description' ) . ':'); ?>
 
-                    <?php echo Form::textarea('description', null, ['class' => 'form-control',  'required','rows=4','placeholder' => __( 'lang.description' ) ]); ?>
+                    <?php echo Form::textarea('description', null, ['class' => 'form-control','rows=4','placeholder' => __( 'lang.description' ) ]); ?>
 
                 </div>
             </div>

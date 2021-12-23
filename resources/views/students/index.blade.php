@@ -107,85 +107,7 @@
 
      <script type="text/javascript">
   $(document).ready(function() {
-      //If change in amount amount update amount including tax and line total
-            {{-- $('table#admisssion-table tbody').on('keyup', 'input.amount', function () {
-              alert(5)
-
-            
-            }); --}}
-
-             $(document).on('click', '.update_status', function(e) {
-            e.preventDefault();
-            $('#update_student_status_form').find('#status').val($(this).data('status'));
-            $('#update_student_status_form').find('#student_id').val($(this).data('student_id'));
-            $('#update_student_status_modal').modal('show');
-            });
-
-            
-        $(document).on('submit', '#update_student_status_form', function(e) {
-            e.preventDefault();
-            var form = $(this);
-            var data = form.serialize();
-
-            $.ajax({
-                method: 'POST',
-                url: $(this).attr('action'),
-                dataType: 'json',
-                data: data,
-                beforeSend: function(xhr) {
-                    __disable_submit_button(form.find('button[type="submit"]'));
-                },
-                success: function(result) {
-                    if (result.success == true) {
-                        $('#update_student_status_modal').modal('hide');
-                        toastr.success(result.msg);
-                        students_table.ajax.reload();
-                        $('#update_student_status_form')
-                            .find('button[type="submit"]')
-                            .attr('disabled', false);
-                    } else {
-                        toastr.error(result.msg);
-                    }
-                },
-            });
-        });
-
-         $('.admission_fee_modal > table#admisssion-table tbody').on('keyup', 'input.amount',  function() {
-             alert(5);
-        });
-            $(document).on('change', 'input.amount,input.fee-head-check', function(){
-        var total = 0;
-        var table = $(this).closest('table');
-        table.find('tbody tr').each( function(){
-            if($(this).find('input.fee-head-check').is(':checked')){
-            var line = __read_number($(this).find('input.amount'));
-            var subtotal = line;
-            total = total + subtotal;
-            }
-        });
-         table.find('span.final_total').text(__currency_trans_from_en(total, true));
-        $('input#final_total').val(total);
-        
-        });
-        //Date range as a button
-        $('#student_list_filter_date_range').daterangepicker(
-           dateRangeSettingsForAdmissionDate,
-            function (start, end) {
-                $('#student_list_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
-                students_table.ajax.reload();
-            }
-        );
-        $('#student_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
-            $('#student_list_filter_date_range').val('');
-            students_table.ajax.reload();
-        });
-        $(document).on('change', '#students_list_filter_campus_id,#students_list_filter_class_id,#students_list_filter_class_section_id',  function() {
-            students_table.ajax.reload();
-        });
-        $(document).on('keyup', '#students_list_filter_admission_no,#students_list_filter_roll_no',  function() {
-            students_table.ajax.reload();
-        });
- 
+      
                 //students_table
         var students_table = $("#students_table").DataTable({
             processing: true
@@ -273,6 +195,85 @@
                
             , ]
         , });
+      //If change in amount amount update amount including tax and line total
+            {{-- $('table#admisssion-table tbody').on('keyup', 'input.amount', function () {
+              alert(5)
+
+            
+            }); --}}
+
+             $(document).on('click', '.update_status', function(e) {
+            e.preventDefault();
+            $('#update_student_status_form').find('#status').val($(this).data('status'));
+            $('#update_student_status_form').find('#student_id').val($(this).data('student_id'));
+            $('#update_student_status_modal').modal('show');
+            });
+
+            
+        $(document).on('submit', '#update_student_status_form', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var data = form.serialize();
+
+            $.ajax({
+                method: 'POST',
+                url: $(this).attr('action'),
+                dataType: 'json',
+                data: data,
+                beforeSend: function(xhr) {
+                    __disable_submit_button(form.find('button[type="submit"]'));
+                },
+                success: function(result) {
+                    if (result.success == true) {
+                        $('#update_student_status_modal').modal('hide');
+                        toastr.success(result.msg);
+                        students_table.ajax.reload();
+                        $('#update_student_status_form')
+                            .find('button[type="submit"]')
+                            .attr('disabled', false);
+                    } else {
+                        toastr.error(result.msg);
+                    }
+                },
+            });
+        });
+
+         $('.admission_fee_modal > table#admisssion-table tbody').on('keyup', 'input.amount',  function() {
+             alert(5);
+        });
+            $(document).on('change', 'input.amount,input.fee-head-check', function(){
+        var total = 0;
+        var table = $(this).closest('table');
+        table.find('tbody tr').each( function(){
+            if($(this).find('input.fee-head-check').is(':checked')){
+            var line = __read_number($(this).find('input.amount'));
+            var subtotal = line;
+            total = total + subtotal;
+            }
+        });
+         table.find('span.final_total').text(__currency_trans_from_en(total, true));
+        $('input#final_total').val(total);
+        
+        });
+        //Date range as a button
+        $('#student_list_filter_date_range').daterangepicker(
+           dateRangeSettingsForAdmissionDate,
+            function (start, end) {
+                $('#student_list_filter_date_range').val(start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format));
+                students_table.ajax.reload();
+            }
+        );
+        $('#student_list_filter_date_range').on('cancel.daterangepicker', function(ev, picker) {
+            $('#student_list_filter_date_range').val('');
+            students_table.ajax.reload();
+        });
+        $(document).on('change', '#students_list_filter_campus_id,#students_list_filter_class_id,#students_list_filter_class_section_id',  function() {
+            students_table.ajax.reload();
+        });
+        $(document).on('keyup', '#students_list_filter_admission_no,#students_list_filter_roll_no',  function() {
+            students_table.ajax.reload();
+        });
+ 
 
  $(document).on("click", ".admission_add_button", function () {
         $("div.admission_fee_modal").load($(this).data("href"), function () {

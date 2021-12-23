@@ -4,7 +4,7 @@ namespace App\Http\Controllers\HRM;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Hrm\HrmDeduction;
+use App\Models\HumanRM\HrmDeduction;
 use Yajra\DataTables\Facades\DataTables;
 
 class HrmDeductionController extends Controller

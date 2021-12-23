@@ -1,26 +1,7 @@
+$(document).ready(function() {
 
 
 
-
-(function () {
-    'use strict'
-
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.querySelectorAll('.needs-validation')
-
-    // Loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-      .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-
-          form.classList.add('was-validated')
-        }, false)
-      })
-  })();
 
   $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
     format: moment_date_format + ' ' + moment_time_format,
@@ -47,7 +28,6 @@ $(document).on('submit', 'form', function(e) {
     $(this).find('button[type="submit"]')
             .attr('disabled', true);
 });
-$(document).ready(function() {
     window.addEventListener('online',  updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
 
@@ -107,6 +87,30 @@ $(document).ready(function() {
     };
 
     //Default setting for jQuey validator
+    // jQuery.validator.setDefaults({
+    //     errorPlacement: function(error, element) {
+    //         if (element.hasClass('select2') && element.parent().hasClass('input-group')) {
+    //             error.insertAfter(element.parent());
+    //         } else if (element.hasClass('select2')) {
+    //             error.insertAfter(element.next('span.select2-container'));
+    //         } else if (element.parent().hasClass('input-group')) {
+    //             error.insertAfter(element.parent());
+    //         } else if (element.parent().hasClass('multi-input')) {
+    //             error.insertAfter(element.closest('.multi-input'));
+    //         } else if (element.parent().hasClass('input_inline')) {
+    //             error.insertAfter(element.parent());
+    //         } else {
+    //             error.insertAfter(element);
+    //         }
+    //     },
+
+    //     invalidHandler: function() {
+    //         toastr.error(LANG.some_error_in_input_field);
+    //     },
+    // });
+
+    
+    //Default setting for jQuey validator
     jQuery.validator.setDefaults({
         errorPlacement: function(error, element) {
             if (element.hasClass('select2') && element.parent().hasClass('input-group')) {
@@ -128,7 +132,6 @@ $(document).ready(function() {
             toastr.error(LANG.some_error_in_input_field);
         },
     });
-
     jQuery.validator.addMethod(
         'max-value',
         function(value, element, param) {
@@ -306,7 +309,6 @@ $(document).ready(function() {
     $('.scroll-top-bottom').each( function(){
         $(this).topScrollbar();
     });
-});
 
 //Default settings for daterangePicker
 var ranges = {};
@@ -526,20 +528,22 @@ tinymce.overrideDefaults({
       'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
       'table template paste help mathEditor'
     ],
-    height: 300,
-    content_css: ['matheditor/html/css/math.css'],
+    height: 150,
+    content_css: [mathcss],
     external_plugins: {
       'mathEditor': 'matheditor/plugin.js',
     },
-    //plugins: 'mathEditor',
-
-    //toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | mathEditor',
-
+ 
     toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |' +
       ' bullist numlist outdent indent | link image | print preview media fullpage | mathEditor |' +
       'forecolor backcolor',
     menu: {
       favs: {title: 'My Favorites', items: 'code | searchreplace'}
+    },
+    setup: function(ed) {
+        ed.on('change', function(e) {
+            tinyMCE.triggerSave();
+        });
     },
     menubar: 'favs file edit view insert format tools table help'
 });
@@ -654,4 +658,5 @@ $(document).on('keyup', '#discount_amount',  function() {
 
     }
 
+});
 });

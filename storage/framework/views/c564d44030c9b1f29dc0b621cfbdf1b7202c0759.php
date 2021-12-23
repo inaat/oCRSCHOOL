@@ -16,7 +16,7 @@
 
              </div>
              <div class="col-sm-3">
-                 <?php echo Form::select('lesson_id', [], null, ['class' => 'form-select select2', 'required', 'id' => 'lessons_ids','style' => 'width:100%', 'placeholder' => __('messages.please_select')]); ?>
+                 <?php echo Form::select('lesson_id', [], null, ['class' => 'form-select select2 lessons', 'required', 'id' => 'lessons_ids','style' => 'width:100%', 'placeholder' => __('messages.please_select')]); ?>
 
              </div>
 

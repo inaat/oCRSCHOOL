@@ -4,9 +4,9 @@ namespace App\Http\Controllers\HRM;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Models\Hrm\HrmEmployee;
-use App\Models\Hrm\HrmTransaction;
-use App\Models\Hrm\HrmTransactionPayment;
+use App\Models\HumanRM\HrmEmployee;
+use App\Models\HumanRM\HrmTransaction;
+use App\Models\HumanRM\HrmTransactionPayment;
 use App\Events\HrmTransactionPaymentUpdated;
 use App\Events\HrmTransactionPaymentAdded;
 

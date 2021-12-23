@@ -4,7 +4,7 @@ namespace App\Events;
 
 use Illuminate\Queue\SerializesModels;
 
-use App\Models\HRM\HrmTransactionPayment;
+use App\Models\HumanRM\HrmTransactionPayment;
 
 class HrmTransactionPaymentUpdated
 {

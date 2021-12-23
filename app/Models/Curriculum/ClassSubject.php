@@ -24,19 +24,19 @@ class ClassSubject extends Model
     {
         return $this->belongsTo(\App\Models\Classes::class, 'class_id');
     }
-    // public static function forDropdown($show_none = false)
-    // {
-    //     $query=HrmAllowance::orderBy('id', 'asc')
-    //     ->pluck('allowance', 'id');
+    public static function forDropdown($show_none = false)
+    {
+        $query=ClassSubject::orderBy('id', 'asc')
+        ->pluck('name', 'id');
 
        
         
 
-    //     $allowances=$query;
-    //     if ($show_none) {
-    //         $allowances->prepend(__('lang.none'), '');
-    //     }
+        $subjects=$query;
+        if ($show_none) {
+            $subjects->prepend(__('lang.none'), '');
+        }
 
-    //     return  $allowances;
-    // }
+        return  $subjects;
+    }
 }

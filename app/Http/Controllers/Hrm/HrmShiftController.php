@@ -4,7 +4,7 @@ namespace App\Http\Controllers\HRM;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Hrm\HrmShift;
+use App\Models\HumanRM\HrmShift;
 use Yajra\DataTables\Facades\DataTables;
 use App\Utils\Util;
 use DB;

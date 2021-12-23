@@ -34,20 +34,7 @@ var this_editor_window = top.tinymce.activeEditor;
             MathEditor.close();
         },
     
-        // insertMatrix: function () {
-        //     var rows = parseInt($('#ssRows').val());
-        //     var cols = parseInt($('#ssColumns').val());
-        //     var strMatrix = '\\begin{array}{' + this.repeat("c",cols) + '} ';
-        //     var tempCols = new Array();
-        //     while (tempCols.length + 1 <= cols) tempCols.push('\\mathrm{}');
-        //     tempCols = tempCols.join('&');
-    
-        //     var tempRows = new Array();
-        //     while (tempRows.length + 1 <= rows) tempRows.push(tempCols);
-        //     tempRows = tempRows.join(' \\\\ ');
-        //     this.insert(strMatrix + tempRows + ' \\end{array}');
-        //     this.closeMatrixWindow();
-        // },
+      
         
         insertMatrix: function () {
             var rows = parseInt($('#ssRows').val());

@@ -3,8 +3,8 @@
 namespace App\Utils;
 
 use Illuminate\Support\Facades\Hash;
-use App\Models\Hrm\HrmEmployee;
-use App\Models\Hrm\HrmEmployeeDocument;
+use App\Models\HumanRM\HrmEmployee;
+use App\Models\HumanRM\HrmEmployeeDocument;
 use App\Models\User;
 use App\Models\Student;
 use App\Models\Guardian;

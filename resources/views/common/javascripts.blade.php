@@ -93,6 +93,7 @@
     <script src="{{ asset('js/lang/en.js?v=' . $asset_v) }}"></script>
 @endif
 		<script src="{{ asset('/js/tinymce/tinymce.js?v=' . $asset_v) }}"></script>
+		<script src="{{ asset('/js/tinymce/matheditor/plugin.js?v=' . $asset_v) }}"></script>
 
 <script src="{{ asset('js/functions.js?v=' . $asset_v) }}"></script>
 <script src="{{ asset('js/common.js?v=' . $asset_v) }}"></script>

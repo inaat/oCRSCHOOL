@@ -219,7 +219,6 @@ class AccountController extends Controller
         if (!auth()->user()->can('account.access')) {
             abort(403, 'Unauthorized action.');
         }
-
         $system_settings_id = request()->session()->get('user.system_settings_id');
 
         if (request()->ajax()) {
@@ -253,13 +252,14 @@ class AccountController extends Controller
             if (!empty(request()->input('type'))) {
                 $accounts->where('account_transactions.type', request()->input('type'));
             }
+            dd($accounts);
 
-            $start_date = request()->input('start_date');
-            $end_date = request()->input('end_date');
+            // $start_date = request()->input('start_date');
+            // $end_date = request()->input('end_date');
             
-            if (!empty($start_date) && !empty($end_date)) {
-                $accounts->whereBetween(DB::raw('date(operation_date)'), [$start_date, $end_date]);
-            }
+            // if (!empty($start_date) && !empty($end_date)) {
+            //     $accounts->whereBetween(DB::raw('date(operation_date)'), [$start_date, $end_date]);
+            // }
 
             return DataTables::of($accounts)
                             ->addColumn('debit', function ($row) {

@@ -97,6 +97,7 @@ return[
         'saturday' => 'Saturday',
 
         ////Employee////
+        'employees'=>'Employees',
         'employees_flitters'=>'Employees Flitters',
         'roles_and_permissions'=>'Roles and Permissions',
         'password'=>'Password',
@@ -200,7 +201,8 @@ return[
     'pay_roll'=>'Pay Roll',
     'data_not_found'=>'Data Not Found',
     'teacher&staff_list'=>'Teacher & Staff List',
-
+'payroll_print'=>'Pay Roll Print',
+'employee_list_print'=>'Employee List Print',
 
 
 

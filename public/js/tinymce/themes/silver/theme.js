@@ -28439,9 +28439,9 @@
       var renderBranding = function () {
         var label = global$7.translate([
           'Powered by {0}',
-          'Tiny'
+          'ExplainerKhan'
         ]);
-        var linkHtml = '<a href="https://www.tiny.cloud/?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v5" rel="noopener" target="_blank" tabindex="-1" aria-label="' + label + '">' + label + '</a>';
+        var linkHtml = '<a href="https://www.explainerkhan.com" rel="noopener" target="_blank" tabindex="-1" aria-label="' + label + '">' + label + '</a>';
         return {
           dom: {
             tag: 'span',

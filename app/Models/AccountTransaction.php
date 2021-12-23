@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\FeeTransactionPayment;
-use App\Models\HRM\HrmTransactionPayment;
+use App\Models\HumanRM\HrmTransactionPayment;
 class AccountTransaction extends Model
 {
     use SoftDeletes;

@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\DB;
 
 use Spatie\Permission\Models\Role;
 
-use App\Models\Hrm\HrmTransaction;
-use App\Models\Hrm\HrmEmployee;
-use App\Models\Hrm\HrmTransactionPayment;
+use App\Models\HumanRM\HrmTransaction;
+use App\Models\HumanRM\HrmEmployee;
+use App\Models\HumanRM\HrmTransactionPayment;
 
 use App\Events\HrmTransactionPaymentAdded;
 

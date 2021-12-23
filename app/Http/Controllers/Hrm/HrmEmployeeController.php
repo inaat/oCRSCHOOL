@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Hrm;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Hrm\HrmEmployee;
-use App\Models\Hrm\HrmEmployeeDocument;
+use App\Models\HumanRM\HrmEmployee;
+use App\Models\HumanRM\HrmEmployeeDocument;
 use App\Models\Campus;
-use App\Models\HRM\HrmDepartment;
-use App\Models\HRM\HrmDesignation;
-use App\Models\HRM\HrmEducation;
+use App\Models\HumanRM\HrmDepartment;
+use App\Models\HumanRM\HrmDesignation;
+use App\Models\HumanRM\HrmEducation;
 use App\Models\District;
 use App\Models\City;
 use App\Models\Province;

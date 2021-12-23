@@ -88,6 +88,7 @@
     <script src="<?php echo e(asset('js/lang/en.js?v=' . $asset_v), false); ?>"></script>
 <?php endif; ?>
 		<script src="<?php echo e(asset('/js/tinymce/tinymce.js?v=' . $asset_v), false); ?>"></script>
+		<script src="<?php echo e(asset('/js/tinymce/matheditor/plugin.js?v=' . $asset_v), false); ?>"></script>
 
 <script src="<?php echo e(asset('js/functions.js?v=' . $asset_v), false); ?>"></script>
 <script src="<?php echo e(asset('js/common.js?v=' . $asset_v), false); ?>"></script>

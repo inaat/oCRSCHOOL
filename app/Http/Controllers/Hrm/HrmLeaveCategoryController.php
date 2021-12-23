@@ -4,7 +4,7 @@ namespace App\Http\Controllers\HRM;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Hrm\HrmLeaveCategory;
+use App\Models\HumanRM\HrmLeaveCategory;
 use Yajra\DataTables\Facades\DataTables;
 use Validator;
 

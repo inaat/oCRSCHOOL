@@ -34,9 +34,19 @@ Route::get('class-curriculum/create/{id}', [
     'as' => 'class-curriculum.create',
     'uses' => 'Curriculum\CurriculumController@create'
 ]);
+Route::get('class-subject-question/create/{id}', [
+    'as' => 'class-subject-question.create',
+    'uses' => 'Curriculum\ClassSubjectQuestionBankController@create'
+]);
 
 Route::resource('class-curriculum', 'Curriculum\CurriculumController',['except' => ['index','create']]);
 Route::resource('curriculum-class-subject', 'Curriculum\ClassSubjectController');
 Route::resource('class-subject', 'Curriculum\ClassSubjectLessonController',['except' => 'create']);
 Route::resource('class-subject-progress', 'Curriculum\ClassSubjectProgressController',['except' => 'create']);
 Route::get('get-chapter-lessons', 'Curriculum\ClassSubjectProgressController@getLessons');
+Route::resource('class-subject-question', 'Curriculum\ClassSubjectQuestionBankController',['except' => ['create']]);
+
+Route::resource('class-time-table-period', 'Curriculum\ClassTimeTablePeriodController');
+Route::resource('class-time-table', 'Curriculum\ClassTimeTableController');
+
+
