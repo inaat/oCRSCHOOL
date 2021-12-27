@@ -23,6 +23,8 @@ class CreateClassSubjectsTable extends Migration
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
             $table->integer('class_id')->unsigned();
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
+            $table->integer('teacher_id')->unsigned()->nullable();
+            $table->foreign('teacher_id')->references('id')->on('hrm_employees')->onDelete('cascade');
             $table->integer('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->text('description')->nullable();

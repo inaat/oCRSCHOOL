@@ -47,6 +47,9 @@ Route::get('get-chapter-lessons', 'Curriculum\ClassSubjectProgressController@get
 Route::resource('class-subject-question', 'Curriculum\ClassSubjectQuestionBankController',['except' => ['create']]);
 
 Route::resource('class-time-table-period', 'Curriculum\ClassTimeTablePeriodController');
+Route::get('get-periods', 'Curriculum\ClassTimeTablePeriodController@getPeriods');
+Route::get('get-subjects', 'Curriculum\ClassSubjectController@getSubjects');
+
 Route::resource('class-time-table', 'Curriculum\ClassTimeTableController');
 
 

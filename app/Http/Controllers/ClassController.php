@@ -92,18 +92,18 @@ class ClassController extends Controller
                                 $q->where('classes.title', 'like', "%{$keyword}%");
                             });
                         })
-                        ->editColumn('title', function ($row)  {
-                            return '<div><a  href="' . action('ClassController@show', [$row->id]) . '">
-                            '.ucwords($row->title).'
-                            </a></div>';
-                            
-                        })
                         // ->editColumn('title', function ($row)  {
-                        //     return '<div><a  href="' . action('Curriculum\CurriculumController@index', [$row->id]) . '">
+                        //     return '<div><a  href="' . action('ClassController@show', [$row->id]) . '">
                         //     '.ucwords($row->title).'
                         //     </a></div>';
                             
                         // })
+                        ->editColumn('title', function ($row)  {
+                            return '<div><a  href="' . action('Curriculum\CurriculumController@index', [$row->id]) . '">
+                            '.ucwords($row->title).'
+                            </a></div>';
+                            
+                        })
                           ->editColumn('tuition_fee', '{{@num_format($tuition_fee)}}')
                           ->editColumn('admission_fee', '{{@num_format($admission_fee)}}')
                           ->editColumn('transport_fee', '{{@num_format($transport_fee)}}')

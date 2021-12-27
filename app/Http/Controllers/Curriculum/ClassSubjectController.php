@@ -211,4 +211,28 @@ class ClassSubjectController extends Controller
             return $output;
         }
     }
+    /**
+     * Gets the ClassSubject for 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $class_idcampus_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getSubjects(Request $request)
+    {
+        if (!empty($request->input('class_id'))) {
+            $class_id = $request->input('class_id');
+            
+            $classSubject = ClassSubject::forDropdown($class_id);
+            $html = '<option value="">' . __('lang.please_select') . '</option>';
+            //$html = '';
+            if (!empty($classSubject)) {
+                foreach ($classSubject as $id => $name) {
+                    $html .= '<option value="' . $id .'">' . $name. '</option>';
+                }
+            }
+
+            return $html;
+        }
+    }
 }

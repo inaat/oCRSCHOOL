@@ -231,4 +231,28 @@ class ClassTimeTablePeriodController extends Controller
             return $output;
         }
     }
+     /**
+     * Gets the ClassTimeTablePeriod for 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $campus_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getPeriods(Request $request)
+    {
+        if (!empty($request->input('campus_id'))) {
+            $campus_id = $request->input('campus_id');
+            
+            $classTimeTablePeriod = ClassTimeTablePeriod::forDropdown($campus_id);
+            $html = '<option value="">' . __('lang.please_select') . '</option>';
+            //$html = '';
+            if (!empty($classTimeTablePeriod)) {
+                foreach ($classTimeTablePeriod as $id => $name) {
+                    $html .= '<option value="' . $id .'">' . $name. '</option>';
+                }
+            }
+
+            return $html;
+        }
+    }
 }

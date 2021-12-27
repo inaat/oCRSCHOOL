@@ -1,7 +1,7 @@
-<div class="modal-dialog modal-md" role="document">
+<div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-  		<?php echo Form::open(['url' => action('Curriculum\ClassTimeTablePeriodController@store') , 'method' => 'post' , 'id' => 'add_period_form' ]); ?>
+  		<?php echo Form::open(['url' => action('Curriculum\ClassTimeTableController@store') , 'method' => 'post' , 'id' => 'add_time_table_form' ]); ?>
 
 
         <div class="modal-header bg-primary">
@@ -11,46 +11,37 @@
 
         <div class="modal-body">
             <div class="row ">
-               <div class="col-md-12 p-2 ">
+               <div class="col-md-4 p-2 ">
                     <?php echo Form::label('campus.student', __('campus.campuses') . ':*'); ?>
 
-                    <?php echo Form::select('campus_id', $campuses, null,['class' => 'form-select select2 global-campuses', 'required', 'style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]); ?>
+                    <?php echo Form::select('campus_id', $campuses, null,['class' => 'form-select select2 global-campuses','style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]); ?>
 
                 </div>
-                <div class="col-md-12 p-2">
-                    <?php echo Form::label('name', __('lang.name') . ':*'); ?>
+                <div class="col-md-4 p-2">
+                    <?php echo Form::label('class.classes', __('class.classes') . ':*'); ?>
 
-                    <?php echo Form::text('name',  null, ['class' => 'form-control', 'placeholder' => __('lang.name'), 'required']); ?>
-
-
-                </div>
-                <div class="col-md-12 p-2">
-                    <?php echo Form::label('type', __('lang.type') . ':*'); ?> 
-                    <?php echo Form::select('type', __('lang.period_type'),  null, ['class' => 'form-control select2', 'required','placeholder' => __('messages.please_select')]); ?>
-
+                    <?php echo Form::select('class_id',[],null, ['class' => 'form-select  select2 global-classes ','style' => 'width:100%', 'required', 'placeholder' => __('messages.please_select')]); ?>
 
                 </div>
-                <div class="col-md-12 p-2 time_div" id="start_timepicker" data-target-input="nearest"
-                    data-target="#start_timepicker" data-toggle="datetimepicker">
-                    <?php echo Form::label('start_time', __('lang.start_time') . ':*'); ?>
+                <div class="col-md-4 p-2">
+                <?php echo Form::label('class_section.sections', __('class_section.sections') . ':*'); ?>
 
-                    <div class="input-group flex-nowrap input-group-append  input-group date">
-                        <?php echo Form::text('start_time',  null, ['class' => 'form-control datetimepicker-input', 'data-target' => '#start_timepicker', 'required']); ?>
+                <?php echo Form::select('class_section_id', [], null, ['class' => 'form-select select2 global-class_sections', 'required', 'style' => 'width:100%', 'placeholder' => __('messages.please_select')]); ?>
 
-                        <span class="input-group-text" id="addon-wrapping"><i class="fa fa-clock"></i></span>
-                    </div>
                 </div>
-                <div class="col-md-12 p-2 time_div" id="end_timepicker" data-target-input="nearest"
-                    data-target="#end_timepicker" data-toggle="datetimepicker">
-                    <?php echo Form::label('end_time', __('lang.end_time') . ':*'); ?>
+                <div class="col-md-4 p-2">
+                <?php echo Form::label('subjects', __('lang.subjects') . ':*'); ?>
 
-                    <div class="input-group flex-nowrap input-group-append  input-group date">
-                        <?php echo Form::text('end_time',  null, ['class' => 'form-control datetimepicker-input', 'data-target' => '#end_timepicker', 'required']); ?>
+                <?php echo Form::select('subject_id', [], null, ['class' => 'form-select select2 global-subjects','required', 'id' => 'subjects', 'style' => 'width:100%', 'placeholder' => __('messages.please_select')]); ?>
 
-                        <span class="input-group-text" id="addon-wrapping"><i class="fa fa-clock"></i></span>
-                    </div>
                 </div>
-             
+                <div class="col-md-4 p-2">
+                <?php echo Form::label('periods', __('lang.periods') . ':*'); ?>
+
+                <?php echo Form::select('period_id', [], null, ['class' => 'form-select select2 global-periods','required', 'id' => 'periods', 'style' => 'width:100%', 'placeholder' => __('messages.please_select')]); ?>
+
+                </div>
+               
             </div>
         </div>
         <div class="modal-footer">
@@ -65,4 +56,17 @@
 
 </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
-<?php /**PATH C:\scsserver\htdocs\oCRSCHOOL\resources\views/Curriculum\class_time_table/create.blade.php ENDPATH**/ ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+         $("form#add_time_table_form").validate({
+        rules: {
+            period_id: {
+                required: true,
+            },
+        },
+    });
+      
+       
+    });
+
+</script><?php /**PATH C:\scsserver\htdocs\oCRSCHOOL\resources\views/Curriculum\class_time_table/create.blade.php ENDPATH**/ ?>

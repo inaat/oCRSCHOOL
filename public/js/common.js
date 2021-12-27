@@ -637,11 +637,20 @@ $(document).on('change', '#city_ids', function() {
 $(document).on('change', '.global-campuses', function() {
     var doc = $(this);
     __get_campus_class(doc);
+    var periodExist = document.getElementById("periods");
+    if(periodExist){
+        __get_periods(doc);
+    }
+  
 });
 
 $(document).on('change', '.global-classes', function() {
     var doc = $(this);
     __get_class_Section(doc);
+    var subjectExist = document.getElementById("subjects");
+    if(subjectExist){
+        __get_subjects(doc);
+    }
 });
 
 

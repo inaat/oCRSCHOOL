@@ -23,6 +23,19 @@ class ClassSection extends Model
      * @var array
      */
     protected $guarded = ['id'];
+    public function classes()
+    {
+        return $this->belongsTo(\App\Models\Classes::class, 'class_id');
+    }
+    public function campuses()
+    {
+        return $this->belongsTo(\App\Models\Campus::class, 'campus_id');
+    }
+    public function time_table()
+    {
+        return $this->hasMany(\App\Models\Curriculum\ClassTimeTable::class, 'class_section_id');
+    }
+    
   /**
      * Return list of ClassLevels for a business
      *

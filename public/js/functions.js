@@ -8,23 +8,23 @@ function __calculate_amount(calculation_type, calculation_amount, amount) {
     amount = isNaN(amount) ? 0 : amount;
 
     switch (calculation_type) {
-        case 'fixed':
+        case "fixed":
             return parseFloat(calculation_amount);
-        case 'percentage':
-        case 'percent':
+        case "percentage":
+        case "percent":
             var div = Decimal.div(calculation_amount, 100).toNumber();
             return Decimal.mul(div, amount).toNumber();
         default:
             return 0;
     }
 }
-function __readURL(input,dest) {
+function __readURL(input, dest) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         console.log(reader);
         reader.onload = function (e) {
-            $(dest).attr('src', e.target.result);
-        }
+            $(dest).attr("src", e.target.result);
+        };
 
         reader.readAsDataURL(input.files[0]);
     }
@@ -95,13 +95,13 @@ function __currency_trans_from_en(
         var decimal = __currency_decimal_separator;
     }
 
-    symbol = '';
-    var format = '%s%v';
+    symbol = "";
+    var format = "%s%v";
     if (show_symbol) {
         symbol = s;
-        format = '%s %v';
-        if (__currency_symbol_placement == 'after') {
-            format = '%v %s';
+        format = "%s %v";
+        if (__currency_symbol_placement == "after") {
+            format = "%v %s";
         }
     }
 
@@ -109,24 +109,31 @@ function __currency_trans_from_en(
         precision = __quantity_precision;
     }
 
-    return accounting.formatMoney(input, symbol, precision, thousand, decimal, format);
+    return accounting.formatMoney(
+        input,
+        symbol,
+        precision,
+        thousand,
+        decimal,
+        format
+    );
 }
 
 function __currency_convert_recursively(element, use_page_currency = false) {
-    element.find('.display_currency').each(function () {
+    element.find(".display_currency").each(function () {
         var value = $(this).text();
 
-        var show_symbol = $(this).data('currency_symbol');
+        var show_symbol = $(this).data("currency_symbol");
         if (show_symbol == undefined || show_symbol != true) {
             show_symbol = false;
         }
 
-        var highlight = $(this).data('highlight');
+        var highlight = $(this).data("highlight");
         if (highlight == true) {
             __highlight(value, $(this));
         }
 
-        var is_quantity = $(this).data('is_quantity');
+        var is_quantity = $(this).data("is_quantity");
         if (is_quantity == undefined || is_quantity != true) {
             is_quantity = false;
         }
@@ -150,7 +157,7 @@ function __currency_convert_recursively(element, use_page_currency = false) {
 function __translate(str, obj = []) {
     var trans = LANG[str];
     $.each(obj, function (key, value) {
-        trans = trans.replace(':' + key, value);
+        trans = trans.replace(":" + key, value);
     });
     if (trans) {
         return trans;
@@ -161,11 +168,11 @@ function __translate(str, obj = []) {
 
 //If the value is positive, text-success class will be applied else text-danger
 function __highlight(value, obj) {
-    obj.removeClass('text-success').removeClass('text-danger');
+    obj.removeClass("text-success").removeClass("text-danger");
     if (value > 0) {
-        obj.addClass('text-success');
+        obj.addClass("text-success");
     } else if (value < 0) {
-        obj.addClass('text-danger');
+        obj.addClass("text-danger");
     }
 }
 
@@ -187,7 +194,12 @@ function __number_f(
     use_page_currency = false,
     precision = __currency_precision
 ) {
-    return __currency_trans_from_en(input, show_symbol, use_page_currency, precision);
+    return __currency_trans_from_en(
+        input,
+        show_symbol,
+        use_page_currency,
+        precision
+    );
 }
 
 //Read input and convert it into natural number
@@ -202,7 +214,7 @@ function __write_number(
     use_page_currency = false,
     precision = __currency_precision
 ) {
-    if (input_element.hasClass('input_quantity')) {
+    if (input_element.hasClass("input_quantity")) {
         precision = __quantity_precision;
     }
 
@@ -210,19 +222,19 @@ function __write_number(
 }
 
 //Return the font-awesome html based on class value
-function __fa_awesome($class = 'fa-sync fa-spin fa-fw ') {
+function __fa_awesome($class = "fa-sync fa-spin fa-fw ") {
     return '<i class="fa ' + $class + '"></i>';
 }
 
 //Converts standard dates (YYYY-MM-DD) to human readable dates
 function __show_date_diff_for_human(element) {
     moment.locale(app_locale);
-    element.find('.time-to-now').each(function () {
+    element.find(".time-to-now").each(function () {
         var string = $(this).text();
         $(this).text(moment(string).toNow(true));
     });
 
-    element.find('.time-from-now').each(function () {
+    element.find(".time-from-now").each(function () {
         var string = $(this).text();
         $(this).text(moment(string).from(moment()));
     });
@@ -242,46 +254,58 @@ function round_to_iraqi_dinnar(value) {
 }
 
 function __select2(selector) {
-    if ($('html').attr('dir') == 'rtl') selector.select2({ dir: 'rtl' });
+    if ($("html").attr("dir") == "rtl") selector.select2({ dir: "rtl" });
     else selector.select2();
 }
 
 function update_font_size() {
-    var font_size = localStorage.getItem('upos_font_size');
+    var font_size = localStorage.getItem("upos_font_size");
     var font_size_array = [];
-    font_size_array['s'] = ' - 3px';
-    font_size_array['m'] = '';
-    font_size_array['l'] = ' + 3px';
-    font_size_array['xl'] = ' + 6px';
-    if (typeof font_size !== 'undefined') {
-        $('header').css('font-size', 'calc(100% ' + font_size_array[font_size] + ')');
-        $('footer').css('font-size', 'calc(100% ' + font_size_array[font_size] + ')');
-        $('section').each(function () {
-            if (!$(this).hasClass('print_section')) {
-                $(this).css('font-size', 'calc(100% ' + font_size_array[font_size] + ')');
+    font_size_array["s"] = " - 3px";
+    font_size_array["m"] = "";
+    font_size_array["l"] = " + 3px";
+    font_size_array["xl"] = " + 6px";
+    if (typeof font_size !== "undefined") {
+        $("header").css(
+            "font-size",
+            "calc(100% " + font_size_array[font_size] + ")"
+        );
+        $("footer").css(
+            "font-size",
+            "calc(100% " + font_size_array[font_size] + ")"
+        );
+        $("section").each(function () {
+            if (!$(this).hasClass("print_section")) {
+                $(this).css(
+                    "font-size",
+                    "calc(100% " + font_size_array[font_size] + ")"
+                );
             }
         });
-        $('div.modal').css('font-size', 'calc(100% ' + font_size_array[font_size] + ')');
+        $("div.modal").css(
+            "font-size",
+            "calc(100% " + font_size_array[font_size] + ")"
+        );
     }
 }
 
 function sum_table_col(table, class_name) {
     var sum = 0;
     table
-        .find('tbody')
-        .find('tr')
+        .find("tbody")
+        .find("tr")
         .each(function () {
             if (
                 parseFloat(
                     $(this)
-                        .find('.' + class_name)
-                        .data('orig-value')
+                        .find("." + class_name)
+                        .data("orig-value")
                 )
             ) {
                 sum += parseFloat(
                     $(this)
-                        .find('.' + class_name)
-                        .data('orig-value')
+                        .find("." + class_name)
+                        .data("orig-value")
                 );
             }
         });
@@ -293,14 +317,15 @@ function __count_status(data, key) {
     var statuses = [];
     for (var r in data) {
         var element = $(data[r][key]);
-        if (element.data('orig-value')) {
-            var status_name = element.data('orig-value');
+        if (element.data("orig-value")) {
+            var status_name = element.data("orig-value");
             if (!(status_name in statuses)) {
                 statuses[status_name] = [];
-                statuses[status_name]['count'] = 1;
-                statuses[status_name]['display_name'] = element.data('status-name');
+                statuses[status_name]["count"] = 1;
+                statuses[status_name]["display_name"] =
+                    element.data("status-name");
             } else {
-                statuses[status_name]['count'] += 1;
+                statuses[status_name]["count"] += 1;
             }
         }
     }
@@ -308,10 +333,14 @@ function __count_status(data, key) {
     //generate html
     var html = '<p class="text-left"><small>';
     for (var key in statuses) {
-        html += statuses[key]['display_name'] + ' - ' + statuses[key]['count'] + '</br>';
+        html +=
+            statuses[key]["display_name"] +
+            " - " +
+            statuses[key]["count"] +
+            "</br>";
     }
 
-    html += '</small></p>';
+    html += "</small></p>";
 
     return html;
 }
@@ -320,18 +349,19 @@ function __sum_status(table, class_name) {
     var statuses = [];
     var status_html = [];
     table
-        .find('tbody')
-        .find('tr')
+        .find("tbody")
+        .find("tr")
         .each(function () {
-            element = $(this).find('.' + class_name);
-            if (element.data('orig-value')) {
-                var status_name = element.data('orig-value');
+            element = $(this).find("." + class_name);
+            if (element.data("orig-value")) {
+                var status_name = element.data("orig-value");
                 if (!(status_name in statuses)) {
                     statuses[status_name] = [];
-                    statuses[status_name]['count'] = 1;
-                    statuses[status_name]['display_name'] = element.data('status-name');
+                    statuses[status_name]["count"] = 1;
+                    statuses[status_name]["display_name"] =
+                        element.data("status-name");
                 } else {
-                    statuses[status_name]['count'] += 1;
+                    statuses[status_name]["count"] += 1;
                 }
             }
         });
@@ -344,58 +374,63 @@ function __sum_status_html(table, class_name) {
     var status_html = '<p class="text-left"><small>';
     for (var key in statuses_sum) {
         status_html +=
-            statuses_sum[key]['display_name'] + ' - ' + statuses_sum[key]['count'] + '</br>';
+            statuses_sum[key]["display_name"] +
+            " - " +
+            statuses_sum[key]["count"] +
+            "</br>";
     }
 
-    status_html += '</small></p>';
+    status_html += "</small></p>";
 
     return status_html;
 }
 
-function __sum_stock(table, class_name, label_direction = 'right') {
+function __sum_stock(table, class_name, label_direction = "right") {
     var stocks = [];
     table
-        .find('tbody')
-        .find('tr')
+        .find("tbody")
+        .find("tr")
         .each(function () {
-            element = $(this).find('.' + class_name);
-            if (element.data('orig-value')) {
-                var unit_name = element.data('unit');
+            element = $(this).find("." + class_name);
+            if (element.data("orig-value")) {
+                var unit_name = element.data("unit");
                 if (!(unit_name in stocks)) {
-                    stocks[unit_name] = parseFloat(element.data('orig-value'));
+                    stocks[unit_name] = parseFloat(element.data("orig-value"));
                 } else {
-                    stocks[unit_name] += parseFloat(element.data('orig-value'));
+                    stocks[unit_name] += parseFloat(element.data("orig-value"));
                 }
             }
         });
     var stock_html = '<p class="text-left"><small>';
 
     for (var key in stocks) {
-        if (label_direction == 'left') {
+        if (label_direction == "left") {
             stock_html +=
                 key +
                 ' : <span class="display_currency" data-is_quantity="true">' +
                 stocks[key] +
-                '</span> ' +
-                '</br>';
+                "</span> " +
+                "</br>";
         } else {
             stock_html +=
                 '<span class="display_currency" data-is_quantity="true">' +
                 stocks[key] +
-                '</span> ' +
+                "</span> " +
                 key +
-                '</br>';
+                "</br>";
         }
     }
 
-    stock_html += '</small></p>';
+    stock_html += "</small></p>";
 
     return stock_html;
 }
 
 function __print_receipt(section_id = null) {
     if (section_id) {
-        var imgs = document.getElementById(section_id).getElementsByTagName('img');
+        var imgs = document
+            .getElementById(section_id)
+            .getElementsByTagName("img");
     } else {
         var imgs = document.images;
     }
@@ -405,7 +440,7 @@ function __print_receipt(section_id = null) {
         img_counter = 0;
 
         [].forEach.call(imgs, function (img) {
-            img.addEventListener('load', incrementImageCounter, false);
+            img.addEventListener("load", incrementImageCounter, false);
         });
     } else {
         setTimeout(function () {
@@ -430,7 +465,10 @@ function incrementImageCounter() {
 }
 
 function __getUnitMultiplier(row) {
-    multiplier = row.find('select.sub_unit').find(':selected').data('multiplier');
+    multiplier = row
+        .find("select.sub_unit")
+        .find(":selected")
+        .data("multiplier");
     if (multiplier == undefined) {
         return 1;
     } else {
@@ -458,9 +496,12 @@ function __round(number, multiple = 0) {
 function __datatable_ajax_callback(data) {
     for (var i = 0, len = data.columns.length; i < len; i++) {
         if (!data.columns[i].search.value) delete data.columns[i].search;
-        if (data.columns[i].searchable === true) delete data.columns[i].searchable;
-        if (data.columns[i].orderable === true) delete data.columns[i].orderable;
-        if (data.columns[i].data === data.columns[i].name) delete data.columns[i].name;
+        if (data.columns[i].searchable === true)
+            delete data.columns[i].searchable;
+        if (data.columns[i].orderable === true)
+            delete data.columns[i].orderable;
+        if (data.columns[i].data === data.columns[i].name)
+            delete data.columns[i].name;
     }
     delete data.search.regex;
 
@@ -476,7 +517,7 @@ function __page_leave_confirmation(form) {
         orig_form_data = form_obj.serialize();
     }, 1000);
 
-    $(document).on('submit', 'form', function (event) {
+    $(document).on("submit", "form", function (event) {
         window.onbeforeunload = null;
     });
     window.onbeforeunload = function () {
@@ -489,27 +530,27 @@ function __page_leave_confirmation(form) {
 //initialize tinyMCE editor for invoice template
 function init_tinymce(editor_id) {
     tinymce.init({
-        selector: 'textarea#' + editor_id,
+        selector: "textarea#" + editor_id,
         plugins: [
-            'advlist autolink link image lists charmap print preview hr anchor pagebreak',
-            'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-            'table template paste help',
+            "advlist autolink link image lists charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+            "table template paste help",
         ],
         toolbar:
-            'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |' +
-            ' bullist numlist outdent indent | link image | print preview fullpage | ' +
-            'forecolor backcolor',
+            "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify |" +
+            " bullist numlist outdent indent | link image | print preview fullpage | " +
+            "forecolor backcolor",
         menu: {
-            favs: { title: 'My Favorites', items: 'code | searchreplace' },
+            favs: { title: "My Favorites", items: "code | searchreplace" },
         },
-        menubar: 'favs file edit view insert format tools table help',
+        menubar: "favs file edit view insert format tools table help",
     });
 }
 
 function getSelectedRows() {
     var selected_rows = [];
     var i = 0;
-    $('.row-select:checked').each(function () {
+    $(".row-select:checked").each(function () {
         selected_rows[i++] = $(this).val();
     });
 
@@ -524,191 +565,217 @@ function __is_online() {
 }
 
 function __disable_submit_button(element) {
-        element.attr('disable', true);
+    element.attr("disable", true);
 }
 function __enable_submit_button(element) {
-        element.removeAttr('disabled');
-       
+    element.removeAttr("disabled");
 }
 function __removeAttr(element) {
-        element.removeAttr('required');
-       
+    element.removeAttr("required");
 }
 
-//Add dropdown for chapter-lesson 
-function __get_chapter_lessons(subject_id,chapter_number) {
+//Add dropdown for periods
+function __get_subjects(doc) {
+    var class_id = doc.closest(".row").find(".global-classes").val();
     $.ajax({
-        method: 'GET'
-        , url: '/get-chapter-lessons'
-        , dataType: 'html'
-        , data: {
+        method: "GET",
+        url: "/get-subjects",
+        dataType: "html",
+        data: {
+            class_id: class_id,
+        },
+        success: function (result) {
+            if (result) {
+                doc.closest(".row").find(".global-subjects").html(result);
+            }
+        },
+    });
+}
+//Add dropdown for periods
+function __get_periods(doc) {
+    var campus_id = doc.closest(".row").find(".global-campuses").val();
+    $.ajax({
+        method: "GET",
+        url: "/get-periods",
+        dataType: "html",
+        data: {
+            campus_id: campus_id,
+        },
+        success: function (result) {
+            if (result) {
+                doc.closest(".row").find(".global-periods").html(result);
+            }
+        },
+    });
+}
+//Add dropdown for chapter-lesson
+function __get_chapter_lessons(subject_id, chapter_number) {
+    $.ajax({
+        method: "GET",
+        url: "/get-chapter-lessons",
+        dataType: "html",
+        data: {
             subject_id: subject_id,
             chapter_number: chapter_number,
-        }
-        , success: function(result) {
+        },
+        success: function (result) {
             if (result) {
-                $('.lessons').html(result);
-
+                $(".lessons").html(result);
             }
-        }
-    , });
+        },
+    });
 }
-//Add dropdown for Provinces 
+//Add dropdown for Provinces
 function __get_provinces() {
-    var country_id = $('#country_id').val();
+    var country_id = $("#country_id").val();
     $.ajax({
-        method: 'GET'
-        , url: '/get_provinces'
-        , dataType: 'html'
-        , data: {
-            country_id: country_id
-        }
-        , success: function(result) {
+        method: "GET",
+        url: "/get_provinces",
+        dataType: "html",
+        data: {
+            country_id: country_id,
+        },
+        success: function (result) {
             if (result) {
-                $('#provinces_ids').html(result);
-
+                $("#provinces_ids").html(result);
             }
-        }
-    , });
+        },
+    });
 }
 //Add dropdown for Districts
 function __get_districts() {
-    var province_id = $('#provinces_ids').val();
+    var province_id = $("#provinces_ids").val();
     $.ajax({
-        method: 'GET'
-        , url: '/get_districts'
-        , dataType: 'html'
-        , data: {
-            province_id: province_id
-        }
-        , success: function(result) {
+        method: "GET",
+        url: "/get_districts",
+        dataType: "html",
+        data: {
+            province_id: province_id,
+        },
+        success: function (result) {
             if (result) {
-                $('#district_ids').html(result);
-
+                $("#district_ids").html(result);
             }
-        }
-    , });
+        },
+    });
 }
 //Add dropdown for Cities
 function __get_cities() {
-    var district_id = $('#district_ids').val();
+    var district_id = $("#district_ids").val();
     $.ajax({
-        method: 'GET'
-        , url: '/get_cities'
-        , dataType: 'html'
-        , data: {
-            district_id: district_id
-        }
-        , success: function(result) {
+        method: "GET",
+        url: "/get_cities",
+        dataType: "html",
+        data: {
+            district_id: district_id,
+        },
+        success: function (result) {
             if (result) {
-                $('#city_ids').html(result);
-
+                $("#city_ids").html(result);
             }
-        }
-    , });
+        },
+    });
 }
 //Add dropdown for Regions
 function __get_regions() {
-    var city_id = $('#city_ids').val();
+    var city_id = $("#city_ids").val();
     $.ajax({
-        method: 'GET'
-        , url: '/get_regions'
-        , dataType: 'html'
-        , data: {
-            city_id: city_id
-        }
-        , success: function(result) {
+        method: "GET",
+        url: "/get_regions",
+        dataType: "html",
+        data: {
+            city_id: city_id,
+        },
+        success: function (result) {
             if (result) {
-                $('#region_ids').html(result);
-
+                $("#region_ids").html(result);
             }
-        }
-    , });
+        },
+    });
 }
 
 function __get_campus_class(doc) {
     //Add dropdown for sub units if sub unit field is visible
-    var campus_id = doc.closest(".row")
-        .find(".global-campuses").val();
+    var campus_id = doc.closest(".row").find(".global-campuses").val();
     $.ajax({
-        method: 'GET'
-        , url: '/classes/get_campus_classes'
-        , dataType: 'html'
-        , data: {
-            campus_id: campus_id
-        }
-        , success: function(result) {
+        method: "GET",
+        url: "/classes/get_campus_classes",
+        dataType: "html",
+        data: {
+            campus_id: campus_id,
+        },
+        success: function (result) {
             if (result) {
-                doc.closest(".row")
-                    .find(".global-classes").html(result);
-
+                doc.closest(".row").find(".global-classes").html(result);
             }
-        }
-    , });
-}
-
-
-function __get_class_Section(doc) {
-    //Add dropdown for sub units if sub unit field is visible
-    var class_id = doc.closest(".row")
-        .find('.global-classes').val();
-    $.ajax({
-        method: 'GET'
-        , url: '/classes/get_class_section'
-        , dataType: 'html'
-        , data: {
-            class_id: class_id
-        }
-        , success: function(result) {
-            if (result) {
-                doc.closest(".row")
-                    .find('.global-class_sections').html(result);
-
-            }
-        }
-    , });
-}
-function __printErrorMsg (msg) {
-    $.each( msg, function( key, value ) {
-      $('.'+key+'_err').text(value);
-      toastr.error(value);
-      $('input[name="'+key+'"]').focus();
+        },
     });
 }
 
-
+function __get_class_Section(doc) {
+    //Add dropdown for sub units if sub unit field is visible
+    var class_id = doc.closest(".row").find(".global-classes").val();
+    $.ajax({
+        method: "GET",
+        url: "/classes/get_class_section",
+        dataType: "html",
+        data: {
+            class_id: class_id,
+        },
+        success: function (result) {
+            if (result) {
+                doc.closest(".row").find(".global-class_sections").html(result);
+            }
+        },
+    });
+}
+function __printErrorMsg(msg) {
+    $.each(msg, function (key, value) {
+        $("." + key + "_err").text(value);
+        toastr.error(value);
+        $('input[name="' + key + '"]').focus();
+    });
+}
 
 ///Hrm///
 function __calculateTotalGrossAmount() {
-    var transaction_final_total = __read_number($('#transaction_final_total'));
+    var transaction_final_total = __read_number($("#transaction_final_total"));
 
     let total_gross_amount = transaction_final_total;
-   let total_allowance=0;
-   let total_deduction=0;
+    let total_allowance = 0;
+    let total_deduction = 0;
 
-
-
-    var allowance_table = $('.allowance-table');
-    allowance_table.find('tbody tr').each(function() {
-        if ($(this).find('input.allowance-check').is(':checked')) {
-            var allowance = __read_number($(this).find('input.allowance-amount'));
+    var allowance_table = $(".allowance-table");
+    allowance_table.find("tbody tr").each(function () {
+        if ($(this).find("input.allowance-check").is(":checked")) {
+            var allowance = __read_number(
+                $(this).find("input.allowance-amount")
+            );
             total_gross_amount += allowance;
             total_allowance += allowance;
         }
     });
-    $('span.allowance_final_total').text(__currency_trans_from_en(total_allowance, true));
-     __write_number($('#allowance_final_total').first(), total_allowance);
+    $("span.allowance_final_total").text(
+        __currency_trans_from_en(total_allowance, true)
+    );
+    __write_number($("#allowance_final_total").first(), total_allowance);
 
-    var deduction_table = $('.deduction-table');
-    deduction_table.find('tbody tr').each(function() {
-        if ($(this).find('input.deduction-check').is(':checked')) {
-            var deduction = __read_number($(this).find('input.deduction-amount'));
+    var deduction_table = $(".deduction-table");
+    deduction_table.find("tbody tr").each(function () {
+        if ($(this).find("input.deduction-check").is(":checked")) {
+            var deduction = __read_number(
+                $(this).find("input.deduction-amount")
+            );
             total_gross_amount -= deduction;
             total_deduction += deduction;
         }
     });
-    $('span.deduction_final_total').text(__currency_trans_from_en(total_deduction, true));
-     __write_number($('#deduction_final_total').first(), total_deduction);
-    $('span.gross_final_total').text(__currency_trans_from_en(total_gross_amount, true));
-     __write_number($('#gross_final_total'),total_gross_amount);
+    $("span.deduction_final_total").text(
+        __currency_trans_from_en(total_deduction, true)
+    );
+    __write_number($("#deduction_final_total").first(), total_deduction);
+    $("span.gross_final_total").text(
+        __currency_trans_from_en(total_gross_amount, true)
+    );
+    __write_number($("#gross_final_total"), total_gross_amount);
 }

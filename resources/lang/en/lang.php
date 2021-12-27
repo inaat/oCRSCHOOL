@@ -409,5 +409,14 @@ return [
             'study_period'=>'Study Period',
             'lunch_break'=>'Lunch Break',
         ],
+        'lunch_break'=>'Break',
+
         'assign_new_period'=>'Assign New Period',
+        'timetable'=>'Timetable',
+        'timetables'=>'Timetables',
+        'assign_period'=>'Assign Period',
+        'edit_assign_period'=>'Edit Assign Period',
+        'periods'=>'Periods',
+        'subjects'=>'Subjects',
+        'classes_timetable'=>'Classes Timetable',
 ];

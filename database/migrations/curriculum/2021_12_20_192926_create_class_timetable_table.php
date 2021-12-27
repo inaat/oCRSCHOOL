@@ -19,11 +19,12 @@ class CreateClassTimetableTable extends Migration
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
             $table->integer('class_id')->unsigned();
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
+            $table->integer('class_section_id')->unsigned();
+            $table->foreign('class_section_id')->references('id')->on('class_sections')->onDelete('cascade');
             $table->integer('subject_id')->unsigned();
             $table->foreign('subject_id')->references('id')->on('class_subjects')->onDelete('cascade');
             $table->integer('period_id')->unsigned();
             $table->foreign('period_id')->references('id')->on('class_timetable_periods')->onDelete('cascade');
-            $table->string('day');
             $table->timestamps();
         });
     }
